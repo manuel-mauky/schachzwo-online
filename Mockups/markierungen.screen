@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
+  <widgets xsi:type="model:WidgetGroup" id="6" width="600" height="600" measuredWidth="600" measuredHeight="600">
+    <widgets xsi:type="model:Master" id="1" width="600" height="600" measuredWidth="600" measuredHeight="600">
+      <screen xsi:type="model:Screen" href="assets/ownAssets/chessboard.screen#/"/>
+      <overrides>
+        <widgets ref="33" x="132" y="529" width="66" height="66">
+          <attributes key="background" value="#6fa8dc"/>
+        </widgets>
+        <widgets ref="42" x="65" y="529" width="66" height="66">
+          <attributes key="background" value="#6aa84f"/>
+        </widgets>
+        <widgets ref="34" x="65" y="464" width="66" height="66">
+          <attributes key="background" value="#93c47d"/>
+        </widgets>
+        <widgets ref="30" y="396" width="66" height="66">
+          <attributes key="background" value="#93c47d"/>
+        </widgets>
+        <widgets ref="35" x="132" y="464" width="66" height="66">
+          <attributes key="background" value="#6aa84f"/>
+        </widgets>
+        <widgets ref="40" x="197" y="464" width="66" height="66">
+          <attributes key="background" value="#93c47d"/>
+        </widgets>
+        <widgets ref="41" x="197" y="529" width="66" height="66">
+          <attributes key="background" value="#6aa84f"/>
+        </widgets>
+        <widgets ref="84" width="600" height="600"/>
+        <widgets ref="1" width="600" height="600"/>
+        <widgets ref="2" width="66" height="66"/>
+        <widgets ref="3" x="65" width="66" height="66"/>
+        <widgets ref="4" x="65" y="65" width="66" height="66"/>
+        <widgets ref="5" y="65" width="66" height="66"/>
+        <widgets ref="6" y="133" width="66" height="66"/>
+        <widgets ref="7" y="198" width="66" height="66"/>
+        <widgets ref="8" x="65" y="265" width="66" height="66"/>
+        <widgets ref="9" x="132" y="198" width="66" height="66"/>
+        <widgets ref="10" x="65" y="133" width="66" height="66"/>
+        <widgets ref="11" y="265" width="66" height="66"/>
+        <widgets ref="12" x="132" y="133" width="66" height="66"/>
+        <widgets ref="13" x="132" y="65" width="66" height="66"/>
+        <widgets ref="14" x="132" width="66" height="66"/>
+        <widgets ref="15" x="197" width="66" height="66"/>
+        <widgets ref="16" x="264" width="66" height="66"/>
+        <widgets ref="17" x="197" y="65" width="66" height="66"/>
+        <widgets ref="18" x="264" y="65" width="66" height="66"/>
+        <widgets ref="19" x="197" y="133" width="66" height="66"/>
+        <widgets ref="20" x="264" y="133" width="66" height="66"/>
+        <widgets ref="21" x="197" y="198" width="66" height="66"/>
+        <widgets ref="22" x="264" y="198" width="66" height="66"/>
+        <widgets ref="23" x="132" y="265" width="66" height="66"/>
+        <widgets ref="24" x="197" y="265" width="66" height="66"/>
+        <widgets ref="25" x="264" y="265" width="66" height="66"/>
+        <widgets ref="26" x="65" y="198" width="66" height="66"/>
+        <widgets ref="27" y="330" width="66" height="66"/>
+        <widgets ref="28" x="65" y="330" width="66" height="66"/>
+        <widgets ref="29" x="65" y="396" width="66" height="66"/>
+        <widgets ref="31" y="464" width="66" height="66"/>
+        <widgets ref="32" y="529" width="66" height="66"/>
+        <widgets ref="36" x="132" y="396" width="66" height="66"/>
+        <widgets ref="37" x="132" y="330" width="66" height="66"/>
+        <widgets ref="38" x="197" y="330" width="66" height="66"/>
+        <widgets ref="39" x="197" y="396" width="66" height="66"/>
+        <widgets ref="43" x="332" width="66" height="66"/>
+        <widgets ref="44" x="397" width="66" height="66"/>
+        <widgets ref="45" x="397" y="65" width="66" height="66"/>
+        <widgets ref="46" x="332" y="65" width="66" height="66"/>
+        <widgets ref="47" x="332" y="133" width="66" height="66"/>
+        <widgets ref="48" x="332" y="198" width="66" height="66"/>
+        <widgets ref="49" x="464" y="198" width="66" height="66"/>
+        <widgets ref="50" x="397" y="133" width="66" height="66"/>
+        <widgets ref="51" x="464" y="133" width="66" height="66"/>
+        <widgets ref="52" x="464" y="65" width="66" height="66"/>
+        <widgets ref="53" x="464" width="66" height="66"/>
+        <widgets ref="54" x="529" width="66" height="66"/>
+        <widgets ref="55" x="529" y="65" width="66" height="66"/>
+        <widgets ref="56" x="529" y="133" width="66" height="66"/>
+        <widgets ref="57" x="529" y="198" width="66" height="66"/>
+        <widgets ref="58" x="397" y="198" width="66" height="66"/>
+        <widgets ref="59" x="332" y="330" width="66" height="66"/>
+        <widgets ref="60" x="397" y="330" width="66" height="66"/>
+        <widgets ref="61" x="397" y="396" width="66" height="66"/>
+        <widgets ref="62" x="332" y="396" width="66" height="66"/>
+        <widgets ref="63" x="332" y="464" width="66" height="66"/>
+        <widgets ref="64" x="332" y="529" width="66" height="66"/>
+        <widgets ref="65" x="464" y="529" width="66" height="66"/>
+        <widgets ref="66" x="397" y="464" width="66" height="66"/>
+        <widgets ref="67" x="464" y="464" width="66" height="66"/>
+        <widgets ref="68" x="464" y="396" width="66" height="66"/>
+        <widgets ref="69" x="464" y="330" width="66" height="66"/>
+        <widgets ref="70" x="529" y="330" width="66" height="66"/>
+        <widgets ref="71" x="529" y="396" width="66" height="66"/>
+        <widgets ref="72" x="529" y="464" width="66" height="66"/>
+        <widgets ref="73" x="529" y="529" width="66" height="66"/>
+        <widgets ref="74" x="397" y="529" width="66" height="66"/>
+        <widgets ref="75" x="332" y="265" width="66" height="66"/>
+        <widgets ref="76" x="397" y="265" width="66" height="66"/>
+        <widgets ref="77" x="464" y="265" width="66" height="66"/>
+        <widgets ref="78" x="529" y="265" width="66" height="66"/>
+        <widgets ref="79" x="264" y="330" width="66" height="66"/>
+        <widgets ref="80" x="264" y="396" width="66" height="66"/>
+        <widgets ref="81" x="264" y="464" width="66" height="66"/>
+        <widgets ref="82" x="264" y="529" width="66" height="66"/>
+        <widgets ref="83" x="277" y="280" width="40" height="40"/>
+      </overrides>
+    </widgets>
+    <widgets xsi:type="model:Circle" id="2" x="266" y="400" width="58" height="61" measuredWidth="58" measuredHeight="61" background="#444444">
+      <font/>
+    </widgets>
+    <widgets xsi:type="model:Circle" id="3" x="133" y="533" width="58" height="61" measuredWidth="58" measuredHeight="61" background="#444444">
+      <font/>
+    </widgets>
+  </widgets>
+  <hRuler/>
+  <vRuler/>
+  <font size="12px"/>
+</model:Screen>
