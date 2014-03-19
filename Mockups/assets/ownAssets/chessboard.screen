@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
+  <widgets xsi:type="model:WidgetGroup" id="84" measuredWidth="900" measuredHeight="900">
+    <widgets xsi:type="model:Panel" id="1" width="900" height="900" measuredWidth="900" measuredHeight="900"/>
+    <widgets xsi:type="model:Panel" id="2" measuredWidth="100" measuredHeight="100"/>
+    <widgets xsi:type="model:Panel" id="3" x="99" measuredWidth="100" measuredHeight="100" background="#999999"/>
+    <widgets xsi:type="model:Panel" id="4" x="99" y="99" measuredWidth="100" measuredHeight="100"/>
+    <widgets xsi:type="model:Panel" id="5" y="99" measuredWidth="100" measuredHeight="100" background="#999999"/>
+    <widgets xsi:type="model:Panel" id="6" y="200" measuredWidth="100" measuredHeight="100"/>
+    <widgets xsi:type="model:Panel" id="7" y="299" measuredWidth="100" measuredHeight="100" background="#999999"/>
+    <widgets xsi:type="model:Panel" id="8" x="99" y="398" measuredWidth="100" measuredHeight="100" background="#999999"/>
+    <widgets xsi:type="model:Panel" id="9" x="198" y="299" measuredWidth="100" measuredHeight="100" background="#999999"/>
+    <widgets xsi:type="model:Panel" id="10" x="99" y="200" measuredWidth="100" measuredHeight="100" background="#999999"/>
+    <widgets xsi:type="model:Panel" id="11" y="398" measuredWidth="100" measuredHeight="100"/>
+    <widgets xsi:type="model:Panel" id="12" x="198" y="200" measuredWidth="100" measuredHeight="100"/>
+    <widgets xsi:type="model:Panel" id="13" x="198" y="99" measuredWidth="100" measuredHeight="100" background="#999999"/>
+    <widgets xsi:type="model:Panel" id="14" x="198" measuredWidth="100" measuredHeight="100"/>
+    <widgets xsi:type="model:Panel" id="15" x="297" measuredWidth="100" measuredHeight="100" background="#999999"/>
+    <widgets xsi:type="model:Panel" id="16" x="396" measuredWidth="100" measuredHeight="100"/>
+    <widgets xsi:type="model:Panel" id="17" x="297" y="99" measuredWidth="100" measuredHeight="100"/>
+    <widgets xsi:type="model:Panel" id="18" x="396" y="99" measuredWidth="100" measuredHeight="100" background="#999999"/>
+    <widgets xsi:type="model:Panel" id="19" x="297" y="200" measuredWidth="100" measuredHeight="100" background="#999999"/>
+    <widgets xsi:type="model:Panel" id="20" x="396" y="200" measuredWidth="100" measuredHeight="100"/>
+    <widgets xsi:type="model:Panel" id="21" x="297" y="299" measuredWidth="100" measuredHeight="100"/>
+    <widgets xsi:type="model:Panel" id="22" x="396" y="299" measuredWidth="100" measuredHeight="100" background="#999999"/>
+    <widgets xsi:type="model:Panel" id="23" x="198" y="398" measuredWidth="100" measuredHeight="100"/>
+    <widgets xsi:type="model:Panel" id="24" x="297" y="398" measuredWidth="100" measuredHeight="100" background="#999999"/>
+    <widgets xsi:type="model:Panel" id="25" x="396" y="398" measuredWidth="100" measuredHeight="100"/>
+    <widgets xsi:type="model:Panel" id="26" x="99" y="299" measuredWidth="100" measuredHeight="100"/>
+    <widgets xsi:type="model:Panel" id="27" y="496" measuredWidth="100" measuredHeight="100" background="#999999"/>
+    <widgets xsi:type="model:Panel" id="28" x="99" y="496" measuredWidth="100" measuredHeight="100"/>
+    <widgets xsi:type="model:Panel" id="29" x="99" y="595" measuredWidth="100" measuredHeight="100" background="#999999"/>
+    <widgets xsi:type="model:Panel" id="30" y="595" measuredWidth="100" measuredHeight="100"/>
+    <widgets xsi:type="model:Panel" id="31" y="696" measuredWidth="100" measuredHeight="100" background="#999999"/>
+    <widgets xsi:type="model:Panel" id="32" y="795" measuredWidth="100" measuredHeight="100"/>
+    <widgets xsi:type="model:Panel" id="33" x="198" y="795" measuredWidth="100" measuredHeight="100"/>
+    <widgets xsi:type="model:Panel" id="34" x="99" y="696" measuredWidth="100" measuredHeight="100"/>
+    <widgets xsi:type="model:Panel" id="35" x="198" y="696" measuredWidth="100" measuredHeight="100" background="#999999"/>
+    <widgets xsi:type="model:Panel" id="36" x="198" y="595" measuredWidth="100" measuredHeight="100"/>
+    <widgets xsi:type="model:Panel" id="37" x="198" y="496" measuredWidth="100" measuredHeight="100" background="#999999"/>
+    <widgets xsi:type="model:Panel" id="38" x="297" y="496" measuredWidth="100" measuredHeight="100"/>
+    <widgets xsi:type="model:Panel" id="39" x="297" y="595" measuredWidth="100" measuredHeight="100" background="#999999"/>
+    <widgets xsi:type="model:Panel" id="40" x="297" y="696" measuredWidth="100" measuredHeight="100"/>
+    <widgets xsi:type="model:Panel" id="41" x="297" y="795" measuredWidth="100" measuredHeight="100" background="#999999"/>
+    <widgets xsi:type="model:Panel" id="42" x="99" y="795" measuredWidth="100" measuredHeight="100" background="#999999"/>
+    <widgets xsi:type="model:Panel" id="43" x="498" measuredWidth="100" measuredHeight="100" background="#999999"/>
+    <widgets xsi:type="model:Panel" id="44" x="597" measuredWidth="100" measuredHeight="100"/>
+    <widgets xsi:type="model:Panel" id="45" x="597" y="99" measuredWidth="100" measuredHeight="100" background="#999999"/>
+    <widgets xsi:type="model:Panel" id="46" x="498" y="99" measuredWidth="100" measuredHeight="100"/>
+    <widgets xsi:type="model:Panel" id="47" x="498" y="200" measuredWidth="100" measuredHeight="100" background="#999999"/>
+    <widgets xsi:type="model:Panel" id="48" x="498" y="299" measuredWidth="100" measuredHeight="100"/>
+    <widgets xsi:type="model:Panel" id="49" x="696" y="299" measuredWidth="100" measuredHeight="100"/>
+    <widgets xsi:type="model:Panel" id="50" x="597" y="200" measuredWidth="100" measuredHeight="100"/>
+    <widgets xsi:type="model:Panel" id="51" x="696" y="200" measuredWidth="100" measuredHeight="100" background="#999999"/>
+    <widgets xsi:type="model:Panel" id="52" x="696" y="99" measuredWidth="100" measuredHeight="100"/>
+    <widgets xsi:type="model:Panel" id="53" x="696" measuredWidth="100" measuredHeight="100" background="#999999"/>
+    <widgets xsi:type="model:Panel" id="54" x="795" measuredWidth="100" measuredHeight="100"/>
+    <widgets xsi:type="model:Panel" id="55" x="795" y="99" measuredWidth="100" measuredHeight="100" background="#999999"/>
+    <widgets xsi:type="model:Panel" id="56" x="795" y="200" measuredWidth="100" measuredHeight="100"/>
+    <widgets xsi:type="model:Panel" id="57" x="795" y="299" measuredWidth="100" measuredHeight="100" background="#999999"/>
+    <widgets xsi:type="model:Panel" id="58" x="597" y="299" measuredWidth="100" measuredHeight="100" background="#999999"/>
+    <widgets xsi:type="model:Panel" id="59" x="498" y="496" measuredWidth="100" measuredHeight="100"/>
+    <widgets xsi:type="model:Panel" id="60" x="597" y="496" measuredWidth="100" measuredHeight="100" background="#999999"/>
+    <widgets xsi:type="model:Panel" id="61" x="597" y="595" measuredWidth="100" measuredHeight="100"/>
+    <widgets xsi:type="model:Panel" id="62" x="498" y="595" measuredWidth="100" measuredHeight="100" background="#999999"/>
+    <widgets xsi:type="model:Panel" id="63" x="498" y="696" measuredWidth="100" measuredHeight="100"/>
+    <widgets xsi:type="model:Panel" id="64" x="498" y="795" measuredWidth="100" measuredHeight="100" background="#999999"/>
+    <widgets xsi:type="model:Panel" id="65" x="696" y="795" measuredWidth="100" measuredHeight="100" background="#999999"/>
+    <widgets xsi:type="model:Panel" id="66" x="597" y="696" measuredWidth="100" measuredHeight="100" background="#999999"/>
+    <widgets xsi:type="model:Panel" id="67" x="696" y="696" measuredWidth="100" measuredHeight="100"/>
+    <widgets xsi:type="model:Panel" id="68" x="696" y="595" measuredWidth="100" measuredHeight="100" background="#999999"/>
+    <widgets xsi:type="model:Panel" id="69" x="696" y="496" measuredWidth="100" measuredHeight="100"/>
+    <widgets xsi:type="model:Panel" id="70" x="795" y="496" measuredWidth="100" measuredHeight="100" background="#999999"/>
+    <widgets xsi:type="model:Panel" id="71" x="795" y="595" measuredWidth="100" measuredHeight="100"/>
+    <widgets xsi:type="model:Panel" id="72" x="795" y="696" measuredWidth="100" measuredHeight="100" background="#999999"/>
+    <widgets xsi:type="model:Panel" id="73" x="795" y="795" measuredWidth="100" measuredHeight="100"/>
+    <widgets xsi:type="model:Panel" id="74" x="597" y="795" measuredWidth="100" measuredHeight="100"/>
+    <widgets xsi:type="model:Panel" id="75" x="498" y="398" measuredWidth="100" measuredHeight="100" background="#999999"/>
+    <widgets xsi:type="model:Panel" id="76" x="597" y="398" measuredWidth="100" measuredHeight="100"/>
+    <widgets xsi:type="model:Panel" id="77" x="696" y="398" measuredWidth="100" measuredHeight="100" background="#999999"/>
+    <widgets xsi:type="model:Panel" id="78" x="795" y="398" measuredWidth="100" measuredHeight="100"/>
+    <widgets xsi:type="model:Panel" id="79" x="396" y="496" measuredWidth="100" measuredHeight="100" background="#999999"/>
+    <widgets xsi:type="model:Panel" id="80" x="396" y="595" measuredWidth="100" measuredHeight="100"/>
+    <widgets xsi:type="model:Panel" id="81" x="396" y="696" measuredWidth="100" measuredHeight="100" background="#999999"/>
+    <widgets xsi:type="model:Panel" id="82" x="396" y="795" measuredWidth="100" measuredHeight="100"/>
+    <widgets xsi:type="model:Circle" id="83" x="416" y="420" width="60" height="60" measuredWidth="60" measuredHeight="60">
+      <font/>
+    </widgets>
+  </widgets>
+  <hRuler/>
+  <vRuler/>
+  <font size="12px"/>
+</model:Screen>
