@@ -12,11 +12,6 @@
   <widgets xsi:type="model:Master" id="5" x="10" y="56" measuredWidth="833" measuredHeight="313">
     <screen xsi:type="model:WidgetGroup" href="assets/Bootstrap/Bootstrap.screen#Hero%20Unit"/>
     <overrides>
-      <widgetChanges xsi:type="o:Insert" newIndex="4">
-        <object xsi:type="model:TextField" x="238" y="222" width="361" text="http://schachzwo.de/link-zum-spiel">
-          <font size="18px"/>
-        </object>
-      </widgetChanges>
       <widgets ref="59" y="50" text="SchachZWO"/>
       <widgets ref="60" height="73" text="Wenn du SchachZWO mit einem Freund spielen möchtest, klicke einfach auf &quot;Neues Spiel&quot; und du erhältst einen Link, mit dem du deinen Freund einladen kannst!"/>
       <widgets ref="61" x="60" y="216" width="135" text="Neues Spiel"/>
