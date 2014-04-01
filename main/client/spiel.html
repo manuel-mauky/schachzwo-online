@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+		<link href="css/bootstrap.min.css" rel="stylesheet">
+		
+        <script data-main="client/main" src="client/libs/require.js"></script>
+		
+
+    <title>SchachZwo Online</title>
+  </head>
+    <body>
+    
+    <div class="container">
+    
+    <nav class="navbar navbar-default navbar-inverse " role="navigation">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<div>
+					<span class="navbar-brand">SchachZwo</span>
+				</div>
+			</div>
+
+			<div class="collapse navbar-collapse navbar-responsive-collapse">
+				<ul class="nav navbar-nav navbar-right">
+					<li class="active">
+						<a href="index.html" class="glyphicon glyphicon-home"> Home</a>
+					</li>
+						
+					<li>
+						<a href="/about" class="glyphicon glyphicon-user"> About</a>	
+					<li>	
+					
+					<li>
+						<a href="/contact" class="glyphicon glyphicon-envelope"> Contact</a>	
+					<li>		
+				</ul>
+			</div>
+		</nav>
+       
+		
+		<div class="container">
+			
+			<div class="row">
+			
+				<div class="col-xs-12 col-md-8 panel panel-default">
+					<div class="panel-body">
+						
+						<div style="width:500px;height:500px;border:solid 1px black">
+					
+						</div>
+					</div>
+				</div>
+				
+				<div class="col-xs-4 col-md-4 panel panel-default" >
+					<form role="form" class="panel-body">
+					
+						<div class="form-group">
+							<input type="text" class="form-control" value="http://schachzwo.de/link-zum-spiel"/>
+						</div>
+						
+						<div class="form-group">
+							<table>	
+								<tr>
+									<td></td>
+									<th>Spieler 1</th>
+									<th>Spieler 2</th>
+								</tr>
+							
+								<tr>
+									<td>Punkte</td>
+									<td>0</td>
+									<td>3</td>
+								</tr>
+							</table>
+						</div>
+						
+						<div class="form-group">
+							<a class="btn btn-primary" role="button" href="#">Neue Runde</a>
+							<a class="btn btn-warning" role="button" href="#">Remis erfragen</a>
+							<a class="btn btn-danger" role="button" href="#">Aufgeben</a>
+						</div>
+					
+					</form>
+					
+				</div>
+			
+			</div>
+		
+		</div>
+		
+		
+		<div id="footer">
+			<div class="container">
+			<footer class="footer text-muted">
+				<p>&copy; hszg</p>
+			</footer>
+			</div>
+		</div>
+		
+		</div>
+
+    </body>
+</html>
