@@ -1,13 +1,11 @@
 var express = require("express");
-
-
 var app = express();
 
-app.get("/", function(req, res){
-    "use strict";
 
-    res.send("Hello World");
-});
+app.use("/board", require("./server/board").route);
+
+app.use(express.static(__dirname + "/client"));
+
 
 var server = app.listen(1337, function() {
     "use strict";
