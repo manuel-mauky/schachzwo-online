@@ -91,53 +91,41 @@
     </overrides>
   </widgets>
   <widgets xsi:type="model:VLine" id="5" x="616" y="68" height="548" measuredWidth="6" measuredHeight="548"/>
-  <widgets xsi:type="model:Panel" id="8" x="640" y="184" width="360" height="152" measuredWidth="360" measuredHeight="152"/>
-  <widgets xsi:type="model:Label" id="11" x="650" y="222" text="Punkte" measuredWidth="47" measuredHeight="23">
-    <font/>
-  </widgets>
-  <widgets xsi:type="model:Label" id="12" x="720" y="222" text="0" measuredWidth="13" measuredHeight="23">
-    <font/>
-  </widgets>
-  <widgets xsi:type="model:Label" id="13" x="816" y="222" width="65" text="3" measuredWidth="65" measuredHeight="23">
-    <font/>
-  </widgets>
-  <widgets xsi:type="model:Master" id="15" x="785" y="352" measuredWidth="89" measuredHeight="28">
+  <widgets xsi:type="model:Panel" id="8" x="640" y="184" width="360" height="89" measuredWidth="360" measuredHeight="89"/>
+  <widgets xsi:type="model:Master" id="15" x="776" y="288" measuredWidth="85" measuredHeight="30">
     <screen xsi:type="model:WidgetGroup" href="assets/Bootstrap/Bootstrap.screen#Button"/>
     <overrides>
       <widgets ref="2" text="Aufgeben"/>
     </overrides>
   </widgets>
-  <widgets xsi:type="model:Master" id="16" x="640" y="352" measuredWidth="133" measuredHeight="28">
+  <widgets xsi:type="model:Master" id="16" x="640" y="288" measuredWidth="122" measuredHeight="30">
     <screen xsi:type="model:WidgetGroup" href="assets/Bootstrap/Bootstrap.screen#Button"/>
     <overrides>
       <widgets ref="2" text="Remis anbieten"/>
     </overrides>
   </widgets>
-  <widgets xsi:type="model:Label" id="17" x="650" y="264" text="Partie Nummer 2" measuredWidth="107" measuredHeight="23">
+  <widgets xsi:type="model:Label" id="18" x="650" y="240" text="Spieler 1 am Zug" measuredWidth="94" measuredHeight="23">
     <font/>
   </widgets>
-  <widgets xsi:type="model:Label" id="18" x="650" y="286" text="Spieler 1 am Zug" measuredWidth="109" measuredHeight="23">
+  <widgets xsi:type="model:Note" id="20" x="392" y="552" text="Eigene Figuren auf unterer Seite" measuredWidth="184" measuredHeight="29" annotation="true">
     <font/>
   </widgets>
-  <widgets xsi:type="model:Note" id="20" x="392" y="552" text="Eigene Figuren auf unterer Seite" measuredWidth="212" measuredHeight="29" annotation="true">
+  <widgets xsi:type="model:TextField" id="21" x="680" y="194" text="Spieler 1" measuredWidth="55" measuredHeight="23">
     <font/>
   </widgets>
-  <widgets xsi:type="model:TextField" id="21" x="720" y="194" text="Spieler 1" measuredWidth="63" measuredHeight="23">
+  <widgets xsi:type="model:TextField" id="22" x="816" y="194" text="Spieler 2" measuredWidth="55" measuredHeight="23">
     <font/>
   </widgets>
-  <widgets xsi:type="model:TextField" id="22" x="816" y="194" text="Spieler 2" measuredWidth="63" measuredHeight="23" background="#000000" borderColor="#ffffff">
-    <font/>
-  </widgets>
-  <widgets xsi:type="model:Master" id="23" x="640" y="134" measuredWidth="159" measuredHeight="28">
+  <widgets xsi:type="model:Master" id="23" x="640" y="134" measuredWidth="147" measuredHeight="30">
     <screen xsi:type="model:WidgetGroup" href="assets/Bootstrap/Bootstrap.screen#Button"/>
     <overrides>
       <widgets ref="2" text="Mitspieler einladen"/>
     </overrides>
   </widgets>
-  <widgets xsi:type="model:Note" id="24" x="817" y="112" height="61" text="Farbzugehörigkeit des Spielers" measuredWidth="199" measuredHeight="61" annotation="true">
-    <font/>
-  </widgets>
-  <widgets xsi:type="model:Arrow" id="25" x="878" y="162" width="35" height="41" measuredWidth="35" measuredHeight="41" annotation="true" direction="bottom"/>
+  <widgets xsi:type="model:Icon" id="26" x="650" y="190" measuredWidth="32" measuredHeight="32" icon="user (large)"/>
+  <widgets xsi:type="model:Icon" id="27" x="786" y="190" measuredWidth="32" measuredHeight="32" foreground="#999999" icon="user (large)"/>
+  <widgets xsi:type="model:Icon" id="28" x="743" y="198" measuredWidth="16" measuredHeight="16" icon="edit (small)"/>
+  <widgets xsi:type="model:Icon" id="29" x="880" y="198" measuredWidth="16" measuredHeight="16" icon="edit (small)"/>
   <hRuler/>
   <vRuler/>
   <font size="12px"/>
