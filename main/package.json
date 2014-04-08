@@ -12,7 +12,7 @@
   "devDependencies": {
     "request": "latest",
     "requirejs": "^2.1.11",
-    "mocha" : "latest",
-    "chai" : "latest"
+    "mocha": "latest",
+    "chai": "latest"
   }
 }
