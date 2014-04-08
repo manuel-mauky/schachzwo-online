@@ -11,6 +11,8 @@
   },
   "devDependencies": {
     "request": "latest",
-    "requirejs": "^2.1.11"
+    "requirejs": "^2.1.11",
+    "mocha" : "latest",
+    "chai" : "latest"
   }
 }
