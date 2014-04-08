@@ -3,16 +3,18 @@
 requirejs.config({
     paths: {
 
-        app: 'app/app',
+        'app.main': 'app/app',
         'app.landing': 'app/landing/landing',
         'app.game': 'app/game/game',
+        'directives.schachzwoBoard': 'app/common/directives/schachzwo-board',
+        'services.boardProvider': 'app/common/services/board-provider',
 
         //AngularJS
         angular: 'libs/angular/angular.min',
         angularRoute: 'libs/angular/angular-route.min',
 
         //jQuery
-        jquery: 'https://code.jquery.com/jquery-2.1.0.min',
+        jquery: 'libs/jquery/jquery-2.1.0.min',
         'jquery.ui': 'libs/jquery/jquery-ui.min',
         'schachzwo.board.ui': 'libs/jquery/schachzwo.board.ui',
 
@@ -28,9 +30,10 @@ requirejs.config({
         },
         angularRoute: ['angular'],
         bootstrap: ['jquery'],
-        'schachzwo.board.ui': ['jquery', 'jquery.ui']
+        'jquery.ui':  ['jquery'],
+        'schachzwo.board.ui': ['jquery.ui']
     }
 });
 
 // starting app
-require(['app', 'app.landing', 'app.game']);
+require(['app.main']);

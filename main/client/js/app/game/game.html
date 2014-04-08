@@ -3,9 +3,13 @@
     <div class="col-xs-12 col-md-8 panel panel-default">
         <div class="panel-body">
 
-            <div id="board-container" style="width: 100%; min-height: 600px">
+            <div style="width: 100%; min-height: 600px"
+                 schachzwo-board  ng-model="board"
+                 board-size = "boardSize"
+                 on-select="onSelect(row, col)"></div>
 
-            </div>
+
+            <a href="" ng-click="switchBoardSize()">board size {{boardSize === 7 ? 9 : 7}}</a>
         </div>
     </div>
 

@@ -1,15 +1,22 @@
 'use strict';
 
 define([
-    'require',
     'angular',
-    'angularRoute'], function (require, angular) {
+    'angularRoute',
+    'app.landing',
+    'app.game',
+    'directives.schachzwoBoard',
+    'services.boardProvider'], function (angular) {
     require(['domReady!'], function (document) {
 
+        angular.module('directives', []);
+
         angular.module('schachzwoApp', [
-                'ngRoute',
-                'game',
-                'landing']).
+            'ngRoute',
+            'game',
+            'landing',
+            'schachzwoBoard',
+            'boardProvider']).
             config(['$routeProvider', function ($routeProvider) {
 
                 $routeProvider.when('/game',

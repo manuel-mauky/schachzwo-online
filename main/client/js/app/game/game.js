@@ -1,20 +1,40 @@
 'use strict';
 
-define(['angular', 'jquery', 'schachzwo.board.ui'], function(angular, $) {
+define(['angular'], function (angular) {
+
 
     angular.module('game', []).
-        controller('gameCtrl', ['$scope', function($scope) {
+        controller('gameCtrl', ['$scope', 'boardProvider', function ($scope, boardProvider) {
 
-            $('#board-container').schachzwo(
-                {
-                    self: 'black',
-                    boardSize: 9,
-                    select: function (event, data) {
+            $scope.boardSize = 7;
+            $scope.board = [];
 
-                        alert('row: ' + data.row + " col: " + data.col);
+            var initBoard = function () {
+                if ($scope.boardSize === 7) {
+                    $scope.board = boardProvider.SMALL;
+                } else {
+                    $scope.board = boardProvider.BIG;
+                }
+
+            };
+
+            $scope.onSelect = function (row, col) {
+
+                for (var i in  $scope.board) {
+                    if ($scope.board[i].selected) {
+                        $scope.board.splice(i, 1);
+                        break;
                     }
+                }
+                $scope.board.push({row: row, col: col, selected: true});
+            };
 
-                });
+            $scope.switchBoardSize = function () {
+                $scope.boardSize = $scope.boardSize === 7 ? 9 : 7;
+                initBoard();
+            }
+
+            initBoard();
 
         }]);
 

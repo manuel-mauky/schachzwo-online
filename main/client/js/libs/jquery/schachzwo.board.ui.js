@@ -1,20 +1,26 @@
 (function ($) {
 
+    var Color = {
+        BLACK: "black",
+        WHITE: "white"
+    };
+
+
     $.widget('custom.schachzwo', {
 
         options: {
 
             boardSize: 9,
-            self: "black",
+            self: Color.BLACK,
             boardBorderColor: "#ED8641",
             boardBlackFieldColor: "#BE5003",
             boardWhiteFieldColor: "#F8D48A",
             boardSelectedFieldColor: "rgba(61,158,255,0.8)",
             boardAccessibleFieldColor: "rgba(60,255,60,0.6)",
-            figureBlackColor: "black",
-            figureWhiteColor: "white",
+            figureBlackColor: "#000000",
+            figureWhiteColor: "#FFFFFF",
             figureBlackBorderColor: "gray",
-            figureWhiteBorderColor: "black"
+            figureWhiteBorderColor: "#000000"
 
         },
 
@@ -29,15 +35,15 @@
 
             this._on(this.canvas, {'click': function (e) {
 
-                var x = e.pageX - this.canvas.position().left - this.x0;
-                var y = e.pageY - this.canvas.position().top - this.y0;
+                var x = e.pageX - this.canvas.offset().left - this.x0;
+                var y = e.pageY - this.canvas.offset().top - this.y0;
 
                 if (x >= 0 && x <= this.fieldSize * this.options.boardSize &&
                     y >= 0 && y <= this.fieldSize * this.options.boardSize) {
 
                     var col = Math.floor(x / this.fieldSize);
                     var row = Math.floor(y / this.fieldSize);
-                    this._trigger( "select", null, { col: col, row: row } );
+                    this._trigger("onSelect", null, { col: col, row: row });
 
                 }
             }});
@@ -53,7 +59,7 @@
             this._draw(width, height);
         },
 
-         _respond: function () {
+        _respond: function () {
 
             var container = this.canvas.parent();
 
@@ -63,6 +69,24 @@
             this.canvas.attr('height', height);
 
             this._draw(width, height);
+        },
+
+        _checkColor: function (color) {
+            if (color !== Color.BLACK && color !== Color.WHITE) {
+                throw "Invalid color, it should be 'black' or 'white'.";
+            }
+        },
+
+        _checkColRow: function (val) {
+            if (val < 0 || val >= this.options.boardSize) {
+                throw "Invalid value, it can only be a number between 0 and " + this.options.boardSize + ".";
+            }
+        },
+
+        _checkBoardSize: function (boardSize) {
+            if (boardSize != 7 && boardSize != 9) {
+                throw "Invalid board size, it should be 7 or 9.";
+            }
         },
 
         _draw: function (width, height) {
@@ -80,7 +104,8 @@
             var figureBlackBorderColor = this.options.figureBlackBorderColor;
             var figureWhiteBorderColor = this.options.figureWhiteBorderColor;
 
-            context.clearRect(0, 0, width, height);
+            this._checkBoardSize(boardSize);
+
             var boardWidth = Math.min(width, height);
             var border = (3 / 100) * boardWidth;
             boardWidth -= 2 * border;
@@ -113,29 +138,29 @@
             var drawFigure = function (row, col, figure) {
 
                 var fillFigure = function (color) {
-                    context.fillStyle = color === 'white' ? figureWhiteColor : figureBlackColor;
+                    context.fillStyle = color === Color.WHITE ? figureWhiteColor : figureBlackColor;
                     context.fill();
                     context.lineWidth = 1 / 30 * fieldSize;
-                    context.strokeStyle = color === 'white' ? figureWhiteBorderColor : figureBlackBorderColor;
+                    context.strokeStyle = color === Color.WHITE ? figureWhiteBorderColor : figureBlackBorderColor;
                     context.stroke();
                 };
 
                 var figures = {
 
-                    rock: function (row, col, color) {
+                    rocks: function (row, col, color) {
                         context.beginPath();
                         context.rect(x0 + (col + (11 / 28)) * fieldSize, y0 + (row + (2 / 7)) * fieldSize, (3 / 14) * fieldSize, (3 / 7) * fieldSize);
                         fillFigure(color);
 
                     },
 
-                    male: function (row, col, color) {
+                    man: function (row, col, color) {
                         context.beginPath();
                         context.rect(x0 + (col + (1 / 4)) * fieldSize, y0 + (row + (1 / 4)) * fieldSize, (1 / 2) * fieldSize, (1 / 2) * fieldSize);
                         fillFigure(color);
                     },
 
-                    female: function (row, col, color) {
+                    woman: function (row, col, color) {
                         context.beginPath();
                         context.arc(x0 + (col + (1 / 2)) * fieldSize, y0 + (row + (1 / 2)) * fieldSize, Math.sqrt(1 / (4 * Math.PI)) * fieldSize, 0, 2 * Math.PI, false);
                         fillFigure(color);
@@ -153,7 +178,7 @@
                         fillFigure(color);
                     },
 
-                    ken: function (row, col, color) {
+                    knowledge: function (row, col, color) {
                         context.beginPath();
                         context.moveTo(x0 + (col + (1 / 5)) * fieldSize, y0 + (row + (4 / 5)) * fieldSize);
                         context.lineTo(x0 + (col + (4 / 5)) * fieldSize, y0 + (row + (4 / 5)) * fieldSize);
@@ -168,7 +193,7 @@
                         fillFigure(color);
                     },
 
-                    belief: function (row, col, color) {
+                    faith: function (row, col, color) {
                         context.beginPath();
                         context.moveTo(x0 + (col + (1 / 5)) * fieldSize, y0 + (row + (4 / 5)) * fieldSize);
                         context.lineTo(x0 + (col + (4 / 5)) * fieldSize, y0 + (row + (4 / 5)) * fieldSize);
@@ -184,7 +209,6 @@
                     },
 
                     zenith: function (row, col, color) {
-
                         var zenithY = self === color ? (5 / 14) : (9 / 14);
 
                         if (row === (boardSize - 1) / 2 && col === (boardSize - 1) / 2)
@@ -197,7 +221,7 @@
                         context.beginPath();
                         context.arc(x0 + (col + (1 / 2)) * fieldSize, y0 + (row + zenithY) * fieldSize, (3 / 14) * fieldSize, 0, Math.PI, self !== color);
                         context.closePath();
-                        context.fillStyle = color === 'black' ? figureWhiteColor : figureBlackColor;
+                        context.fillStyle = color === Color.BLACK ? figureWhiteColor : figureBlackColor;
                         context.fill();
                     }
 
@@ -231,24 +255,31 @@
                 drawCenter();
             }();
 
-
             for (var i in this.fields) {
-
                 var field = this.fields[i];
 
-                if (field.accessible)
+                this._checkColRow(field.row);
+                this._checkColRow(field.col);
+
+                if (field.accessible) {
                     fillFloor(field.row, field.col, boardAccessibleFieldColor);
-
-                if (field.selected)
+                }
+                if (field.selected) {
                     fillFloor(field.row, field.col, boardSelectedFieldColor);
+                }
 
-                if (field.figure)
+            }
+
+            for (var i in this.fields) {
+                var field = this.fields[i];
+                if (field.figure) {
+                    this._checkColor(field.figure.color);
                     drawFigure(field.row, field.col, field.figure);
-
+                }
             }
 
         }
 
     });
 
-}(jQuery)   );
+}(jQuery));
