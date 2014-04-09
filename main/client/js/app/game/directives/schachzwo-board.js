@@ -3,7 +3,7 @@
 define(['angular', 'jquery', 'schachzwo-board.ui'], function (angular, $) {
 
     angular.module('schachzwoBoard', []).
-        directive('schachzwoBoard', function ($parse, $timeout) {
+        directive('schachzwoBoard', ['$parse', '$timeout', function ($parse, $timeout) {
 
             return {
                 restrict: "A",
@@ -44,7 +44,7 @@ define(['angular', 'jquery', 'schachzwo-board.ui'], function (angular, $) {
                 }
             };
 
-        });
+        }]);
 
 })
 ;
