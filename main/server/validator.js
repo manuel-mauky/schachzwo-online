@@ -3,7 +3,7 @@
 var pInf = Number.POSITIVE_INFINITY;
 var nInf = Number.NEGATIVE_INFINITY;
 
-var spielfeld = [[{color:'white',typ:'mann'},{color:'white',typ:'springer'},{color:'white',typ:'frau'},{color:'white',typ:'glaube'},{},{color:'white',typ:'wissen'},{color:'white',typ:'frau'},{color:'white',typ:'springer'},{color:'white',typ:'mann'}],[{color:'white',typ:'rocks'},{color:'white',typ:'rocks'},{color:'white',typ:'rocks'},{color:'white',typ:'rocks'},{color:'white',typ:'rocks'},{color:'white',typ:'rocks'},{color:'white',typ:'rocks'},{color:'white',typ:'rocks'},{color:'white',typ:'rocks'}],[{},{},{},{},{},{},{},{},{}],[{},{},{},{},{},{},{},{},{}],[{},{},{color:"black",typ:"rocks"},{},{},{},{},{},{}],[{},{},{},{},{},{},{},{},{}],[{},{},{},{},{},{},{},{},{}],[{color:'black',typ:'rocks'},{color:'black',typ:'rocks'},{color:'black',typ:'rocks'},{color:'black',typ:'rocks'},{color:'black',typ:'rocks'},{color:'black',typ:'rocks'},{color:'black',typ:'rocks'},{color:'black',typ:'rocks'},{color:'black',typ:'rocks'}],[{color:'black',typ:'mann'},{color:'black',typ:'springer'},{color:'black',typ:'frau'},{color:'black',typ:'glaube'},{},{color:'black',typ:'wissen'},{color:'black',typ:'frau'},{color:'black',typ:'springer'},{color:'black',typ:'mann'}]];
+var spielfeld = [[{color:'white',typ:'mann'},{color:'white',typ:'springer'},{color:'white',typ:'frau'},{color:'white',typ:'glaube'},{color:'white', typ:'zenit'},{color:'white',typ:'wissen'},{color:'white',typ:'frau'},{color:'white',typ:'springer'},{color:'white',typ:'mann'}],[{color:'white',typ:'rocks'},{color:'white',typ:'rocks'},{color:'white',typ:'rocks'},{color:'white',typ:'rocks'},{color:'white',typ:'rocks'},{color:'white',typ:'rocks'},{color:'white',typ:'rocks'},{color:'white',typ:'rocks'},{color:'white',typ:'rocks'}],[{},{},{},{},{},{},{},{},{}],[{},{},{},{},{},{},{},{},{}],[{},{},{color:"black",typ:"mann"},{},{},{},{},{},{}],[{},{},{},{},{},{},{},{},{}],[{},{},{},{},{},{},{},{},{}],[{color:'black',typ:'rocks'},{color:'black',typ:'rocks'},{color:'black',typ:'rocks'},{color:'black',typ:'rocks'},{color:'black',typ:'rocks'},{color:'black',typ:'rocks'},{color:'black',typ:'rocks'},{color:'black',typ:'rocks'},{color:'black',typ:'rocks'}],[{color:'black',typ:'mann'},{color:'black',typ:'springer'},{color:'black',typ:'frau'},{color:'black',typ:'glaube'},{},{color:'black',typ:'wissen'},{color:'black',typ:'frau'},{color:'black',typ:'springer'},{color:'black',typ:'mann'}]];
 //var spielfeld = [[{color:'weiss',typ:'mann'},{color:'weiss',typ:'springer'},{color:'weiss',typ:'frau'},{color:'weiss',typ:'glaube'},{},{color:'weiss',typ:'wissen'},{color:'weiss',typ:'frau'},{color:'weiss',typ:'springer'},{color:'weiss',typ:'mann'}],[{color:'weiss',typ:'rocks'},{color:'weiss',typ:'rocks'},{color:'weiss',typ:'rocks'},{color:'weiss',typ:'rocks'},{color:'weiss',typ:'rocks'},{color:'weiss',typ:'rocks'},{color:'weiss',typ:'rocks'},{color:'weiss',typ:'rocks'},{color:'weiss',typ:'rocks'}],[{},{},{},{},{},{},{},{},{}],[{},{},{},{},{},{},{},{},{}],[{},{},{},{},{},{},{},{},{}],[{},{},{},{},{},{},{},{},{}],[{},{},{},{},{},{},{},{},{}],[{},{color:'schwarz',typ:'rocks'},{color:'schwarz',typ:'rocks'},{color:'schwarz',typ:'rocks'},{color:'schwarz',typ:'rocks'},{color:'schwarz',typ:'rocks'},{color:'schwarz',typ:'rocks'},{color:'schwarz',typ:'rocks'},{color:'schwarz',typ:'rocks'}],[{color:'schwarz',typ:'mann'},{color:'schwarz',typ:'springer'},{color:'schwarz',typ:'frau'},{color:'schwarz',typ:'glaube'},{},{color:'schwarz',typ:'wissen'},{color:'schwarz',typ:'frau'},{color:'schwarz',typ:'springer'},{color:'schwarz',typ:'mann'}]];
 
 var gamesize = 9;
@@ -28,13 +28,6 @@ var Zustand = {
     PLAY: "play",
     PAUSE: "pause",
     FINISHED: "finished"
-};
-
-var Figur = function(typ,farbe){
-    var figur = new Object();
-    figur.farbe = farbe;
-    figur.typ = typ;
-    return figur;
 };
 
 var isHorizont = function(x,y){
@@ -80,6 +73,51 @@ var getFinDirPos = function(x,y,valid){
         result.push(element);
     }
     return result;
+}
+
+var getThreatenField = function(x,y){
+    var result = new Array();
+    var list = new Array();
+    var current = getFeldInfo(x,y);
+    for(var i =0; i < 9; i++){
+        for(var j =0; j < 9; j++){
+            var element = getFeldInfo(i,j);
+            if(element.typ != FigurTyp.ZENIT && current.color != element.color){ //Zenit würde endlosschleife ergeben
+                list = getRange(i,j);
+                list.forEach(function(e){
+                    if (e.x == x && e.y == y){
+                        if(element.typ == FigurTyp.ROCKS && j == y) return;
+                        element.x = i;
+                        element.y = j;
+                        result.push(element);
+                    }
+                });
+            }
+            else if(element.typ == FigurTyp.ZENIT && current.color != element.color){
+                if(Math.abs(element.x - i) <= 1 && Math.abs(element.y - j) <= 1) {
+                    element.x = i;
+                    element.y = j;
+                    result.push(element);
+                }
+            }
+        }
+    }
+    return result;
+}
+
+var getRange = function(x,y){
+    var current = getFeldInfo(x,y);
+    switch(current.typ)
+    {
+        case FigurTyp.ROCKS: return getRocksRange(x,y);
+        case FigurTyp.MANN: return getMannRange(x,y);
+        case FigurTyp.FRAU: return getFrauRange(x,y);
+        case FigurTyp.SPRINGER: return getSpringerRange(x,y);
+        case FigurTyp.GLAUBE: return getGlaubeRange(x,y);
+        case FigurTyp.WISSEN: return getWissenRange(x,y);
+        case FigurTyp.ZENIT: return getZenitRange(x,y);
+        default: return [];
+    }
 }
 
 var getSpringerRange = function(x,y){
@@ -203,12 +241,25 @@ var getRocksRange = function(x,y){
 }
 
 var getZenitRange = function(x,y){
-    //not implementet jet
+    var valid = [{x:1,y:1},{x:1,y:-1},{x:-1,y:1},{x:-1,y:-1},{x:1,y:0},{x:-1,y:0},{x:0,y:1},{x:0,y:-1}];
+    list = getFinDirPos(x,y,valid);
+    var i = 0;
+    var horizont = gamesize == 9 ? 4 : 3;
+    var threaten = false;
+    if(Math.abs(x - horizont) <= 1 && Math.abs(y - horizont) <= 1){
+        var t = getThreatenField(x, y);
+        console.log(t.length);
+        if(t.length<=0) list.push({x:horizont,y:horizont});
+    }
+    return list;
 }
 
 var test = function(x,y){
     spielfeld[x][y]={color:'white',typ:'glaube',moved:true};
-    var result = getWissenRange(x,y);
+    var result = getZenitRange(x,y);
+    //var result = getThreatenField(x,y)
     spielfeld[x][y]={};
     return result;
 }
+
+//console.log(getThreatenField())
