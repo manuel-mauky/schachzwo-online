@@ -2,7 +2,6 @@
 
 define(['angular'], function (angular) {
 
-
     angular.module('game', []).
         controller('gameCtrl', ['$scope', 'boardProvider', function ($scope, boardProvider) {
 
@@ -27,6 +26,8 @@ define(['angular'], function (angular) {
                     }
                 }
                 $scope.board.push({row: row, col: col, selected: true});
+
+
             };
 
             $scope.switchBoardSize = function () {
