@@ -1,9 +1,9 @@
 'use strict';
 
-define(['angular', 'jquery', 'schachzwo.board.ui'], function (angular, $) {
+define(['angular', 'jquery', 'schachzwo-board.ui'], function (angular, $) {
 
     angular.module('schachzwoBoard', []).
-        directive('schachzwoBoard', function ($parse, $timeout) {
+        directive('schachzwoBoard', ['$parse', '$timeout', function ($parse, $timeout) {
 
             return {
                 restrict: "A",
@@ -25,27 +25,26 @@ define(['angular', 'jquery', 'schachzwo.board.ui'], function (angular, $) {
                         }
                     });
 
-                    if (modelInvoker) {
+                    scope.$watch(boardSizeInvoker, function (val) {
+                        if (val) {
+                            $(element).schachzwo('option', 'boardSize', val);
+                        }
+                    });
 
-                            scope.$watch(boardSizeInvoker, function (val) {
-                                if (val) {
-                                    $(element).schachzwo('option', 'boardSize', val);
-                                }
-                            });
+                    scope.$watch(selfColorInvoker, function (val) {
+                        if (val) {
+                            $(element).schachzwo('option', 'self', val);
+                        }
+                    });
 
-                            scope.$watch(selfColorInvoker, function (val) {
-                                if (val) {
-                                    $(element).schachzwo('option', 'self', val);
-                                }
-                            });
+                    scope.$watchCollection(modelInvoker, function (val) {
+                        $(element).schachzwo("show", val);
+                    });
 
-                        scope.$watchCollection(modelInvoker, function (val) {
-                            $(element).schachzwo("show", val);
-                        });
-                    }
                 }
             };
 
-        });
+        }]);
 
-});
+})
+;
