@@ -249,7 +249,7 @@ var getZenitRange = function(x,y){
     if(Math.abs(x - horizont) <= 1 && Math.abs(y - horizont) <= 1){
         var t = getThreatenField(x, y);
         console.log(t.length);
-        if(t.length<=0) list.push({x:horizont,y:horizont});
+        if(t.length<=0 || (t.length==1 && t[0].typ == FigurTyp.ZENIT && t[0].x == horizont && t[0].y == horizont)) list.push({x:horizont,y:horizont});
     }
     return list;
 }
