@@ -23,17 +23,17 @@ describe("Creation of Figure", function(){
 
         assert.ok(rocks);
         assert.notOk(rocks.color);
-        assert.notOk(rocks.figureType);
+        assert.notOk(rocks.type);
     });
 
 
     it("should be possible with constructor params", function(){
 
-        var man = new model.Figure({color:Color.BLACK, figureType: FigureType.MAN});
+        var man = new model.Figure({color:Color.BLACK, type: FigureType.MAN});
 
         assert.ok(man);
         assert.equal(man.color, Color.BLACK);
-        assert.equal(man.figureType, FigureType.MAN);
+        assert.equal(man.type, FigureType.MAN);
     });
 
 })
@@ -73,18 +73,18 @@ describe("Creation of Match", function(){
                         {
                             figure: {
                                 color: "black",
-                                figureType: "rocks"
+                                type: "rocks"
                             },
-                            file: 0,
-                            rank: 0
+                            column: 0,
+                            row: 0
                         },
                         {
-                            file: 0,
-                            rank: 1
+                            column: 0,
+                            row: 1
                         },
                         {
-                            file: 1,
-                            rank: 1
+                            column: 1,
+                            row: 1
                         }
                     ]
                 }
@@ -112,16 +112,16 @@ describe("Creation of Match", function(){
         assert.equal(match.history.length, 1);
 
 
-        var rocks = new Figure({color:"black", figureType:"rocks"});
+        var rocks = new Figure({color:"black", type:"rocks"});
 
         var snapshot = match.history[0];
         assert.ok(snapshot);
         assert.isArray(snapshot.board);
         assert.equal(snapshot.board.length,3);
 
-        assert.deepEqual(snapshot.board[0], new Field({figure:rocks, file:0, rank:0}));
-        assert.deepEqual(snapshot.board[1], new Field({file:0, rank:1}));
-        assert.deepEqual(snapshot.board[2], new Field({file:1, rank:1}));
+        assert.deepEqual(snapshot.board[0], new Field({figure:rocks, column:0, row:0}));
+        assert.deepEqual(snapshot.board[1], new Field({column:0, row:1}));
+        assert.deepEqual(snapshot.board[2], new Field({column:1, row:1}));
     });
 
 })

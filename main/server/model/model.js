@@ -61,14 +61,14 @@ var Figure = function (json) {
     var json = json || 0;
 
     this.color = json.color;
-    this.figureType = json.figureType;
+    this.type = json.type;
 
     return this;
 }
 
 /**
  * The Field constructor. This represents a single field of the chess board.
- * A field is defined by its file (column) and rank (row) on the board.
+ * A field is defined by its column (column) and row (row) on the board.
  * Every field can have zero or one figure on it.
  *
  * @param json
@@ -80,8 +80,8 @@ var Field = function (json) {
 
     this.figure = json.figure || undefined;
 
-    this.file = json.file;
-    this.rank = json.rank;
+    this.column = json.column;
+    this.row = json.row;
 
     return this;
 }
