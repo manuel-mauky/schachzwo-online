@@ -140,10 +140,10 @@ var Snapshot = function (json) {
             return;
         }
 
-        for (var i = 0; i < size; i++) {
+        for (var row = 0; row < size; row++) {
             var s = "";
-            for (var j = 0; j < size; j++) {
-                var field = this.getField(j, i);
+            for (var column = 0; column < size; column++) {
+                var field = this.getField(column, row);
 
                 if (field.figure) {
                     switch (field.figure.type) {
@@ -221,8 +221,11 @@ var Match = function (json) {
         }, this);
     }
 
-    this.size = json.size || BoardSize.SMALL;
-
+    if(json.size == BoardSize.BIG){
+        this.size = BoardSize.BIG;
+    }else{
+        this.size = BoardSize.SMALL;
+    }
 
     /**
      * Returns the current snapshot of this match.
