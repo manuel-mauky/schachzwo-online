@@ -13,6 +13,7 @@
             boardSize: 9,
             self: Color.BLACK,
             boardBorderColor: "#ED8641",
+            boardCaptionColor: "#000000",
             boardBlackFieldColor: "#BE5003",
             boardWhiteFieldColor: "#F8D48A",
             boardSelectedFieldColor: "rgba(61,158,255,0.8)",
@@ -94,6 +95,7 @@
             var boardSize = this.options.boardSize;
             var self = this.options.self;
             var boardBorderColor = this.options.boardBorderColor;
+            var boardCaptionColor = this.options.boardCaptionColor;
             var boardBlackFieldColor = this.options.boardBlackFieldColor;
             var boardWhiteFieldColor = this.options.boardWhiteFieldColor;
             var boardSelectedFieldColor = this.options.boardSelectedFieldColor;
@@ -242,6 +244,22 @@
                     context.stroke();
                 };
 
+                var drawCaptions = function () {
+                    var fontSize = border - 4;
+                    context.textBaseline = "top";
+                    context.textAlign = "center";
+                    context.fillStyle = boardCaptionColor;
+                    context.font = "bold " + fontSize + "px Arial";
+
+                    for (var i = 0; i < boardSize; i++) {
+                        context.fillText(String.fromCharCode(65 + i), x0 + (fieldSize * i) + fieldSize / 2, y0 - border + (border - fontSize) / 2 - 1);
+                        context.fillText(String.fromCharCode(65 + i), x0 + (fieldSize * i) + fieldSize / 2, y0 + fieldSize * boardSize + (border - fontSize) / 2 - 1);
+                        context.fillText(String.fromCharCode(48 + (boardSize - i)), x0 - border / 2, y0 + (fieldSize * i) + (fieldSize - fontSize) / 2);
+                        context.fillText(String.fromCharCode(48 + (boardSize - i)), x0 + fieldSize * boardSize + border / 2, y0 + (fieldSize * i) + (fieldSize - fontSize) / 2);
+                    }
+
+                };
+
                 context.fillStyle = boardBorderColor;
                 rect(x0 - border, y0 - border, boardWidth + 2 * border, boardWidth + 2 * border);
 
@@ -252,6 +270,7 @@
                 }
 
                 drawCenter();
+                drawCaptions();
             }();
 
             for (var i in this.fields) {
