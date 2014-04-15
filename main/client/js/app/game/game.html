@@ -6,7 +6,7 @@
             <div style="width: 100%; min-height: 600px"
                  schachzwo-board  ng-model="board"
                  board-size = "boardSize"
-                 on-select="onSelect(row, col)"></div>
+                 on-select="onSelect(row, column)"></div>
 
 
             <a href="" ng-click="switchBoardSize()">board size {{boardSize === 7 ? 9 : 7}}</a>

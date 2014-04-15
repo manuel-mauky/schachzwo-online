@@ -17,7 +17,7 @@ define(['angular'], function (angular) {
 
             };
 
-            $scope.onSelect = function (row, col) {
+            $scope.onSelect = function (row, column) {
 
                 for (var i in  $scope.board) {
                     if ($scope.board[i].selected) {
@@ -25,7 +25,7 @@ define(['angular'], function (angular) {
                         break;
                     }
                 }
-                $scope.board.push({row: row, col: col, selected: true});
+                $scope.board.push({row: row, column: column, selected: true});
 
 
             };
