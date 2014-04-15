@@ -102,6 +102,8 @@ describe("Creation of Match", function(){
 
         assert.deepEqual(match.playerWhite,max);
         assert.deepEqual(match.playerBlack, john);
+        assert.instanceOf(match.playerBlack, Player);
+        assert.instanceOf(match.playerWhite, Player);
 
         assert.equal(match.state, State.PLAYING);
 
@@ -122,6 +124,43 @@ describe("Creation of Match", function(){
         assert.deepEqual(snapshot.board[0], new Field({figure:rocks, column:0, row:0}));
         assert.deepEqual(snapshot.board[1], new Field({column:0, row:1}));
         assert.deepEqual(snapshot.board[2], new Field({column:1, row:1}));
+
+        assert.instanceOf(snapshot.board[0].figure, Figure);
     });
 
+})
+
+describe("GetField accessor function of Snapshot", function(){
+
+    var rocks1 = new Figure({color:Color.BLACK,type:FigureType.ROCKS});
+    var rocks2 = new Figure({color:Color.WHITE,type:FigureType.ROCKS});
+
+    var snapshot = new Snapshot();
+    snapshot.board.push(new Field({column:0,row:0}));
+    snapshot.board.push(new Field({column:0,row:1}));
+    snapshot.board.push(new Field({column:0,row:2,figure:rocks1}));
+    snapshot.board.push(new Field({column:1,row:0}));
+    snapshot.board.push(new Field({column:1,row:1}));
+    snapshot.board.push(new Field({column:1,row:2}));
+    snapshot.board.push(new Field({column:2,row:0, figure:rocks2}));
+    snapshot.board.push(new Field({column:2,row:1}));
+    snapshot.board.push(new Field({column:2,row:2}));
+
+    it("should return the properly field", function(){
+
+        var x0y0 = snapshot.getField(0,0);
+        assert.ok(x0y0);
+        assert.instanceOf(x0y0,Field);
+
+
+        var x0y2 = snapshot.getField(0,2);
+        assert.ok(x0y2);
+        assert.deepEqual(x0y2.figure, rocks1);
+
+    });
+
+    it("should return undefined for out-of-bounds coordinates", function(){
+        var x3y0 = snapshot.getField(3,0);
+        assert.isUndefined(x3y0);
+    })
 })

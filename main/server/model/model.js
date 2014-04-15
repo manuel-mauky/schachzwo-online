@@ -78,7 +78,11 @@ var Figure = function (json) {
 var Field = function (json) {
     var json = json || 0;
 
-    this.figure = json.figure || undefined;
+    if(json.figure){
+        this.figure = new Figure(json.figure);
+    }else{
+        this.figure = undefined;
+    }
 
     this.column = json.column;
     this.row = json.row;
@@ -105,6 +109,72 @@ var Snapshot = function (json) {
             this.board.push(new Field(entry));
         }, this);
     }
+
+    /**
+     * @param column
+     * @param row
+     * @returns the field or undefined if no field with this coordinates could be found.
+     */
+    this.getField = function(column, row){
+        for(var i=0 ; i<this.board.length ; i++){
+            var field = this.board[i];
+            if(field.column == column && field.row == row){
+                return field;
+            }
+        }
+        return undefined;
+    };
+
+    /**
+     * This method can be used for debugging. It prints the current board
+     * with console.log.
+     */
+    this.debugPrint = function(){
+
+        if(this.board.length == 49){
+            var size = 7;
+        }else if(this.board.length == 81){
+            var size = 9;
+        } else {
+            return;
+        }
+
+        for(var i=0 ; i<size ; i++){
+            var s = "";
+            for(var j=0 ; j<size ; j++){
+                var field = this.getField(j,i);
+
+                if(field.figure){
+                    switch(field.figure.type){
+                        case FigureType.ROCKS:
+                            s += "r ";
+                            break;
+                        case FigureType.MAN:
+                            s += "m ";
+                            break;
+                        case FigureType.WOMAN:
+                            s += "w ";
+                            break;
+                        case FigureType.KNIGHT:
+                            s += "s ";
+                            break;
+                        case FigureType.KNOWLEDGE:
+                            s += "k ";
+                            break;
+                        case FigureType.FAITH:
+                            s += "f ";
+                            break;
+                        case FigureType.ZENITH:
+                            s += "z ";
+                            break;
+                    }
+                } else {
+                    s += "  ";
+                }
+            }
+            console.log(s);
+        }
+    };
 
     return this;
 }
@@ -136,8 +206,8 @@ var Player = function (json) {
 var Match = function (json) {
     var json = json || 0;
 
-    this.playerWhite = json.playerWhite;
-    this.playerBlack = json.playerBlack;
+    this.playerWhite = new Player(json.playerWhite);
+    this.playerBlack = new Player(json.playerBlack);
 
     this.matchId = json.matchId;
     this.state = json.state || State.READY;
