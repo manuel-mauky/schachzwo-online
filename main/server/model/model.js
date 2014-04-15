@@ -125,6 +125,7 @@ var Snapshot = function (json) {
         return undefined;
     };
 
+
     /**
      * This method can be used for debugging. It prints the current board
      * with console.log.
@@ -221,6 +222,19 @@ var Match = function (json) {
     }
 
     this.size = json.size || BoardSize.SMALL;
+
+
+    /**
+     * Returns the current snapshot of this match.
+     */
+    this.getCurrentSnapshot = function(){
+
+        if(!this.history || this.history.length === 0){
+            throw new Error("There is no current snapshot in the history.");
+        }
+
+        return this.history[this.history.length -1];
+    }
 
     return this;
 }

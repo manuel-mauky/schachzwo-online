@@ -15,6 +15,8 @@ var State = model.State;
 var Match = model.Match;
 var Snapshot = model.Snapshot;
 
+var modelFactory = require("./model.factory");
+
 describe("Creation of Figure", function () {
 
     it("should be possible to with empty constructor", function () {
@@ -163,4 +165,50 @@ describe("GetField accessor function of Snapshot", function () {
         var x3y0 = snapshot.getField(3, 0);
         assert.isUndefined(x3y0);
     })
+});
+
+
+describe("GetCurrentSnapshot accessor function of Match", function(){
+
+    it("should return the first snapshot for a fresh match", function(){
+        // modelFactory creates a match which is ready to be played. there is one snapshot with the start lineup.
+        var match = modelFactory.createMatch(BoardSize.SMALL);
+        assert.equal(match.history.length, 1);
+
+
+        var current = match.getCurrentSnapshot();
+
+        assert.ok(current);
+        assert.equal(current, match.history[0]);
+    });
+
+    it("should return the last snapshot when there are more then one", function(){
+
+        var match = modelFactory.createMatch(BoardSize.SMALL);
+
+        var snapshot = modelFactory.createStartSnapshot(BoardSize.SMALL);
+
+        // move the rocks from 1,1 to 1,2
+        snapshot.getField(1,2).figure = snapshot.getField(1,1).figure;
+        snapshot.getField(1,1).figure = undefined;
+
+
+        match.history.push(snapshot);
+
+
+        var current = match.getCurrentSnapshot();
+
+        assert.ok(current);
+        assert.isUndefined(current.getField(1,1).figure);
+        assert.ok(current.getField(1,2).figure);
+    });
+
+    it("should throw an error when there is no snapshot available", function(){
+
+        var match = new Match();
+
+        assert.throws(function(){
+            match.getCurrentSnapshot();
+        });
+    });
 });
