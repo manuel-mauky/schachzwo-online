@@ -78,9 +78,9 @@ var Figure = function (json) {
 var Field = function (json) {
     var json = json || 0;
 
-    if(json.figure){
+    if (json.figure) {
         this.figure = new Figure(json.figure);
-    }else{
+    } else {
         this.figure = undefined;
     }
 
@@ -115,10 +115,10 @@ var Snapshot = function (json) {
      * @param row
      * @returns the field or undefined if no field with this coordinates could be found.
      */
-    this.getField = function(column, row){
-        for(var i=0 ; i<this.board.length ; i++){
+    this.getField = function (column, row) {
+        for (var i = 0; i < this.board.length; i++) {
             var field = this.board[i];
-            if(field.column == column && field.row == row){
+            if (field.column == column && field.row == row) {
                 return field;
             }
         }
@@ -129,23 +129,23 @@ var Snapshot = function (json) {
      * This method can be used for debugging. It prints the current board
      * with console.log.
      */
-    this.debugPrint = function(){
+    this.debugPrint = function () {
 
-        if(this.board.length == 49){
+        if (this.board.length == 49) {
             var size = 7;
-        }else if(this.board.length == 81){
+        } else if (this.board.length == 81) {
             var size = 9;
         } else {
             return;
         }
 
-        for(var i=0 ; i<size ; i++){
+        for (var i = 0; i < size; i++) {
             var s = "";
-            for(var j=0 ; j<size ; j++){
-                var field = this.getField(j,i);
+            for (var j = 0; j < size; j++) {
+                var field = this.getField(j, i);
 
-                if(field.figure){
-                    switch(field.figure.type){
+                if (field.figure) {
+                    switch (field.figure.type) {
                         case FigureType.ROCKS:
                             s += "r ";
                             break;
