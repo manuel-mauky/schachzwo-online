@@ -23,14 +23,10 @@ describe("getRangeFor", function () {
     var match;
     var board;
 
-    beforeEach(function () {
-        match = modelFactory.createMatch(model.BoardSize.SMALL);
-        board = match.history[0];
-        accessor = new BoardAccessor(match);
-    });
-
-
     it("should return an empty array when there is no figure on this position", function () {
+        match = modelFactory.createMatch(model.BoardSize.SMALL);
+        accessor = new BoardAccessor(match);
+
         var range = accessor.getRangeFor(2, 2); // empty field
 
         assert.isArray(range);
@@ -39,6 +35,12 @@ describe("getRangeFor", function () {
 
 
     describe("Rocks", function () {
+
+        beforeEach(function () {
+            match = modelFactory.createMatch(model.BoardSize.SMALL);
+            board = match.history[0];
+            accessor = new BoardAccessor(match);
+        });
 
         it("should be one field upwards for black from start", function () {
             var range = accessor.getRangeFor(0, 5);  // left black rocks
@@ -164,7 +166,239 @@ describe("getRangeFor", function () {
         });
 
     });
-})
+
+    describe.skip("Man", function (){
+
+        beforeEach(function () {
+            match = modelFactory.createMatch(model.BoardSize.SMALL);
+            board = match.history[0];
+            accessor = new BoardAccessor(match);
+        });
+
+        it("should be empty at the begin as there are figures around the man", function(){
+            throw new Error("not tested yet");
+        });
+
+        it("should include the row and column", function(){
+            throw new Error("not tested yet");
+        });
+
+
+        it("should not include fields behind an own or enemy figure in the way", function(){
+            throw new Error("not tested yet");
+        });
+
+        it("should include diagonal fields in distance of one", function(){
+            throw new Error("not tested yet");
+        });
+
+        it("should not include fields with your own figures", function(){
+            throw new Error("not tested yet");
+        });
+
+        it("should include figures of the enemy", function(){
+            throw new Error("not tested yet");
+        });
+
+        it("should not include the origin", function(){
+            throw new Error("not tested yet");
+        });
+
+        it("should include two fields diagonal from the start position when it wasn't moved yet", function(){
+            throw new Error("not tested yet");
+        });
+
+        it("should only include those two-distance-diagonal fields that aren't blocked by enemy figures", function(){
+           // the rules say that from the start the man can go 2 fields in every direction but only
+           // when there is no figure in the way.
+            throw new Error("not tested yet");
+        });
+
+
+        it("should include fields behind the origin", function(){
+            throw new Error("not tested yet");
+        })
+
+    });
+
+    describe.skip("Woman", function() {
+        beforeEach(function () {
+            match = modelFactory.createMatch(model.BoardSize.SMALL);
+            board = match.history[0];
+            accessor = new BoardAccessor(match);
+        });
+
+        it("should be empty at the begin as there are figures around the woman", function(){
+            throw new Error("not tested yet");
+        });
+
+        it("should include the diagonals", function(){
+            throw new Error("not tested yet");
+        });
+
+
+        it("should not include fields behind an own or enemy figure in the way", function(){
+            throw new Error("not tested yet");
+        });
+
+        it("should include vertical and horizontal fields in distance of one", function(){
+            throw new Error("not tested yet");
+        });
+
+        it("should not include fields with your own figures", function(){
+            throw new Error("not tested yet");
+        });
+
+        it("should include figures of the enemy", function(){
+            throw new Error("not tested yet");
+        });
+
+        it("should not include the origin", function(){
+            throw new Error("not tested yet");
+        });
+
+        it("should include fields behind the origin", function(){
+            throw new Error("not tested yet");
+        })
+    });
+
+    describe.skip("Knight", function() {
+        beforeEach(function () {
+            match = modelFactory.createMatch(model.BoardSize.SMALL);
+            board = match.history[0];
+            accessor = new BoardAccessor(match);
+        });
+
+        it("should include the typical knight positions", function(){
+            throw new Error("not tested yet");
+        });
+
+        it("should not include fields with your own figures", function(){
+            throw new Error("not tested yet");
+        });
+
+        it("should include figures of the enemy", function(){
+            throw new Error("not tested yet");
+        });
+
+        it("should not include the origin", function(){
+            throw new Error("not tested yet");
+        })
+
+    });
+
+    describe.skip("Zenith", function() {
+        beforeEach(function () {
+            match = modelFactory.createMatch(model.BoardSize.SMALL);
+            board = match.history[0];
+            accessor = new BoardAccessor(match);
+        });
+
+        it("should include one field in every direction", function(){
+            throw new Error("not tested yet");
+        });
+
+        it("should include the origin", function(){
+            throw new Error("not tested yet");
+        });
+
+        it("should include the origin even if the other zenith is already there", function(){
+            throw new Error("not tested yet");
+        });
+
+        it("should not include fields where the zenith would be in check", function(){
+            throw new Error("not tested yet");
+        });
+
+        it("should not include the origin when the zenith is in check", function() {
+            throw new Error("not tested yet");
+        });
+
+        it("should include the origin even if the origin would be threatened by the enemy", function(){
+            throw new Error("not tested yet");
+        });
+
+        it("should include field with enemy figures", function(){
+            throw new Error("not tested yet");
+        });
+
+        it("should not include fields with the enemy zenith", function(){
+            throw new Error("not tested yet");
+        });
+
+        it("should not include fields with own figures", function(){
+            throw new Error("not tested yet");
+        });
+    });
+
+    describe.skip("Knowledge", function() {
+        beforeEach(function () {
+            match = modelFactory.createMatch(model.BoardSize.BIG);
+            board = match.history[0];
+            accessor = new BoardAccessor(match);
+        });
+
+        it("should include the diagonals", function(){
+            throw new Error("not tested yet");
+        });
+
+        it("should include the row and column", function(){
+            throw new Error("not tested yet");
+        });
+
+        it("should include fields with enemy figures", function(){
+            throw new Error("not tested yet");
+        });
+
+        it("should not include fields with own figures", function(){
+            throw new Error("not tested yet");
+        });
+
+        it("should not include fields behind enemy or own figures", function(){
+            throw new Error("not tested yet");
+        });
+
+        it("should not include the origin", function(){
+            throw new Error("not tested yet");
+        });
+
+        it("should include fields behind the origin", function(){
+            throw new Error("not tested yet");
+        });
+
+
+    });
+
+    describe.skip("Faith", function() {
+        beforeEach(function () {
+            match = modelFactory.createMatch(model.BoardSize.BIG);
+            board = match.history[0];
+            accessor = new BoardAccessor(match);
+        });
+
+
+        it("should include a 5x5 matrix on an empty board", function(){
+            throw new Error("not tested yet");
+        });
+
+        it("should only include those fields that can be reaced by two moves", function(){
+            throw new Error("not tested yet");
+        });
+
+        it("should not include the origin", function(){
+            throw new Error("not tested yet");
+        });
+
+        it("should include fields with enemy figures", function(){
+            throw new Error("not tested yet");
+        });
+
+        it("should not include fields with own figures", function(){
+            throw new Error("not tested yet");
+        });
+
+    });
+});
 
 describe("Instantiation of BoardAccessor", function () {
 
