@@ -14,6 +14,8 @@ var Player = model.Player;
 var State = model.State;
 var Match = model.Match;
 var Snapshot = model.Snapshot;
+var Position = model.Position;
+var Move = model.Move;
 
 var modelFactory = require("./model.factory");
 
@@ -71,22 +73,20 @@ describe("Creation of Match", function () {
             size: 7,
             history: [
                 {
-                    board: [
+                    move: [
                         {
                             figure: {
                                 color: "black",
                                 type: "rocks"
                             },
-                            column: 0,
-                            row: 0
-                        },
-                        {
-                            column: 0,
-                            row: 1
-                        },
-                        {
-                            column: 1,
-                            row: 1
+                            from: {
+                                column: 0,
+                                row: 0
+                                },
+                            to: {
+                                column: 1,
+                                row: 1
+                            }
                         }
                     ]
                 }
@@ -118,17 +118,17 @@ describe("Creation of Match", function () {
 
         var rocks = new Figure({color: "black", type: "rocks"});
 
-        var snapshot = match.history[0];
-        assert.ok(snapshot);
-        assert.isArray(snapshot.board);
-        assert.equal(snapshot.board.length, 3);
+        var move = match.history;
+        assert.ok(move);
+        assert.isArray(move);
+        assert.equal(move.length, 1);
 
-        assert.deepEqual(snapshot.board[0], new Field({figure: rocks, column: 0, row: 0}));
-        assert.deepEqual(snapshot.board[1], new Field({column: 0, row: 1}));
-        assert.deepEqual(snapshot.board[2], new Field({column: 1, row: 1}));
+        assert.deepEqual(move[0], new Move({figure: rocks, from:{column: 0, row: 0},to:{column: 1, row: 1}}));
 
-        assert.instanceOf(snapshot.board[0].figure, Figure);
     });
+    assert.instanceOf(move[0].figure, Figure);
+    assert.instanceOf(move[0].from, Position);
+    assert.instanceOf(move[0].to, Position);
 
 });
 

@@ -84,11 +84,38 @@ var Field = function (json) {
         this.figure = undefined;
     }
 
-    this.column = json.column;
-    this.row = json.row;
+    this.position = new Position(json.position);
 
     return this;
 }
+
+/**
+ * The Position Constructor. This represents a Position on the Board
+ * @param json
+ * @return {Position}
+ * @constructor
+ */
+var Position = function(json){
+    var column = json.column;
+    var row = json.row;
+    return this;
+}
+
+/**
+ * The Move constructor. This represents a Move on the Board in the History
+ * @param json
+ * @return {Move}
+ * @constructor
+ */
+var Move = function(json){
+    var json = json || 0;
+
+    var figure = new Figure(json.figure);
+    var from = new Position(json.from);
+    var to = new Position(json.to);
+    return this;
+}
+
 
 /**
  * The Snapshot constructor. This represents a single point in time of the match.
@@ -125,6 +152,9 @@ var Snapshot = function (json) {
         return undefined;
     };
 
+    this.getField = function(position){
+        return this.getField(position.column,position.row);
+    }
 
     /**
      * This method can be used for debugging. It prints the current board
@@ -214,10 +244,10 @@ var Match = function (json) {
     this.state = json.state || State.READY;
 
     this.history = new Array();
-    // for every json-entry create a snapshot instance.
+    // for every json-entry create a move instance.
     if (Array.isArray(json.history)) {
         json.history.forEach(function (entry) {
-            this.history.push(new Snapshot(entry));
+            this.history.push(new Move(entry));
         }, this);
     }
 
@@ -227,16 +257,30 @@ var Match = function (json) {
         this.size = BoardSize.SMALL;
     }
 
+
+    this.generateSnapshot = function(number){
+        if(!this.history || this.history.length < number ){
+            throw new Error("There is no move in the history for this number.");
+        }
+        var modelFactory = require("./model.factory");
+        var snapshot = modelFactory.createEmptyMatch(this.size);
+
+        for(var i = 0; i < number; i++){
+            var move = this.history[i];
+            var fieldFrom = snapshot.getField(move.from);
+            var fieldTo = snapshot.getField(move.to);
+            if(fieldFrom.figure != move.figure) throw new Error("This Move was invalid!");
+            fieldTo.figure = fieldFrom.figure;
+            fieldFrom.figure = undefined;
+        }
+        return snapshot;
+    }
+
     /**
      * Returns the current snapshot of this match.
      */
     this.getCurrentSnapshot = function(){
-
-        if(!this.history || this.history.length === 0){
-            throw new Error("There is no current snapshot in the history.");
-        }
-
-        return this.history[this.history.length -1];
+        return this.generateSnapshot(this.history.length);
     }
 
     return this;
@@ -252,3 +296,5 @@ module.exports.Field = Field;
 module.exports.Snapshot = Snapshot;
 module.exports.Player = Player;
 module.exports.Match = Match;
+module.exports.Position = Position;
+module.exports.Move = Move;
