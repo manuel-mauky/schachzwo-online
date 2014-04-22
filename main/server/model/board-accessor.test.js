@@ -38,7 +38,7 @@ describe("getRangeFor", function () {
 
         beforeEach(function () {
             match = modelFactory.createMatch(model.BoardSize.SMALL);
-            board = match.history[0];
+            board = match.getCurrentSnapshot();
             accessor = new BoardAccessor(match);
         });
 
@@ -171,7 +171,7 @@ describe("getRangeFor", function () {
 
         beforeEach(function () {
             match = modelFactory.createEmptyMatch(model.BoardSize.SMALL);
-            board = match.history[0];
+            board = match.getCurrentSnapshot();
             accessor = new BoardAccessor(match);
         });
 
@@ -311,178 +311,433 @@ describe("getRangeFor", function () {
 
     describe.skip("Woman", function() {
         beforeEach(function () {
-            match = modelFactory.createMatch(model.BoardSize.SMALL);
-            board = match.history[0];
+            match = modelFactory.createEmptyMatch(model.BoardSize.SMALL);
+            board = match.getCurrentSnapshot();
             accessor = new BoardAccessor(match);
         });
 
         it("should be empty at the begin as there are figures around the woman", function(){
-            throw new Error("not tested yet");
+            match = modelFactory.createMatch(model.BoardSize.SMALL); // for this test we use a board with start lineup of figures
+            board = match.getCurrentSnapshot();
+            accessor = new BoardAccessor(match);
+
+            // at the start the zeniths are placed on the origin. So in the first draw we need to place the zeniths on there start position.
+            board.getField(3, 6).figure = new Figure({type:FigureType.ZENITH, color: Color.BLACK});
+
+
+            var range = accessor.getRangeFor(2,6);
+
+            assert.isArray(range);
+            assert.equal(range.length, 0);
         });
 
         it("should include the diagonals", function(){
-            throw new Error("not tested yet");
+            board.getField(1,4).figure = new Figure({type:FigureType.WOMAN, color: Color.BLACK});
+
+            var range = accessor.getRangeFor(1,4);
+
+            assert.include(range, {column: 0, row: 3});
+            assert.include(range, {column: 2, row: 5});
+            assert.include(range, {column: 3, row: 6});
+
+            assert.include(range, {column: 0, row: 5});
+            assert.include(range, {column: 2, row: 3});
+            assert.include(range, {column: 3, row: 2});
+            assert.include(range, {column: 4, row: 1});
+            assert.include(range, {column: 5, row: 0});
         });
 
 
         it("should not include fields behind an own or enemy figure in the way", function(){
-            throw new Error("not tested yet");
+
+            board.getField(1, 4).figure = new Figure({type: FigureType.WOMAN, color: Color.BLACK});
+
+            board.getField(3, 2).figure = new Figure({type: FigureType.ROCKS, color: Color.BLACK});
+            board.getField(2, 5).figure = new Figure({type: FigureType.ROCKS, color: Color.WHITE});
+
+
+            var range = accessor.getRangeFor(1, 4);
+
+            assert.notInclude(range, {column: 3, row: 6});
+
+            assert.notInclude(range, {column: 4, row: 1});
+            assert.notInclude(range, {column: 5, row: 0});
         });
 
         it("should include vertical and horizontal fields in distance of one", function(){
-            throw new Error("not tested yet");
+            board.getField(1, 4).figure = new Figure({type: FigureType.WOMAN, color: Color.BLACK});
+
+            var range = accessor.getRangeFor(1, 4);
+
+
+            assert.include(range, {column: 0, row: 4});
+            assert.include(range, {column: 2, row: 4});
+            assert.include(range, {column: 1, row: 3});
+            assert.include(range, {column: 1, row: 5});
+
         });
 
         it("should not include fields with your own figures", function(){
-            throw new Error("not tested yet");
+            board.getField(1, 4).figure = new Figure({type: FigureType.WOMAN, color: Color.BLACK});
+            board.getField(3, 2).figure = new Figure({type: FigureType.ROCKS, color: Color.BLACK});
+
+            var range = accessor.getRangeFor(1, 4);
+
+            assert.notInclude(range, {column: 3, row:2});
         });
 
         it("should include figures of the enemy", function(){
-            throw new Error("not tested yet");
+            board.getField(1, 4).figure = new Figure({type: FigureType.WOMAN, color: Color.BLACK});
+            board.getField(3, 2).figure = new Figure({type: FigureType.ROCKS, color: Color.WHITE});
+
+            var range = accessor.getRangeFor(1, 4);
+
+            assert.include(range, {column: 3, row:2});
         });
 
         it("should not include the origin", function(){
-            throw new Error("not tested yet");
+            board.getField(1, 5).figure = new Figure({type: FigureType.WOMAN, color: Color.BLACK});
+            var range = accessor.getRangeFor(1, 5);
+
+            assert.notInclude(range, {column: 3, row: 3});
         });
 
         it("should include fields behind the origin", function(){
-            throw new Error("not tested yet");
+            board.getField(1, 5).figure = new Figure({type: FigureType.WOMAN, color: Color.BLACK});
+            var range = accessor.getRangeFor(1, 5);
+
+            assert.include(range, {column: 4, row: 2});
+            assert.include(range, {column: 5, row: 1});
+            assert.include(range, {column: 6, row: 0});
         })
     });
 
     describe.skip("Knight", function() {
         beforeEach(function () {
-            match = modelFactory.createMatch(model.BoardSize.SMALL);
-            board = match.history[0];
+            match = modelFactory.createEmptyMatch(model.BoardSize.SMALL);
+            board = match.getCurrentSnapshot();
             accessor = new BoardAccessor(match);
         });
 
         it("should include the typical knight positions", function(){
-            throw new Error("not tested yet");
+
+            board.getField(2, 4).figure = new Figure({type: FigureType.KNIGHT, color: Color.BLACK});
+
+            var range = accessor.getRangeFor(2, 4);
+
+            assert.include(range, {column: 1, row: 2});
+            assert.include(range, {column: 3, row: 2});
+            assert.include(range, {column: 0, row: 3});
+            assert.include(range, {column: 4, row: 3});
+            assert.include(range, {column: 0, row: 5});
+            assert.include(range, {column: 1, row: 6});
+            assert.include(range, {column: 3, row: 6});
+            assert.include(range, {column: 4, row: 5});
+
         });
 
         it("should not include fields with your own figures", function(){
-            throw new Error("not tested yet");
+            board.getField(2, 4).figure = new Figure({type: FigureType.KNIGHT, color: Color.BLACK});
+
+            board.getField(1, 2).figure = new Figure({type: FigureType.ROCKS, color: Color.BLACK});
+
+
+
+            var range = accessor.getRangeFor(2, 4);
+
+            assert.notInclude(range, {column: 1, row:2});
         });
 
         it("should include figures of the enemy", function(){
-            throw new Error("not tested yet");
+            board.getField(2, 4).figure = new Figure({type: FigureType.KNIGHT, color: Color.BLACK});
+
+            board.getField(1, 2).figure = new Figure({type: FigureType.ROCKS, color: Color.WHITE});
+
+
+            var range = accessor.getRangeFor(2, 4);
+
+            assert.include(range, {column: 1, row:2});
         });
 
         it("should not include the origin", function(){
-            throw new Error("not tested yet");
+            board.getField(2, 5).figure = new Figure({type: FigureType.KNIGHT, color: Color.BLACK});
+
+            var range = accessor.getRangeFor(2, 4);
+
+            assert.notInclude(range, {column: 3, row: 3});
         })
 
     });
 
     describe.skip("Zenith", function() {
         beforeEach(function () {
-            match = modelFactory.createMatch(model.BoardSize.SMALL);
-            board = match.history[0];
+            match = modelFactory.createEmptyMatch(model.BoardSize.SMALL);
+            board = match.getCurrentSnapshot();
             accessor = new BoardAccessor(match);
         });
 
         it("should include one field in every direction", function(){
-            throw new Error("not tested yet");
+            board.getField(1, 4).figure = new Figure({type: FigureType.ZENITH, color: Color.BLACK});
+
+            var range = accessor.getRangeFor(1, 4);
+
+            assert.include(range, {column: 0, row: 3});
+            assert.include(range, {column: 1, row: 3});
+            assert.include(range, {column: 2, row: 3});
+
+            assert.include(range, {column: 0, row: 4});
+            assert.include(range, {column: 2, row: 4});
+
+            assert.include(range, {column: 0, row: 5});
+            assert.include(range, {column: 1, row: 5});
+            assert.include(range, {column: 2, row: 5});
         });
 
         it("should include the origin", function(){
-            throw new Error("not tested yet");
+            board.getField(2, 4).figure = new Figure({type: FigureType.ZENITH, color: Color.BLACK});
+
+            var range = accessor.getRangeFor(2, 4);
+
+            assert.include(range, {column: 3, row: 3});
         });
 
         it("should include the origin even if the other zenith is already there", function(){
-            throw new Error("not tested yet");
+            board.getField(2, 4).figure = new Figure({type: FigureType.ZENITH, color: Color.BLACK});
+            board.getField(3, 3).figure = new Figure({type: FigureType.ZENITH, color: Color.WHITE});
+
+            var range = accessor.getRangeFor(2, 4);
+
+            assert.include(range, {column: 3, row: 3});
         });
 
         it("should not include fields where the zenith would be in check", function(){
-            throw new Error("not tested yet");
+            board.getField(3, 5).figure = new Figure({type: FigureType.ZENITH, color: Color.BLACK});
+            board.getField(0, 4).figure = new Figure({type: FigureType.MAN, color: Color.WHITE});
+
+            var range = accessor.getRangeFor(3, 4);
+
+            assert.notInclude(range, {column: 2, row: 4});
+            assert.notInclude(range, {column: 3, row: 4});
+            assert.notInclude(range, {column: 4, row: 4});
         });
 
         it("should not include the origin when the zenith is in check", function() {
-            throw new Error("not tested yet");
+            board.getField(3, 4).figure = new Figure({type: FigureType.ZENITH, color: Color.BLACK});
+            board.getField(0, 4).figure = new Figure({type: FigureType.MAN, color: Color.WHITE});
+
+            var range = accessor.getRangeFor(3, 4);
+
+            assert.notInclude(range, {column: 3, row: 3});
         });
 
         it("should include the origin even if the origin would be threatened by the enemy", function(){
-            throw new Error("not tested yet");
+            board.getField(3, 4).figure = new Figure({type: FigureType.ZENITH, color: Color.BLACK});
+            board.getField(0, 3).figure = new Figure({type: FigureType.MAN, color: Color.WHITE});
+
+            var range = accessor.getRangeFor(3, 4);
+
+            assert.include(range, {column: 3, row: 3});
         });
 
         it("should include field with enemy figures", function(){
-            throw new Error("not tested yet");
-        });
+            board.getField(3, 4).figure = new Figure({type: FigureType.ZENITH, color: Color.BLACK});
+            board.getField(2, 4).figure = new Figure({type: FigureType.ROCKS, color: Color.WHITE});
 
-        it("should not include fields with the enemy zenith", function(){
-            throw new Error("not tested yet");
+            var range = accessor.getRangeFor(3, 4);
+
+            assert.include(range, {column: 2, row: 4});
         });
 
         it("should not include fields with own figures", function(){
-            throw new Error("not tested yet");
+            board.getField(3, 4).figure = new Figure({type: FigureType.ZENITH, color: Color.BLACK});
+            board.getField(2, 4).figure = new Figure({type: FigureType.ROCKS, color: Color.BLACK});
+
+            var range = accessor.getRangeFor(3, 4);
+
+            assert.notInclude(range, {column: 2, row: 4});
         });
     });
 
     describe.skip("Knowledge", function() {
         beforeEach(function () {
-            match = modelFactory.createMatch(model.BoardSize.BIG);
-            board = match.history[0];
+            match = modelFactory.createEmptyMatch(model.BoardSize.BIG);
+            board = match.getCurrentSnapshot();
             accessor = new BoardAccessor(match);
         });
 
         it("should include the diagonals", function(){
-            throw new Error("not tested yet");
+            board.getField(1,4).figure = new Figure({type:FigureType.KNOWLEDGE, color: Color.BLACK});
+
+            var range = accessor.getRangeFor(1,4);
+
+            assert.include(range, {column: 0, row: 3});
+            assert.include(range, {column: 2, row: 5});
+            assert.include(range, {column: 3, row: 6});
+
+            assert.include(range, {column: 0, row: 5});
+            assert.include(range, {column: 2, row: 3});
+            assert.include(range, {column: 3, row: 2});
+            assert.include(range, {column: 4, row: 1});
+            assert.include(range, {column: 5, row: 0});
         });
 
         it("should include the row and column", function(){
-            throw new Error("not tested yet");
+
+            board.getField(1, 4).figure = new Figure({type:FigureType.KNOWLEDGE, color: Color.BLACK});
+
+            var range = accessor.getRangeFor(1,4);
+
+            assert.isArray(range);
+
+            // include the column without the current field (1,4)
+            assert.include(range, {column: 1, row: 0});
+            assert.include(range, {column: 1, row: 1});
+            assert.include(range, {column: 1, row: 2});
+            assert.include(range, {column: 1, row: 3});
+            assert.include(range, {column: 1, row: 5});
+            assert.include(range, {column: 1, row: 6});
+
+            // include the row without the current field.
+            assert.include(range, {column: 0, row: 4});
+            assert.include(range, {column: 2, row: 4});
+            assert.include(range, {column: 3, row: 4});
+            assert.include(range, {column: 4, row: 4});
+            assert.include(range, {column: 5, row: 4});
+            assert.include(range, {column: 6, row: 4});
         });
 
         it("should include fields with enemy figures", function(){
-            throw new Error("not tested yet");
+            board.getField(3, 4).figure = new Figure({type: FigureType.KNOWLEDGE, color: Color.BLACK});
+            board.getField(2, 4).figure = new Figure({type: FigureType.ROCKS, color: Color.WHITE});
+
+            var range = accessor.getRangeFor(3, 4);
+
+            assert.include(range, {column: 2, row: 4});
         });
 
         it("should not include fields with own figures", function(){
-            throw new Error("not tested yet");
+            board.getField(3, 4).figure = new Figure({type: FigureType.KNOWLEDGE, color: Color.BLACK});
+            board.getField(2, 4).figure = new Figure({type: FigureType.ROCKS, color: Color.BLACK});
+
+            var range = accessor.getRangeFor(3, 4);
+
+            assert.notInclude(range, {column: 2, row: 4});
         });
 
         it("should not include fields behind enemy or own figures", function(){
-            throw new Error("not tested yet");
+            board.getField(1, 5).figure = new Figure({type: FigureType.KNOWLEDGE, color: Color.BLACK});
+            board.getField(1, 2).figure = new Figure({type: FigureType.ROCKS, color: Color.BLACK});
+            board.getField(4, 5).figure = new Figure({type: FigureType.ROCKS, color: Color.WHITE});
+
+            var range = accessor.getRangeFor(1, 5);
+
+            assert.notInclude(range, {column: 1, row: 1});
+            assert.notInclude(range, {column: 1, row: 0});
+
+            assert.notInclude(range, {column: 5, row: 5});
+            assert.notInclude(range, {column: 6, row: 5});
         });
 
         it("should not include the origin", function(){
-            throw new Error("not tested yet");
+            board.getField(3, 5).figure = new Figure({type: FigureType.KNOWLEDGE, color: Color.BLACK});
+
+            var range = accessor.getRangeFor(3, 5);
+
+            assert.notInclude(range, {column: 3, row: 3});
         });
 
         it("should include fields behind the origin", function(){
-            throw new Error("not tested yet");
-        });
+            board.getField(3, 5).figure = new Figure({type: FigureType.KNOWLEDGE, color: Color.BLACK});
 
+            var range = accessor.getRangeFor(3, 5);
+
+            assert.notInclude(range, {column: 3, row: 2});
+            assert.notInclude(range, {column: 3, row: 1});
+            assert.notInclude(range, {column: 3, row: 0});
+        });
 
     });
 
     describe.skip("Faith", function() {
         beforeEach(function () {
-            match = modelFactory.createMatch(model.BoardSize.BIG);
-            board = match.history[0];
+            match = modelFactory.createEmptyMatch(model.BoardSize.BIG);
+            board = match.getCurrentSnapshot();
             accessor = new BoardAccessor(match);
         });
 
 
         it("should include a 5x5 matrix on an empty board", function(){
-            throw new Error("not tested yet");
+            board.getField(2, 2).figure = new Figure({type: FigureType.FAITH, color: Color.BLACK});
+
+            var range = accessor.getRangeFor(2, 2);
+
+
+            assert.include(range, {column: 0, row: 0});
+            assert.include(range, {column: 1, row: 0});
+            assert.include(range, {column: 2, row: 0});
+            assert.include(range, {column: 3, row: 0});
+            assert.include(range, {column: 4, row: 0});
+
+            assert.include(range, {column: 0, row: 1});
+            assert.include(range, {column: 1, row: 1});
+            assert.include(range, {column: 2, row: 1});
+            assert.include(range, {column: 3, row: 1});
+            assert.include(range, {column: 4, row: 1});
+
+            assert.include(range, {column: 0, row: 2});
+            assert.include(range, {column: 1, row: 2});
+            assert.include(range, {column: 3, row: 2});
+            assert.include(range, {column: 4, row: 2});
+
+            assert.include(range, {column: 0, row: 3});
+            assert.include(range, {column: 1, row: 3});
+            assert.include(range, {column: 2, row: 3});
+            assert.include(range, {column: 3, row: 3});
+            assert.include(range, {column: 4, row: 3});
+
+            assert.include(range, {column: 0, row: 4});
+            assert.include(range, {column: 1, row: 4});
+            assert.include(range, {column: 2, row: 4});
+            assert.include(range, {column: 3, row: 4});
+            // 4x4 is the origin
+
         });
 
-        it("should only include those fields that can be reaced by two moves", function(){
-            throw new Error("not tested yet");
+        it("should only include those fields that can be reached by two moves", function(){
+            board.getField(3, 5).figure = new Figure({type: FigureType.FAITH, color: Color.BLACK});
+            board.getField(2, 5).figure = new Figure({type: FigureType.ROCKS, color: Color.BLACK});
+            board.getField(2, 6).figure = new Figure({type: FigureType.ROCKs, color: Color.WHITE});
+
+            var range = accessor.getRangeFor(3, 5);
+
+            assert.notInclude(range, {column: 1, row: 6});
+            assert.notInclude(range, {column: 1, row: 7});
         });
 
         it("should not include the origin", function(){
-            throw new Error("not tested yet");
+            board.getField(3, 5).figure = new Figure({type: FigureType.FAITH, color: Color.BLACK});
+
+            var range = accessor.getRangeFor(3, 5);
+
+            assert.notInclude(range, {column: 3, row: 3});
         });
 
         it("should include fields with enemy figures", function(){
-            throw new Error("not tested yet");
+            board.getField(3, 4).figure = new Figure({type: FigureType.FAITH, color: Color.BLACK});
+            board.getField(2, 4).figure = new Figure({type: FigureType.ROCKS, color: Color.WHITE});
+
+            var range = accessor.getRangeFor(3, 4);
+
+            assert.include(range, {column: 2, row: 4});
         });
 
         it("should not include fields with own figures", function(){
-            throw new Error("not tested yet");
+            board.getField(3, 4).figure = new Figure({type: FigureType.FAITH, color: Color.BLACK});
+            board.getField(2, 4).figure = new Figure({type: FigureType.ROCKS, color: Color.BLACK});
+
+            var range = accessor.getRangeFor(3, 4);
+
+            assert.notInclude(range, {column: 2, row: 4});
         });
 
     });
