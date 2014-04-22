@@ -19,6 +19,17 @@ module.exports.createMatch = function (size) {
     }
 }
 
+module.exports.createEmptyMatch = function(size) {
+    if(size == model.BoardSize.SMALL){
+        return helper_createEmptyMatch(model.BoardSize.SMALL);
+    }else if(size == model.BoardSize.BIG){
+        return helper_createEmptyMatch(model.BoardSize.BIG);
+    }else{
+        throw new Error("The size param was wrong. Size needs to be either 7 (small) or 9 (big)");
+    }
+
+}
+
 
 /**
  * Create a snapshot with the start lineup.
@@ -36,11 +47,7 @@ module.exports.createStartSnapshot = function (size) {
 
 
 var createSmallMatch = function () {
-    var match = new model.Match();
-
-    match.matchId = createMatchId();
-    match.size = model.BoardSize.SMALL;
-    match.state = model.State.READY;
+    var match = helper_createEmptyMatch(model.BoardSize.SMALL);
 
     match.history.push(createSmallStartSnapshot());
 
@@ -48,17 +55,22 @@ var createSmallMatch = function () {
 }
 
 var createBigMatch = function () {
-    var match = new model.Match();
-
-    match.matchId = createMatchId();
-    match.size = model.BoardSize.BIG;
-    match.state = model.State.READY;
+    var match = helper_createEmptyMatch(model.BoardSize.BIG);
 
     match.history.push(createBigStartSnapshot());
 
     return match;
 }
 
+var helper_createEmptyMatch = function(size){
+    var match = new model.Match();
+
+    match.matchId = createMatchId();
+    match.size = size;
+    match.state = model.State.READY;
+
+    return match;
+}
 
 var createMatchId = function () {
     return 123; // needs to be replaces by GUID
