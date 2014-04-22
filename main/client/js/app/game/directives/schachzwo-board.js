@@ -19,7 +19,7 @@ define(['angular', 'jquery', 'schachzwo-board.ui'], function (angular, $) {
                         boardSize: boardSizeInvoker(scope) || 9,
                         onSelect: function (event, data) {
                             if (attrs.onSelect) {
-                                onSelectInvoker(scope, {row: data.row, col: data.col});
+                                onSelectInvoker(scope, {row: data.row, column: data.column});
                                 scope.$apply();
                             }
                         }

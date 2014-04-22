@@ -13,6 +13,7 @@
             boardSize: 9,
             self: Color.BLACK,
             boardBorderColor: "#ED8641",
+            boardCaptionColor: "#000000",
             boardBlackFieldColor: "#BE5003",
             boardWhiteFieldColor: "#F8D48A",
             boardSelectedFieldColor: "rgba(61,158,255,0.8)",
@@ -41,9 +42,9 @@
                 if (x >= 0 && x <= this.fieldSize * this.options.boardSize &&
                     y >= 0 && y <= this.fieldSize * this.options.boardSize) {
 
-                    var col = Math.floor(x / this.fieldSize);
+                    var column = Math.floor(x / this.fieldSize);
                     var row = Math.floor(y / this.fieldSize);
-                    this._trigger("onSelect", null, { col: col, row: row });
+                    this._trigger("onSelect", null, { column: column, row: row });
 
                 }
             }});
@@ -94,6 +95,7 @@
             var boardSize = this.options.boardSize;
             var self = this.options.self;
             var boardBorderColor = this.options.boardBorderColor;
+            var boardCaptionColor = this.options.boardCaptionColor;
             var boardBlackFieldColor = this.options.boardBlackFieldColor;
             var boardWhiteFieldColor = this.options.boardWhiteFieldColor;
             var boardSelectedFieldColor = this.options.boardSelectedFieldColor;
@@ -124,17 +126,17 @@
                 context.fill();
             };
 
-            var fillFloor = function (row, col, color) {
+            var fillFloor = function (row, column, color) {
                 context.fillStyle = color;
-                rect(x0 + col * fieldSize, y0 + row * fieldSize, fieldSize, fieldSize);
+                rect(x0 + column * fieldSize, y0 + row * fieldSize, fieldSize, fieldSize);
             };
 
-            var drawFloor = function (row, col) {
-                fillFloor(row, col, (row * boardSize + col) % 2 === 0 ? boardWhiteFieldColor : boardBlackFieldColor);
+            var drawFloor = function (row, column) {
+                fillFloor(row, column, (row * boardSize + column) % 2 === 0 ? boardWhiteFieldColor : boardBlackFieldColor);
             };
 
 
-            var drawFigure = function (row, col, figure) {
+            var drawFigure = function (row, column, figure) {
 
                 var fillFigure = function (color) {
                     context.fillStyle = color === Color.WHITE ? figureWhiteColor : figureBlackColor;
@@ -146,79 +148,79 @@
 
                 var figures = {
 
-                    rocks: function (row, col, color) {
+                    rocks: function (row, column, color) {
                         context.beginPath();
-                        context.rect(x0 + (col + (11 / 28)) * fieldSize, y0 + (row + (2 / 7)) * fieldSize, (3 / 14) * fieldSize, (3 / 7) * fieldSize);
+                        context.rect(x0 + (column + (11 / 28)) * fieldSize, y0 + (row + (2 / 7)) * fieldSize, (3 / 14) * fieldSize, (3 / 7) * fieldSize);
                         fillFigure(color);
 
                     },
 
-                    man: function (row, col, color) {
+                    man: function (row, column, color) {
                         context.beginPath();
-                        context.rect(x0 + (col + (1 / 4)) * fieldSize, y0 + (row + (1 / 4)) * fieldSize, (1 / 2) * fieldSize, (1 / 2) * fieldSize);
+                        context.rect(x0 + (column + (1 / 4)) * fieldSize, y0 + (row + (1 / 4)) * fieldSize, (1 / 2) * fieldSize, (1 / 2) * fieldSize);
                         fillFigure(color);
                     },
 
-                    woman: function (row, col, color) {
+                    woman: function (row, column, color) {
                         context.beginPath();
-                        context.arc(x0 + (col + (1 / 2)) * fieldSize, y0 + (row + (1 / 2)) * fieldSize, Math.sqrt(1 / (4 * Math.PI)) * fieldSize, 0, 2 * Math.PI, false);
+                        context.arc(x0 + (column + (1 / 2)) * fieldSize, y0 + (row + (1 / 2)) * fieldSize, Math.sqrt(1 / (4 * Math.PI)) * fieldSize, 0, 2 * Math.PI, false);
                         fillFigure(color);
                     },
 
-                    knight: function (row, col, color) {
+                    knight: function (row, column, color) {
                         context.beginPath();
-                        context.moveTo(x0 + (col + (29 / 140)) * fieldSize, y0 + (row + (3 / 4)) * fieldSize);
-                        context.lineTo(x0 + (col + (111 / 140)) * fieldSize, y0 + (row + (3 / 4)) * fieldSize);
-                        context.lineTo(x0 + (col + (111 / 140)) * fieldSize, y0 + (row + (19 / 28)) * fieldSize);
-                        context.lineTo(x0 + (col + (1 / 2)) * fieldSize, y0 + (row + (37 / 140)) * fieldSize);
-                        context.lineTo(x0 + (col + (29 / 140)) * fieldSize, y0 + (row + (19 / 28)) * fieldSize);
-                        context.lineTo(x0 + (col + (29 / 140)) * fieldSize, y0 + (row + (3 / 4)) * fieldSize);
+                        context.moveTo(x0 + (column + (29 / 140)) * fieldSize, y0 + (row + (3 / 4)) * fieldSize);
+                        context.lineTo(x0 + (column + (111 / 140)) * fieldSize, y0 + (row + (3 / 4)) * fieldSize);
+                        context.lineTo(x0 + (column + (111 / 140)) * fieldSize, y0 + (row + (19 / 28)) * fieldSize);
+                        context.lineTo(x0 + (column + (1 / 2)) * fieldSize, y0 + (row + (37 / 140)) * fieldSize);
+                        context.lineTo(x0 + (column + (29 / 140)) * fieldSize, y0 + (row + (19 / 28)) * fieldSize);
+                        context.lineTo(x0 + (column + (29 / 140)) * fieldSize, y0 + (row + (3 / 4)) * fieldSize);
                         context.closePath();
                         fillFigure(color);
                     },
 
-                    knowledge: function (row, col, color) {
+                    knowledge: function (row, column, color) {
                         context.beginPath();
-                        context.moveTo(x0 + (col + (1 / 5)) * fieldSize, y0 + (row + (4 / 5)) * fieldSize);
-                        context.lineTo(x0 + (col + (4 / 5)) * fieldSize, y0 + (row + (4 / 5)) * fieldSize);
-                        context.lineTo(x0 + (col + (4 / 5)) * fieldSize, y0 + (row + (23 / 35)) * fieldSize);
-                        context.lineTo(x0 + (col + (9 / 14)) * fieldSize, y0 + (row + (23 / 35)) * fieldSize);
-                        context.lineTo(x0 + (col + (5 / 7)) * fieldSize, y0 + (row + (1 / 5)) * fieldSize);
-                        context.lineTo(x0 + (col + (2 / 7)) * fieldSize, y0 + (row + (1 / 5)) * fieldSize);
-                        context.lineTo(x0 + (col + (5 / 14)) * fieldSize, y0 + (row + (23 / 35)) * fieldSize);
-                        context.lineTo(x0 + (col + (1 / 5)) * fieldSize, y0 + (row + (23 / 35)) * fieldSize);
-                        context.lineTo(x0 + (col + (1 / 5)) * fieldSize, y0 + (row + (4 / 5)) * fieldSize);
+                        context.moveTo(x0 + (column + (1 / 5)) * fieldSize, y0 + (row + (4 / 5)) * fieldSize);
+                        context.lineTo(x0 + (column + (4 / 5)) * fieldSize, y0 + (row + (4 / 5)) * fieldSize);
+                        context.lineTo(x0 + (column + (4 / 5)) * fieldSize, y0 + (row + (23 / 35)) * fieldSize);
+                        context.lineTo(x0 + (column + (9 / 14)) * fieldSize, y0 + (row + (23 / 35)) * fieldSize);
+                        context.lineTo(x0 + (column + (5 / 7)) * fieldSize, y0 + (row + (1 / 5)) * fieldSize);
+                        context.lineTo(x0 + (column + (2 / 7)) * fieldSize, y0 + (row + (1 / 5)) * fieldSize);
+                        context.lineTo(x0 + (column + (5 / 14)) * fieldSize, y0 + (row + (23 / 35)) * fieldSize);
+                        context.lineTo(x0 + (column + (1 / 5)) * fieldSize, y0 + (row + (23 / 35)) * fieldSize);
+                        context.lineTo(x0 + (column + (1 / 5)) * fieldSize, y0 + (row + (4 / 5)) * fieldSize);
                         context.closePath();
                         fillFigure(color);
                     },
 
-                    faith: function (row, col, color) {
+                    faith: function (row, column, color) {
                         context.beginPath();
-                        context.moveTo(x0 + (col + (1 / 5)) * fieldSize, y0 + (row + (4 / 5)) * fieldSize);
-                        context.lineTo(x0 + (col + (4 / 5)) * fieldSize, y0 + (row + (4 / 5)) * fieldSize);
-                        context.lineTo(x0 + (col + (4 / 5)) * fieldSize, y0 + (row + (23 / 35)) * fieldSize);
-                        context.lineTo(x0 + (col + (5 / 7)) * fieldSize, y0 + (row + (23 / 35)) * fieldSize);
-                        context.lineTo(x0 + (col + (9 / 14)) * fieldSize, y0 + (row + (1 / 5)) * fieldSize);
-                        context.lineTo(x0 + (col + (5 / 14)) * fieldSize, y0 + (row + (1 / 5)) * fieldSize);
-                        context.lineTo(x0 + (col + (2 / 7)) * fieldSize, y0 + (row + (23 / 35)) * fieldSize);
-                        context.lineTo(x0 + (col + (1 / 5)) * fieldSize, y0 + (row + (23 / 35)) * fieldSize);
-                        context.lineTo(x0 + (col + (1 / 5)) * fieldSize, y0 + (row + (4 / 5)) * fieldSize);
+                        context.moveTo(x0 + (column + (1 / 5)) * fieldSize, y0 + (row + (4 / 5)) * fieldSize);
+                        context.lineTo(x0 + (column + (4 / 5)) * fieldSize, y0 + (row + (4 / 5)) * fieldSize);
+                        context.lineTo(x0 + (column + (4 / 5)) * fieldSize, y0 + (row + (23 / 35)) * fieldSize);
+                        context.lineTo(x0 + (column + (5 / 7)) * fieldSize, y0 + (row + (23 / 35)) * fieldSize);
+                        context.lineTo(x0 + (column + (9 / 14)) * fieldSize, y0 + (row + (1 / 5)) * fieldSize);
+                        context.lineTo(x0 + (column + (5 / 14)) * fieldSize, y0 + (row + (1 / 5)) * fieldSize);
+                        context.lineTo(x0 + (column + (2 / 7)) * fieldSize, y0 + (row + (23 / 35)) * fieldSize);
+                        context.lineTo(x0 + (column + (1 / 5)) * fieldSize, y0 + (row + (23 / 35)) * fieldSize);
+                        context.lineTo(x0 + (column + (1 / 5)) * fieldSize, y0 + (row + (4 / 5)) * fieldSize);
                         context.closePath();
                         fillFigure(color);
                     },
 
-                    zenith: function (row, col, color) {
+                    zenith: function (row, column, color) {
                         var zenithY = self === color ? (5 / 14) : (9 / 14);
 
-                        if (row === (boardSize - 1) / 2 && col === (boardSize - 1) / 2)
+                        if (row === (boardSize - 1) / 2 && column === (boardSize - 1) / 2)
                             zenithY = 1 / 2;
 
                         context.beginPath();
-                        context.arc(x0 + (col + (1 / 2)) * fieldSize, y0 + (row + zenithY) * fieldSize, (3 / 7) * fieldSize, 0, Math.PI, self !== color);
+                        context.arc(x0 + (column + (1 / 2)) * fieldSize, y0 + (row + zenithY) * fieldSize, (3 / 7) * fieldSize, 0, Math.PI, self !== color);
                         context.closePath();
                         fillFigure(color);
                         context.beginPath();
-                        context.arc(x0 + (col + (1 / 2)) * fieldSize, y0 + (row + zenithY) * fieldSize, (3 / 14) * fieldSize, 0, Math.PI, self !== color);
+                        context.arc(x0 + (column + (1 / 2)) * fieldSize, y0 + (row + zenithY) * fieldSize, (3 / 14) * fieldSize, 0, Math.PI, self !== color);
                         context.closePath();
                         context.fillStyle = color === Color.BLACK ? figureWhiteColor : figureBlackColor;
                         context.fill();
@@ -226,7 +228,7 @@
 
                 };
 
-                figures[figure.name](row, col, figure.color);
+                figures[figure.type](row, column, figure.color);
 
             };
 
@@ -242,29 +244,46 @@
                     context.stroke();
                 };
 
+                var drawCaptions = function () {
+                    var fontSize = border - 4;
+                    context.textBaseline = "top";
+                    context.textAlign = "center";
+                    context.fillStyle = boardCaptionColor;
+                    context.font = "bold " + fontSize + "px Arial";
+
+                    for (var i = 0; i < boardSize; i++) {
+                        context.fillText(String.fromCharCode(65 + i), x0 + (fieldSize * i) + fieldSize / 2, y0 - border + (border - fontSize) / 2 - 1);
+                        context.fillText(String.fromCharCode(65 + i), x0 + (fieldSize * i) + fieldSize / 2, y0 + fieldSize * boardSize + (border - fontSize) / 2 - 1);
+                        context.fillText(String.fromCharCode(48 + (boardSize - i)), x0 - border / 2, y0 + (fieldSize * i) + (fieldSize - fontSize) / 2);
+                        context.fillText(String.fromCharCode(48 + (boardSize - i)), x0 + fieldSize * boardSize + border / 2, y0 + (fieldSize * i) + (fieldSize - fontSize) / 2);
+                    }
+
+                };
+
                 context.fillStyle = boardBorderColor;
                 rect(x0 - border, y0 - border, boardWidth + 2 * border, boardWidth + 2 * border);
 
                 for (var row = 0; row < boardSize; row++) {
-                    for (var col = 0; col < boardSize; col++) {
-                        drawFloor(row, col);
+                    for (var column = 0; column < boardSize; column++) {
+                        drawFloor(row, column);
                     }
                 }
 
                 drawCenter();
+                drawCaptions();
             }();
 
             for (var i in this.fields) {
                 var field = this.fields[i];
 
                 this._checkColRow(field.row);
-                this._checkColRow(field.col);
+                this._checkColRow(field.column);
 
                 if (field.accessible) {
-                    fillFloor(field.row, field.col, boardAccessibleFieldColor);
+                    fillFloor(field.row, field.column, boardAccessibleFieldColor);
                 }
                 if (field.selected) {
-                    fillFloor(field.row, field.col, boardSelectedFieldColor);
+                    fillFloor(field.row, field.column, boardSelectedFieldColor);
                 }
 
             }
@@ -273,7 +292,7 @@
                 var field = this.fields[i];
                 if (field.figure) {
                     this._checkColor(field.figure.color);
-                    drawFigure(field.row, field.col, field.figure);
+                    drawFigure(field.row, field.column, field.figure);
                 }
             }
 
