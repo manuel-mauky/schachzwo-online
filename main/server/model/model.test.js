@@ -113,7 +113,7 @@ describe("Creation of Match", function () {
         assert.equal(match.history.length, 1);
 
 
-        var rocks = new Figure({color: "black", type: "rocks"});
+        var rocks = new Figure({color: Color.BLACK, type: FigureType.ROCKS});
 
         var move = match.history;
         assert.ok(move);
@@ -127,6 +127,67 @@ describe("Creation of Match", function () {
 
     });
 
+});
+
+describe("GenerateSnapshot function",function(){
+
+    var match;
+
+   beforeEach(function(){
+        match  = modelFactory.createEmptyMatch(BoardSize.BIG);
+    });
+
+
+    it("should throw an Error if the requested number is greater than the history length",function(){
+        assert.equal(match.history.length,0);
+        assert.throws(function(){
+            match.generateSnapshot(1);
+        });
+    });
+
+    it("should return a new StartSnapshot if history is empty",function(){
+        var expected = modelFactory.createStartSnapshot(BoardSize.BIG);
+        var result = match.generateSnapshot(0);
+        assert.ok(result);
+        assert.equal(JSON.stringify(expected),JSON.stringify(result));
+    });
+
+    it("should return the Snapshot after three moves",function(){
+        match.addMove(new Move({figure: {color: Color.WHITE,type: FigureType.ROCKS},from: {column: 1,row: 1},to: {column: 1,row: 2}}));
+        match.addMove(new Move({figure: {color: Color.BLACK,type: FigureType.ROCKS},from: {column: 3,row: 7},to: {column: 3,row: 5}}));
+        match.addMove(new Move({figure: {color: Color.WHITE,type: FigureType.KNIGHT},from: {column: 1,row: 0},to: {column: 2,row: 2}}));
+
+        var snapshot1 = match.generateSnapshot(1);
+        assert.notOk(snapshot1.getField(1,1).figure);
+        assert.deepEqual(snapshot1.getField(1,2).figure,{color: Color.WHITE,type: FigureType.ROCKS});
+        assert.deepEqual(snapshot1.getField(3,7).figure,{color: Color.BLACK,type: FigureType.ROCKS});
+        assert.notOk(snapshot1.getField(3,5).figure);
+        assert.deepEqual(snapshot1.getField(1,0).figure,{color: Color.WHITE,type: FigureType.KNIGHT});
+        assert.notOk(snapshot1.getField(2,2).figure);
+
+        var snapshot2 = match.generateSnapshot(2);
+        assert.notOk(snapshot2.getField(1,1).figure);
+        assert.deepEqual(snapshot2.getField(1,2).figure,{color: Color.WHITE,type: FigureType.ROCKS});
+        assert.notOk(snapshot2.getField(3,7).figure);
+        assert.deepEqual(snapshot2.getField(3,5).figure,{color: Color.BLACK,type: FigureType.ROCKS});
+        assert.deepEqual(snapshot2.getField(1,0).figure,{color: Color.WHITE,type: FigureType.KNIGHT});
+        assert.notOk(snapshot2.getField(2,2).figure);
+
+        var snapshot3 = match.generateSnapshot(3);
+        assert.notOk(snapshot3.getField(1,1).figure);
+        assert.deepEqual(snapshot3.getField(1,2).figure,{color: Color.WHITE,type: FigureType.ROCKS});
+        assert.notOk(snapshot3.getField(3,7).figure);
+        assert.deepEqual(snapshot3.getField(3,5).figure,{color: Color.BLACK,type: FigureType.ROCKS});
+        assert.notOk(snapshot3.getField(1,0).figure);
+        assert.deepEqual(snapshot3.getField(2,2).figure,{color: Color.WHITE,type: FigureType.KNIGHT});
+    });
+
+    it("should throw a error of the Move can not be performed form the current Snapshot",function(){
+        match.addMove(new Move({figure: {color: Color.WHITE,type: FigureType.ROCKS},from: {column: 5,row:4},to: {column: 1,row: 2}}));
+        assert.throws(function(){
+            match.generateSnapshot(1);
+        });
+    });
 });
 
 describe("GetField accessor function of Snapshot", function () {
@@ -190,7 +251,7 @@ describe("GetCurrentSnapshot accessor function of Match", function(){
         snapshot.getField(1,1).figure = undefined;
 
 
-        match.history.push(new Match({figure: {color: "black",type: "rocks"},from: {column: 1,row: 1},to: {column: 1,row: 2}}));
+        match.history.push(new Move({figure: {color: "black",type: "rocks"},from: {column: 1,row: 1},to: {column: 1,row: 2}}));
 
         var current = match.getCurrentSnapshot();
 
