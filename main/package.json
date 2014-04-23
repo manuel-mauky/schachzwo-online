@@ -9,10 +9,12 @@
   },
   "dependencies": {
     "express": "4.x",
-    "request": "latest"
+    "request": "latest",
+    "body-parser": "latest"
   },
   "devDependencies": {
     "request": "latest",
+    "supertest": "latest",
     "requirejs": "^2.1.11",
     "mocha": "latest",
     "chai": "latest"
