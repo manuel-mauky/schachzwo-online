@@ -96,8 +96,10 @@ var Field = function (json) {
  * @constructor
  */
 var Position = function(json){
-    var column = json.column;
-    var row = json.row;
+    var json = json || 0;
+
+    this.column = json.column;
+    this.row = json.row;
     return this;
 }
 
@@ -110,9 +112,9 @@ var Position = function(json){
 var Move = function(json){
     var json = json || 0;
 
-    var figure = new Figure(json.figure);
-    var from = new Position(json.from);
-    var to = new Position(json.to);
+    this.figure = new Figure(json.figure);
+    this.from = new Position(json.from);
+    this.to = new Position(json.to);
     return this;
 }
 
@@ -145,14 +147,14 @@ var Snapshot = function (json) {
     this.getField = function (column, row) {
         for (var i = 0; i < this.board.length; i++) {
             var field = this.board[i];
-            if (field.column == column && field.row == row) {
+            if (field.position.column == column && field.position.row == row) {
                 return field;
             }
         }
         return undefined;
     };
 
-    this.getField = function(position){
+    this.getFieldFromPosition = function(position){
         return this.getField(position.column,position.row);
     }
 
@@ -263,12 +265,12 @@ var Match = function (json) {
             throw new Error("There is no move in the history for this number.");
         }
         var modelFactory = require("./model.factory");
-        var snapshot = modelFactory.createEmptyMatch(this.size);
+        var snapshot = modelFactory.createStartSnapshot(this.size);
 
         for(var i = 0; i < number; i++){
             var move = this.history[i];
-            var fieldFrom = snapshot.getField(move.from);
-            var fieldTo = snapshot.getField(move.to);
+            var fieldFrom = snapshot.getFieldFromPosition(move.from);
+            var fieldTo = snapshot.getFieldFromPosition(move.to);
             if(fieldFrom.figure != move.figure) throw new Error("This Move was invalid!");
             fieldTo.figure = fieldFrom.figure;
             fieldFrom.figure = undefined;
