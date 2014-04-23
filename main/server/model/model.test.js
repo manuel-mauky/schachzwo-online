@@ -72,23 +72,20 @@ describe("Creation of Match", function () {
 
             size: 7,
             history: [
+
                 {
-                    move: [
-                        {
-                            figure: {
-                                color: "black",
-                                type: "rocks"
-                            },
-                            from: {
-                                column: 0,
-                                row: 0
-                                },
-                            to: {
-                                column: 1,
-                                row: 1
-                            }
-                        }
-                    ]
+                    figure: {
+                        color: "black",
+                        type: "rocks"
+                    },
+                    from: {
+                        column: 0,
+                        row: 0
+                    },
+                    to: {
+                        column: 1,
+                        row: 1
+                    }
                 }
             ]
         };
@@ -124,11 +121,11 @@ describe("Creation of Match", function () {
         assert.equal(move.length, 1);
 
         assert.deepEqual(move[0], new Move({figure: rocks, from:{column: 0, row: 0},to:{column: 1, row: 1}}));
+        assert.instanceOf(move[0].figure, Figure);
+        assert.instanceOf(move[0].from, Position);
+        assert.instanceOf(move[0].to, Position);
 
     });
-    assert.instanceOf(move[0].figure, Figure);
-    assert.instanceOf(move[0].from, Position);
-    assert.instanceOf(move[0].to, Position);
 
 });
 
@@ -138,15 +135,15 @@ describe("GetField accessor function of Snapshot", function () {
     var rocks2 = new Figure({color: Color.WHITE, type: FigureType.ROCKS});
 
     var snapshot = new Snapshot();
-    snapshot.board.push(new Field({column: 0, row: 0}));
-    snapshot.board.push(new Field({column: 0, row: 1}));
-    snapshot.board.push(new Field({column: 0, row: 2, figure: rocks1}));
-    snapshot.board.push(new Field({column: 1, row: 0}));
-    snapshot.board.push(new Field({column: 1, row: 1}));
-    snapshot.board.push(new Field({column: 1, row: 2}));
-    snapshot.board.push(new Field({column: 2, row: 0, figure: rocks2}));
-    snapshot.board.push(new Field({column: 2, row: 1}));
-    snapshot.board.push(new Field({column: 2, row: 2}));
+    snapshot.board.push(new Field({position:{column: 0, row: 0}}));
+    snapshot.board.push(new Field({position:{column: 0, row: 1}}));
+    snapshot.board.push(new Field({position:{column: 0, row: 2}, figure: rocks1}));
+    snapshot.board.push(new Field({position:{column: 1, row: 0}}));
+    snapshot.board.push(new Field({position:{column: 1, row: 1}}));
+    snapshot.board.push(new Field({position:{column: 1, row: 2}}));
+    snapshot.board.push(new Field({position:{column: 2, row: 0}, figure: rocks2}));
+    snapshot.board.push(new Field({position:{column: 2, row: 1}}));
+    snapshot.board.push(new Field({position:{column: 2, row: 2}}));
 
     it("should return the properly field", function () {
 
@@ -173,13 +170,13 @@ describe("GetCurrentSnapshot accessor function of Match", function(){
     it("should return the first snapshot for a fresh match", function(){
         // modelFactory creates a match which is ready to be played. there is one snapshot with the start lineup.
         var match = modelFactory.createMatch(BoardSize.SMALL);
-        assert.equal(match.history.length, 1);
+        assert.equal(match.history.length, 0);
 
 
         var current = match.getCurrentSnapshot();
 
         assert.ok(current);
-        assert.equal(current, match.history[0]);
+        assert.equal(current, modelFactory.createStartSnapshot(BoardSize.SMALL));
     });
 
     it("should return the last snapshot when there are more then one", function(){
@@ -193,8 +190,7 @@ describe("GetCurrentSnapshot accessor function of Match", function(){
         snapshot.getField(1,1).figure = undefined;
 
 
-        match.history.push(snapshot);
-
+        match.history.push(new Match({figure: {color: "black",type: "rocks"},from: {column: 1,row: 1},to: {column: 1,row: 2}}));
 
         var current = match.getCurrentSnapshot();
 

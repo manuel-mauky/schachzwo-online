@@ -48,17 +48,11 @@ module.exports.createStartSnapshot = function (size) {
 
 var createSmallMatch = function () {
     var match = helper_createEmptyMatch(model.BoardSize.SMALL);
-
-    match.history.push(createSmallStartSnapshot());
-
     return match;
 }
 
 var createBigMatch = function () {
     var match = helper_createEmptyMatch(model.BoardSize.BIG);
-
-    match.history.push(createBigStartSnapshot());
-
     return match;
 }
 
@@ -118,7 +112,7 @@ var createBigStartSnapshot = function () {
 var helper_fillWithEmptyFields = function (board, size) {
     for (var i = 0; i < size; i++) {
         for (var j = 0; j < size; j++) {
-            board.push(new model.Field({column: i, row: j}));
+            board.push(new model.Field({position:{column: i, row: j}}));
         }
     }
 }
