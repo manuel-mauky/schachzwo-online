@@ -237,7 +237,7 @@ describe("GetCurrentSnapshot accessor function of Match", function(){
         var current = match.getCurrentSnapshot();
 
         assert.ok(current);
-        assert.equal(current, modelFactory.createStartSnapshot(BoardSize.SMALL));
+        assert.equal(JSON.stringify(current), JSON.stringify(modelFactory.createStartSnapshot(BoardSize.SMALL)));
     });
 
     it("should return the last snapshot when there are more then one", function(){
@@ -251,21 +251,12 @@ describe("GetCurrentSnapshot accessor function of Match", function(){
         snapshot.getField(1,1).figure = undefined;
 
 
-        match.history.push(new Move({figure: {color: "black",type: "rocks"},from: {column: 1,row: 1},to: {column: 1,row: 2}}));
+        match.history.push(new Move({figure: {color: Color.WHITE,type: FigureType.ROCKS},from: {column: 1,row: 1},to: {column: 1,row: 2}}));
 
         var current = match.getCurrentSnapshot();
 
         assert.ok(current);
         assert.isUndefined(current.getField(1,1).figure);
         assert.ok(current.getField(1,2).figure);
-    });
-
-    it("should throw an error when there is no snapshot available", function(){
-
-        var match = new Match();
-
-        assert.throws(function(){
-            match.getCurrentSnapshot();
-        });
     });
 });
