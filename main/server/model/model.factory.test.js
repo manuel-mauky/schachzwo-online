@@ -17,11 +17,8 @@ describe("modelFactory.createMatch", function () {
         assert.ok(match.matchId);
 
         assert.equal(match.state, model.State.READY);
+
         assert.isArray(match.history);
-
-        assert.equal(match.history.length, 1);
-
-        assert.ok(match.history[0]);
 
         assert.equal(match.size, model.BoardSize.SMALL);
 

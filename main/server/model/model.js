@@ -259,19 +259,25 @@ var Match = function (json) {
         this.size = BoardSize.SMALL;
     }
 
-
+    /**
+     * Generate a Snapshot up to the given History entry
+     * @param number
+     * @returns {*}
+     */
     this.generateSnapshot = function(number){
         if(!this.history || this.history.length < number ){
             throw new Error("There is no move in the history for this number.");
         }
-        var modelFactory = require("./model.factory");
+        var modelFactory = require("./model.factory"); // required here to prevent recursive import as model.factory has a dependency to this model.js
+
+        //for performace reasons maybe as static json -> evaluation
         var snapshot = modelFactory.createStartSnapshot(this.size);
 
         for(var i = 0; i < number; i++){
             var move = this.history[i];
             var fieldFrom = snapshot.getFieldFromPosition(move.from);
             var fieldTo = snapshot.getFieldFromPosition(move.to);
-            if(fieldFrom.figure != move.figure) throw new Error("This Move was invalid!");
+            if(JSON.stringify(fieldFrom.figure) != JSON.stringify(move.figure)) throw new Error("This Move from" + JSON.stringify(move.from) + " to " + JSON.stringify(move.to) + " with figure " + JSON.stringify(move.figure) + " was invalid!");//todo testen
             fieldTo.figure = fieldFrom.figure;
             fieldFrom.figure = undefined;
         }
@@ -284,6 +290,13 @@ var Match = function (json) {
     this.getCurrentSnapshot = function(){
         return this.generateSnapshot(this.history.length);
     }
+
+    this.addMove = function(move){
+        //todo error handling
+        //figur auf schachbrett vorhanden
+        //zielfeld gültig -> validator
+        this.history.push(move);
+    };
 
     return this;
 }

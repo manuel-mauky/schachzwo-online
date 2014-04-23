@@ -37,8 +37,14 @@ describe("getRangeFor", function () {
     describe("Rocks", function () {
 
         beforeEach(function () {
-            match = modelFactory.createMatch(model.BoardSize.SMALL);
+            match = modelFactory.createEmptyMatch(model.BoardSize.SMALL);
             board = match.getCurrentSnapshot();
+
+            // mocking the getCurrentSnapshot 
+            match.getCurrentSnapshot = function(){
+                return board;
+            };
+
             accessor = new BoardAccessor(match);
         });
 
@@ -66,7 +72,7 @@ describe("getRangeFor", function () {
         it("should be two diagonal fields next to the origin when black rocks is below origin", function () {
 
             board.getField(3, 4).figure = new Figure({type: FigureType.ROCKS, color: Color.BLACK});
-            var range = accessor.getRangeFor(3, 4); //
+            var range = accessor.getRangeFor(3, 4);
 
 
             assert.isArray(range);
