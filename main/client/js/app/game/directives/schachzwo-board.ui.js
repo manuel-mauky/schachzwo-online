@@ -16,8 +16,8 @@
             boardCaptionColor: "#000000",
             boardBlackFieldColor: "#BE5003",
             boardWhiteFieldColor: "#F8D48A",
-            boardSelectedFieldColor: "rgba(61,158,255,0.8)",
-            boardAccessibleFieldColor: "rgba(60,255,60,0.6)",
+            boardSelectedFieldColor: "rgba(61,158,255,0.6)",
+            boardAccessibleFieldColor: "rgba(61,255,60,0.4)",
             figureBlackColor: "#000000",
             figureWhiteColor: "#FFFFFF",
             figureBlackBorderColor: "gray",
@@ -252,10 +252,14 @@
                     context.font = "bold " + fontSize + "px Arial";
 
                     for (var i = 0; i < boardSize; i++) {
-                        context.fillText(String.fromCharCode(65 + i), x0 + (fieldSize * i) + fieldSize / 2, y0 - border + (border - fontSize) / 2 - 1);
-                        context.fillText(String.fromCharCode(65 + i), x0 + (fieldSize * i) + fieldSize / 2, y0 + fieldSize * boardSize + (border - fontSize) / 2 - 1);
-                        context.fillText(String.fromCharCode(48 + (boardSize - i)), x0 - border / 2, y0 + (fieldSize * i) + (fieldSize - fontSize) / 2);
-                        context.fillText(String.fromCharCode(48 + (boardSize - i)), x0 + fieldSize * boardSize + border / 2, y0 + (fieldSize * i) + (fieldSize - fontSize) / 2);
+
+                        var letter = String.fromCharCode(self === Color.BLACK ? 65 + i : 64 + (boardSize - i));
+                        var number = String.fromCharCode(self === Color.BLACK ? 48 + (boardSize - i) : 49 + i);
+
+                        context.fillText(letter, x0 + (fieldSize * i) + fieldSize / 2, y0 - border + (border - fontSize) / 2 - 1);
+                        context.fillText(letter, x0 + (fieldSize * i) + fieldSize / 2, y0 + fieldSize * boardSize + (border - fontSize) / 2 - 1);
+                        context.fillText(number, x0 - border / 2, y0 + (fieldSize * i) + (fieldSize - fontSize) / 2);
+                        context.fillText(number, x0 + fieldSize * boardSize + border / 2, y0 + (fieldSize * i) + (fieldSize - fontSize) / 2);
                     }
 
                 };
