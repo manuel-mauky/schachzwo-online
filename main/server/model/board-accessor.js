@@ -37,9 +37,8 @@ module.exports = function BoardAccessor(match) {
     };
 
     var checkOutOfBoard = function(column, row){
-        if (column < 0 || column >= match.size || row < 0 || row >= match.size) return true;
-        return false;
-    }
+        return !!(column < 0 || column >= match.size || row < 0 || row >= match.size);
+    };
 
     /**
      * get the range of fields that the figure on the given position can reach.
@@ -50,7 +49,7 @@ module.exports = function BoardAccessor(match) {
         var figure = getFigure(column, row);
 
         if (!figure) {
-            return new Array();
+            return [];
         }
 
         switch (figure.type) {
@@ -76,7 +75,7 @@ module.exports = function BoardAccessor(match) {
                 return getRangeForFaith(column, row);
 
             default:
-                return new Array();
+                return [];
         }
 
     };
@@ -86,7 +85,7 @@ module.exports = function BoardAccessor(match) {
 
         var current = getFigure(column, row);
 
-        var result = new Array();
+        var result = [];
 
         var rowTmp = row;
         if (current.color == Color.WHITE) {
@@ -154,32 +153,20 @@ module.exports = function BoardAccessor(match) {
     };
 
     var getRangeForMan = function (column, row) {
-        var result = new Array();
+        var result = [];
 
         var currentFigure = getFigure(column, row);
 
         // the man can go one field in every diagonal direction
-        var diagonalOneField = [{x:1,y:1},{x:1,y:-1},{x:-1,y:1},{x:-1,y:-1}];
-
-        for(var i=0; i<diagonalOneField.length ; i++){
-            var direction = diagonalOneField[i];
-
-            if(isValidTarget(currentFigure, column + direction.x, row + direction.y)){
-                result.push({column: column+direction.x, row: row+direction.y});
-            }
-        }
+        var diagonalOneFieldDirections = [{x:1,y:1},{x:1,y:-1},{x:-1,y:1},{x:-1,y:-1}];
+        var diagonalResults = findTargets(currentFigure, column, row, diagonalOneFieldDirections);
+        result = result.concat(diagonalResults);
 
 
-        var straightDirection = [{x:-1, y:0},{x:1, y:0}, {x:0, y:-1}, {x:0, y:1}];
-
-
-        for(var i=0 ; i< straightDirection.length ; i++){
-            var direction = straightDirection[i];
-
-            var partialResult = findTargetsInOneDirection(currentFigure, column, row, direction );
-
-            result = result.concat(partialResult);
-        }
+        // the woman can go on the horizontal and vertical directions.
+        var straightDirections = [{x:-1, y:0},{x:1, y:0}, {x:0, y:-1}, {x:0, y:1}];
+        var straightResult = findTargetsInDirections(currentFigure.color, column, row, straightDirections);
+        result = result.concat(straightResult);
 
 
         return result;
@@ -233,31 +220,19 @@ module.exports = function BoardAccessor(match) {
     };
 
     var getRangeForWoman = function(column, row) {
-        var result = new Array();
+        var result = [];
 
         var currentFigure = getFigure(column, row);
 
         // the man can go one field in vertical and horizontal direction
-        var straightOneField = [{x:-1, y:0},{x:1, y:0}, {x:0, y:-1}, {x:0, y:1}];
+        var straightOneFieldDirections = [{x:-1, y:0},{x:1, y:0}, {x:0, y:-1}, {x:0, y:1}];
+        var straightResults = findTargets(currentFigure, column, row, straightOneFieldDirections);
+        result = result.concat(straightResults);
 
-        for(var i=0; i<straightOneField.length ; i++){
-            var direction = straightOneField[i];
-
-            if(isValidTarget(currentFigure, column + direction.x, row + direction.y)){
-                result.push({column: column+direction.x, row: row+direction.y});
-            }
-        }
-
+        // the man can go on the diagonals
         var diagonalDirections = [{x:1,y:1},{x:1,y:-1},{x:-1,y:1},{x:-1,y:-1}];
-
-        for(var i=0 ; i< diagonalDirections.length ; i++){
-            var direction = diagonalDirections[i];
-
-            var partialResult = findTargetsInOneDirection(currentFigure, column, row, direction );
-
-            result = result.concat(partialResult);
-        }
-
+        var diagonalResults = findTargetsInDirections(currentFigure.color, column, row, diagonalDirections);
+        result = result.concat(diagonalResults);
 
         return result;
     };
@@ -266,7 +241,51 @@ module.exports = function BoardAccessor(match) {
 
     };
 
-    var findTargetsInOneDirection = function (currentFigure, startColumn, startRow, direction){
+
+    /**
+     * checks the fields based on the given column and row and the array of directions
+     * whether the field is a valid target or not.
+     *
+     * @param currentFigure
+     * @param column
+     * @param row
+     * @param directions
+     * @returns {Array} an array of valid targets.
+     */
+    var findTargets = function(currentFigure, column, row, directions){
+        var result = [];
+
+        for(var i=0 ; i<directions.length; i++){
+            var direction = directions[i];
+
+            var tmpColumn = column + direction.x;
+            var tmpRow = row + direction.y;
+
+            if(isValidTarget(currentFigure, tmpColumn, tmpRow)){
+                result.push({column: tmpColumn, row: tmpRow});
+            }
+        }
+
+
+        return result;
+    };
+
+    /**
+     * walks from the given starting point in the given direction and checks whether the fields are valid targets
+     * or not. For this check the color of the current figure is needed.
+     *
+     * The direction is specified as an js object with an x and y value,
+     * for example:
+     *      direction = {x: 1, y: 0}
+     *
+     *
+     * @param ownColor
+     * @param startColumn
+     * @param startRow
+     * @param direction
+     * @returns {Array} an array with the valid target positions.
+     */
+    var findTargetsInOneDirection = function (ownColor, startColumn, startRow, direction){
         var result = new Array();
 
         var tmpColumn = startColumn;
@@ -287,7 +306,7 @@ module.exports = function BoardAccessor(match) {
             var figure = getFigure(tmpColumn, tmpRow)
 
             if(figure){
-                if(figure.color != currentFigure.color){
+                if(figure.color != ownColor){
                     result.push({column: tmpColumn, row: tmpRow});
                 }
                 break;
@@ -299,6 +318,29 @@ module.exports = function BoardAccessor(match) {
         return result;
     };
 
+    /**
+     * walks in all directions that are given by the last param.
+     * See the function {@link findTargetsInOneDirection) for more details.
+     *
+     * @param ownColor
+     * @param startColumn
+     * @param startRow
+     * @param directions an array of direction values
+     * @returns {Array}
+     */
+    var findTargetsInDirections = function (ownColor, startColumn, startRow, directions) {
+        var result = [];
+
+        for(var i=0 ; i< directions.length ; i++){
+            var direction = directions[i];
+
+            var partialResult = findTargetsInOneDirection(ownColor, startColumn, startRow, direction );
+
+            result = result.concat(partialResult);
+        }
+
+        return result;
+    };
 
     var isOrigin = function (x, y) {
         var size = match.size;
@@ -331,11 +373,7 @@ module.exports = function BoardAccessor(match) {
 
         var targetFigure = getFigure(targetColumn, targetRow);
 
-        if(targetFigure && targetFigure.color == currentFigure.color){
-            return false;
-        }
-
-        return true;
+        return !(targetFigure && targetFigure.color == currentFigure.color);
     };
 
 
