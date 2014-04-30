@@ -31,7 +31,7 @@ module.exports = function BoardAccessor(match) {
     }
 
     var checkOutOfBoard = function(column, row){
-        // todo
+        if (column < 0 || column >= match.size || row < 0 || row >= match.size) return true;
         return false;
     }
 
