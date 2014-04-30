@@ -19,7 +19,6 @@ module.exports = function BoardAccessor(match) {
 
     this.match = match;
 
-
     /**
      * get the range of fields that the figure on the given position can reach.
      * @param column
@@ -59,42 +58,39 @@ module.exports = function BoardAccessor(match) {
             rowTmp--;
         }
 
-        var columnTmp = column;
-
-
-        if (isOrigin(columnTmp, rowTmp)) {
-            var left = board.getField(columnTmp - 1, rowTmp).figure;
-            var right = board.getField(columnTmp + 1, rowTmp).figure;
+        if (isOrigin(column, rowTmp)) {
+            var left = board.getField(column - 1, rowTmp).figure;
+            var right = board.getField(column + 1, rowTmp).figure;
 
             if (!left || left.color != current.color) {
-                result.push({column: columnTmp - 1, row: rowTmp});
+                result.push({column: column - 1, row: rowTmp});
             }
 
             if (!right || right.color != current.color) {
-                result.push({column: columnTmp + 1, row: rowTmp});
+                result.push({column: column + 1, row: rowTmp});
             }
 
         } else {
-            var figure = board.getField(columnTmp, rowTmp).figure;
+            var figure = board.getField(column, rowTmp).figure;
             if (!figure) {
-                result.push({column: columnTmp, row: rowTmp});
+                result.push({column: column, row: rowTmp});
             }
 
 
-            var leftField = board.getField(columnTmp - 1, rowTmp);
+            var leftField = board.getField(column - 1, rowTmp);
             if (leftField) {
-                var left = board.getField(columnTmp - 1, rowTmp).figure;
+                var left = leftField.figure;
                 if (left && left.color != current.color) {
-                    result.push({column: columnTmp - 1, row: rowTmp});
+                    result.push({column: column - 1, row: rowTmp});
                 }
             }
 
 
-            var rightField = board.getField(columnTmp + 1, rowTmp);
+            var rightField = board.getField(column + 1, rowTmp);
             if (rightField) {
-                var right = board.getField(columnTmp + 1, rowTmp).figure;
+                var right = rightField.figure;
                 if (right && right.color != current.color) {
-                    result.push({column: columnTmp + 1, row: rowTmp});
+                    result.push({column: column + 1, row: rowTmp});
                 }
             }
         }
@@ -110,9 +106,9 @@ module.exports = function BoardAccessor(match) {
                 rowTmp = row - 2;
             }
 
-            var figure = board.getField(columnTmp, rowTmp).figure;
+            var figure = board.getField(column, rowTmp).figure;
             if (!figure) {
-                result.push({column: columnTmp, row: rowTmp});
+                result.push({column: column, row: rowTmp});
             }
         }
 
