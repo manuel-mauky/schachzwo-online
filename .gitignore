@@ -2,6 +2,8 @@
 /.metadata
 /UML/SchachZWO.zargo~
 
+*.log
+
 # eclipse
 .project
 .metadata
