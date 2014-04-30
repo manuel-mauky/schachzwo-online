@@ -33,7 +33,6 @@ describe("getRangeFor", function () {
         assert.equal(range.length, 0);
     });
 
-
     describe("Rocks", function () {
 
         beforeEach(function () {
@@ -771,4 +770,58 @@ describe("Instantiation of BoardAccessor", function () {
         });
     });
 
+});
+
+
+describe.skip("Function isThreatenFrom from BoardAccessor",function(){
+    it("should return empty List on empty Field",function(){
+        var board = modelFactory.createEmptyMatch(model.BoardSize.SMALL);
+        var accessor = new BoardAccessor(board);
+
+        assert.equals(accessor.isThreatenFrom(3,3).length,0);
+        assert.equals(accessor.isThreatenFrom(1,2).length,0);
+    });
+
+    var match = modelFactory.createEmptyMatch(model.BoardSize.SMALL);
+    var board = match.getCurrentSnapshot();
+
+    // mocking the getCurrentSnapshot
+    match.getCurrentSnapshot = function(){
+        return board;
+    };
+
+    var accessor = new BoardAccessor(match);
+
+    it("should return two Rocks and a Knight",function(){
+        board = modelFactory.createStartSnapshot(model.BoardSize.SMALL);
+        board.getField(2,2).figure = new Figure({type: FigureType.ROCKS, color: Color.BLACK});
+
+        var list = accessor.isThreatenFrom(2,2);
+
+        assert.equals(list.length,3);
+        assert.include(list,{column: 1, row: 1});
+        assert.include(list,{column: 1, row: 0});
+        assert.include(list,{column: 3, row: 1});
+    });
+
+    it("should return empty list on figure with same color",function(){
+        board = modelFactory.createStartSnapshot(model.BoardSize.SMALL);
+        board.getField(2,2).figure = new Figure({type: FigureType.ROCKS, color: Color.WHITE});
+        assert.equals(accessor.isThreatenFrom(2,2).length,0);
+    });
+
+    it("should return one rocks and one Faith",function(){
+        board = modelFactory.createStartSnapshot(model.BoardSize.SMALL);
+        board.getField(5,4).figure = new Figure({type: FigureType.ZENIT, color: Color.BLACK});
+        board.getField(3,3).figure = new Figure({type: FigureType.MAN, color: Color.WHITE});
+        board.getField(5,3).figure = new Figure({type: FigureType.FAITH, color: Color.WHITE});
+        board.getField(3,6).figure = new Figure({type: FigureType.ROCKS, color: Color.WHITE});
+        board.getField(5,6).figure = new Figure({type: FigureType.ROCKS, color: Color.BLACK});
+
+        var list = accessor.isThreatenFrom(2,2);
+
+        assert.equals(list.length,2);
+        assert.include(list,{column: 5, row: 3});
+        assert.include(list,{column: 3, row: 5});
+    });
 });
