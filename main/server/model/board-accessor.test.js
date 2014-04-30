@@ -476,6 +476,16 @@ describe("getRangeFor", function () {
             assert.notInclude(range, {column: 3, row: 3});
         })
 
+        it("should not include fields out of the board", function(){
+            board.getField(0, 0).figure = new Figure({type: FigureType.KNIGHT, color: Color.BLACK});
+
+            var range = accessor.getRangeFor(0, 0);
+
+            assert.equal(range.length,2);
+            assert.include(range,{column: 2, row: 1});
+            assert.include(range,{column: 1, row: 2});
+        })
+
     });
 
     describe.skip("Zenith", function() {
