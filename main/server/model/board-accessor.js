@@ -233,8 +233,35 @@ module.exports = function BoardAccessor(match) {
     };
 
     var getRangeForWoman = function(column, row) {
+        var result = new Array();
 
+        var currentFigure = getFigure(column, row);
+
+        // the man can go one field in vertical and horizontal direction
+        var straightOneField = [{x:-1, y:0},{x:1, y:0}, {x:0, y:-1}, {x:0, y:1}];
+
+        for(var i=0; i<straightOneField.length ; i++){
+            var direction = straightOneField[i];
+
+            if(isValidTarget(currentFigure, column + direction.x, row + direction.y)){
+                result.push({column: column+direction.x, row: row+direction.y});
+            }
+        }
+
+        var diagonalDirections = [{x:1,y:1},{x:1,y:-1},{x:-1,y:1},{x:-1,y:-1}];
+
+        for(var i=0 ; i< diagonalDirections.length ; i++){
+            var direction = diagonalDirections[i];
+
+            var partialResult = findTargetsInOneDirection(currentFigure, column, row, direction );
+
+            result = result.concat(partialResult);
+        }
+
+
+        return result;
     };
+
     var getRangeForZenith = function(column, row) {
 
     };

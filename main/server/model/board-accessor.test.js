@@ -328,21 +328,35 @@ describe("getRangeFor", function () {
 
     });
 
-    describe.skip("Woman", function() {
+    describe("Woman", function() {
         beforeEach(function () {
             match = modelFactory.createEmptyMatch(model.BoardSize.SMALL);
-            board = match.getCurrentSnapshot();
+            board = modelFactory.createEmptySnapshot(model.BoardSize.SMALL);
+            // mocking the getCurrentSnapshot
+            match.getCurrentSnapshot = function(){
+                return board;
+            };
             accessor = new BoardAccessor(match);
         });
 
-        it("should be empty at the begin as there are figures around the woman", function(){
+
+        // todo: Implement the start position with two zeniths on the origin.
+        it.skip("should be empty at the begin as there are figures around the woman", function(){
+            // we create a match with the start lineup for this test.
             match = modelFactory.createMatch(model.BoardSize.SMALL); // for this test we use a board with start lineup of figures
-            board = match.getCurrentSnapshot();
             accessor = new BoardAccessor(match);
 
             // at the start the zeniths are placed on the origin. So in the first draw we need to place the zeniths on there start position.
-            board.getField(3, 6).figure = new Figure({type:FigureType.ZENITH, color: Color.BLACK});
+//            board.getField(3, 6).figure = new Figure({type:FigureType.ZENITH, color: Color.BLACK});
+            match.addMove(new model.Move({
+                figure: {color: model.Color.BLACK, type: model.FigureType.ZENITH},
+                from: {column: 3, row: 3},
+                to: {column: 3, row: 6}}));
 
+
+            board = match.getCurrentSnapshot();
+
+            board.debugPrint();
 
             var range = accessor.getRangeFor(2,6);
 
