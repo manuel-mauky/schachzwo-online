@@ -20,15 +20,29 @@ module.exports = function BoardAccessor(match) {
     this.match = match;
 
 
+    var getField = function(column, row){
+        var board = match.getCurrentSnapshot();
+
+        return board.getField(column, row);
+    }
+
+    var getFigure = function(column, row){
+        return getField(column,row).figure;
+    }
+
+    var checkOutOfBoard = function(column, row){
+        // todo
+        return false;
+    }
+    
+    
     /**
      * get the range of fields that the figure on the given position can reach.
      * @param column
      * @param row
      */
     this.getRangeFor = function (column, row) {
-        var snapshot = this.match.getCurrentSnapshot();
-
-        var figure = snapshot.getField(column, row).figure;
+        var figure = getFigure(column, row);
 
         if (!figure) {
             return new Array();
@@ -37,6 +51,13 @@ module.exports = function BoardAccessor(match) {
         switch (figure.type) {
             case FigureType.ROCKS:
                 return getRangeForRocks(column, row);
+
+            case FigureType.MAN:
+                return getRangeForMan(column, row);
+            
+            case FigureType.KNIGHT:
+                return getRangeForKnight(column, row);
+
 
             default:
                 return new Array();
@@ -47,7 +68,7 @@ module.exports = function BoardAccessor(match) {
     var getRangeForRocks = function (column, row) {
         var board = match.getCurrentSnapshot();
 
-        var current = board.getField(column, row).figure;
+        var current = getFigure(column, row);
 
         var result = new Array();
 
@@ -117,7 +138,63 @@ module.exports = function BoardAccessor(match) {
         }
 
         return result;
-    }
+    };
+
+    var getRangeForMan = function (column, row) {
+        var result = new Array();
+
+
+
+        return result;
+    };
+
+
+
+    var getRangeForKnight = function (column, row) {
+        var result = new Array();
+
+        var relativeTargets = [
+            {column:-1,row:-2},
+            {column:1,row:-2},
+            {column:-2,row:-1},
+            {column:2,row:-1},
+            {column:-2,row:1},
+            {column:2,row:1},
+            {column:-1,row:2},
+            {column:1,row:2}];
+
+        var currentFigure = getFigure(column,row);
+
+
+        for(var i=0 ; i<relativeTargets.length ; i++){
+            var relativeTarget = relativeTargets[i];
+
+
+            var targetColumn = column + relativeTarget.column;
+            var targetRow = row + relativeTarget.row;
+
+            if(checkOutOfBoard(targetColumn, targetRow)){
+                continue;
+            }
+
+            var targetFigure = getFigure(targetColumn, targetRow);
+
+
+            if(isOrigin(targetColumn,targetRow)){
+                continue;
+            }
+
+
+            if(targetFigure && targetFigure.color == currentFigure.color){
+                continue;
+            }
+
+            result.push({column: targetColumn, row: targetRow});
+        }
+
+
+        return result;
+    };
 
 
     var isOrigin = function (x, y) {

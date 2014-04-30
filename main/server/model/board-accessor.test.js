@@ -40,7 +40,7 @@ describe("getRangeFor", function () {
             match = modelFactory.createEmptyMatch(model.BoardSize.SMALL);
             board = match.getCurrentSnapshot();
 
-            // mocking the getCurrentSnapshot 
+            // mocking the getCurrentSnapshot
             match.getCurrentSnapshot = function(){
                 return board;
             };
@@ -418,11 +418,15 @@ describe("getRangeFor", function () {
         })
     });
 
-    describe.skip("Knight", function() {
+    describe("Knight", function() {
         beforeEach(function () {
             match = modelFactory.createEmptyMatch(model.BoardSize.SMALL);
-            board = match.getCurrentSnapshot();
-            accessor = new BoardAccessor(match);
+            board = modelFactory.createEmptySnapshot(model.BoardSize.SMALL);
+
+            // mocking the getCurrentSnapshot
+            match.getCurrentSnapshot = function(){
+                return board;
+            };
         });
 
         it("should include the typical knight positions", function(){

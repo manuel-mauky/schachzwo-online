@@ -43,8 +43,20 @@ module.exports.createStartSnapshot = function (size) {
     } else {
         throw new Error("The size param was wrong. Size needs to be either 7 (small) or 9 (big)");
     }
-}
+};
 
+
+module.exports.createEmptySnapshot = function(size){
+
+    if( size != model.BoardSize.SMALL && size != model.BoardSize.BIG ){
+        throw new Error("The size param was wrong. Size needs to be either 7 (small) or 9 (big)");
+    }
+
+    var start = new model.Snapshot();
+    helper_fillWithEmptyFields(start.board, size);
+
+    return start;
+}
 
 var createSmallMatch = function () {
     var match = helper_createEmptyMatch(model.BoardSize.SMALL);
