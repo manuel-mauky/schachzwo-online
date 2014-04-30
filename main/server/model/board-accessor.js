@@ -24,11 +24,17 @@ module.exports = function BoardAccessor(match) {
         var board = match.getCurrentSnapshot();
 
         return board.getField(column, row);
-    }
+    };
 
     var getFigure = function(column, row){
-        return getField(column,row).figure;
-    }
+        var field = getField(column, row);
+
+        if(field){
+            return field.figure;
+        }else{
+            return undefined;
+        }
+    };
 
     var checkOutOfBoard = function(column, row){
         if (column < 0 || column >= match.size || row < 0 || row >= match.size) return true;
@@ -150,6 +156,30 @@ module.exports = function BoardAccessor(match) {
     var getRangeForMan = function (column, row) {
         var result = new Array();
 
+        var currentFigure = getFigure(column, row);
+
+        // the man can go one field in every diagonal direction
+        var diagonalOneField = [{x:1,y:1},{x:1,y:-1},{x:-1,y:1},{x:-1,y:-1}];
+
+        for(var i=0; i<diagonalOneField.length ; i++){
+            var direction = diagonalOneField[i];
+
+            if(isValidTarget(currentFigure, column + direction.x, row + direction.y)){
+                result.push({column: column+direction.x, row: row+direction.y});
+            }
+        }
+
+
+        var straightDirection = [{x:-1, y:0},{x:1, y:0}, {x:0, y:-1}, {x:0, y:1}];
+
+
+        for(var i=0 ; i< straightDirection.length ; i++){
+            var direction = straightDirection[i];
+
+            var partialResult = findTargetsInOneDirection(currentFigure, column, row, direction );
+
+            result = result.concat(partialResult);
+        }
 
 
         return result;
@@ -184,19 +214,9 @@ module.exports = function BoardAccessor(match) {
                 continue;
             }
 
-            var targetFigure = getFigure(targetColumn, targetRow);
-
-
-            if(isOrigin(targetColumn,targetRow)){
-                continue;
+            if(isValidTarget(currentFigure,targetColumn,targetRow)){
+                result.push({column: targetColumn, row: targetRow});
             }
-
-
-            if(targetFigure && targetFigure.color == currentFigure.color){
-                continue;
-            }
-
-            result.push({column: targetColumn, row: targetRow});
         }
 
 
@@ -219,6 +239,39 @@ module.exports = function BoardAccessor(match) {
 
     };
 
+    var findTargetsInOneDirection = function (currentFigure, startColumn, startRow, direction){
+        var result = new Array();
+
+        var tmpColumn = startColumn;
+        var tmpRow = startRow;
+
+        for(var j=0 ; j<match.size ; j++){
+            tmpColumn = tmpColumn + direction.x;
+            tmpRow = tmpRow + direction.y;
+
+            if(checkOutOfBoard(tmpColumn,tmpRow)){
+                break;
+            }
+
+            if(isOrigin(tmpColumn, tmpRow)){
+                continue;
+            }
+
+            var figure = getFigure(tmpColumn, tmpRow)
+
+            if(figure){
+                if(figure.color != currentFigure.color){
+                    result.push({column: tmpColumn, row: tmpRow});
+                }
+                break;
+            }else{
+                result.push({column: tmpColumn, row:tmpRow});
+            }
+        }
+
+        return result;
+    };
+
 
     var isOrigin = function (x, y) {
         var size = match.size;
@@ -227,7 +280,36 @@ module.exports = function BoardAccessor(match) {
         var isSmallOrigin = (size == model.BoardSize.SMALL && (x == 3 && y == 3));
 
         return isBigOrigin || isSmallOrigin;
-    }
+    };
+
+
+    /**
+     * Checks if the specified target is valid for the given figure.
+     *
+     * This check is only intended for all figures <strong>except</strong>
+     * for the Zenith as this figure has lots of custom rules.
+     *
+     * This function returns false if the target field is out of the board OR
+     * the target field is the origin OR there is an enemy figure on the target field.
+     */
+    var isValidTarget = function(currentFigure, targetColumn, targetRow){
+
+        if(checkOutOfBoard(targetColumn, targetRow)){
+            return false;
+        }
+
+        if(isOrigin(targetColumn, targetRow)){
+            return false;
+        }
+
+        var targetFigure = getFigure(targetColumn, targetRow);
+
+        if(targetFigure && targetFigure.color == currentFigure.color){
+            return false;
+        }
+
+        return true;
+    };
 
 
     return this;

@@ -202,7 +202,7 @@ var Snapshot = function (json) {
                             break;
                     }
                 } else {
-                    s += "  ";
+                    s += "[]";
                 }
             }
             console.log(s);

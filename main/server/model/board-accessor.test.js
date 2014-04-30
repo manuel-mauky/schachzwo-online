@@ -172,11 +172,16 @@ describe("getRangeFor", function () {
 
     });
 
-    describe.skip("Man", function (){
+    describe("Man", function (){
 
         beforeEach(function () {
             match = modelFactory.createEmptyMatch(model.BoardSize.SMALL);
-            board = match.getCurrentSnapshot();
+            board = modelFactory.createEmptySnapshot(model.BoardSize.SMALL);
+            // mocking the getCurrentSnapshot
+            match.getCurrentSnapshot = function(){
+                return board;
+            };
+
             accessor = new BoardAccessor(match);
         });
 
@@ -185,8 +190,7 @@ describe("getRangeFor", function () {
             match = modelFactory.createMatch(model.BoardSize.SMALL);
             accessor = new BoardAccessor(match);
 
-
-            var range = accessor.getRangeFor(0,0); // right black man.
+            var range = accessor.getRangeFor(0,6); // right black man.
 
             assert.isArray(range);
             assert.equal(range.length, 0);
@@ -269,9 +273,14 @@ describe("getRangeFor", function () {
             assert.notInclude(range, {column: 3, row: 3});
         });
 
-        it("should include two fields diagonal from the start position when it wasn't moved yet for big boards", function(){
+        it.skip("should include two fields diagonal from the start position when it wasn't moved yet for big boards", function(){
             // we create a big board for this test.
             match = modelFactory.createEmptyMatch(model.BoardSize.BIG);
+            board = modelFactory.createEmptySnapshot(model.BoardSize.BIG);
+            // mocking the getCurrentSnapshot
+            match.getCurrentSnapshot = function(){
+                return board;
+            };
             accessor = new BoardAccessor(match);
 
             board.getField(0,8).figure = new Figure({type:FigureType.MAN, color: Color.BLACK});
@@ -284,13 +293,18 @@ describe("getRangeFor", function () {
 
         });
 
-        it("should only include those two-distance-diagonal fields that aren't blocked by enemy figures", function(){
+        it.skip("should only include those two-distance-diagonal fields that aren't blocked by enemy figures", function(){
            // the rules say that from the start the man can go 2 fields in every direction but only
            // when there is no figure in the way.
 
 
             // we create a big board for this test.
-            match = modelFactory.createEmptyMatch(model.BoardSize.SMALL);
+            match = modelFactory.createEmptyMatch(model.BoardSize.BIG);
+            board = modelFactory.createEmptySnapshot(model.BoardSize.BIG);
+            // mocking the getCurrentSnapshot
+            match.getCurrentSnapshot = function(){
+                return board;
+            };
             accessor = new BoardAccessor(match);
 
 
@@ -426,6 +440,8 @@ describe("getRangeFor", function () {
             match.getCurrentSnapshot = function(){
                 return board;
             };
+
+            accessor = new BoardAccessor(match);
         });
 
         it("should include the typical knight positions", function(){
@@ -459,9 +475,7 @@ describe("getRangeFor", function () {
 
         it("should include figures of the enemy", function(){
             board.getField(2, 4).figure = new Figure({type: FigureType.KNIGHT, color: Color.BLACK});
-
             board.getField(1, 2).figure = new Figure({type: FigureType.ROCKS, color: Color.WHITE});
-
 
             var range = accessor.getRangeFor(2, 4);
 
