@@ -34,8 +34,7 @@ module.exports = function BoardAccessor(match) {
         // todo
         return false;
     }
-    
-    
+
     /**
      * get the range of fields that the figure on the given position can reach.
      * @param column
@@ -58,6 +57,17 @@ module.exports = function BoardAccessor(match) {
             case FigureType.KNIGHT:
                 return getRangeForKnight(column, row);
 
+            case FigureType.WOMAN:
+                return getRangeForWoman(column, row);
+
+            case FigureType.ZENITH:
+                return getRangeForZenith(column, row);
+
+            case FigureType.KNOWLEDGE:
+                return getRangeForKnowledge(column, row);
+
+            case FigureType.FAITH:
+                return getRangeForFaith(column, row);
 
             default:
                 return new Array();
@@ -191,6 +201,22 @@ module.exports = function BoardAccessor(match) {
 
 
         return result;
+    };
+
+
+    var getRangeForKnowledge = function(column, row) {
+
+    };
+
+    var getRangeForFaith = function(column, row) {
+
+    };
+
+    var getRangeForWoman = function(column, row) {
+
+    };
+    var getRangeForZenith = function(column, row) {
+
     };
 
 
