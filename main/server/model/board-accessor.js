@@ -45,7 +45,7 @@ module.exports = function BoardAccessor(match) {
      * @param column
      * @param row
      */
-    this.getRangeFor = function (column, row) {
+    var getRangeFor = this.getRangeFor = function (column, row) {
         var figure = getFigure(column, row);
 
         if (!figure) {
@@ -78,6 +78,56 @@ module.exports = function BoardAccessor(match) {
                 return [];
         }
 
+    };
+
+    var getThreatenFields = this. getThreatenFields = function(column, row){
+        var result = [];
+
+        var ownFigure = getFigure(column, row);
+
+        if(!ownFigure){
+            return result;
+        }
+
+        var list = [];
+
+        for(var i=0 ; i< match.size ; i++){
+            for(var j=0 ; j<match.size ; j++){
+                var field = getField(i, j);
+                var figure = field.figure;
+
+                if(isOrigin(i, j)){
+                    continue;
+                }
+
+
+                if(! figure){
+                    continue;
+                }
+
+                if(figure.color == ownFigure.color){
+                    continue;
+                }
+
+                if(figure.type == FigureType.ZENITH){ // enemy zenith
+                    if(Math.abs(column - i) <= 1 && Math.abs(row - j) <= 1) {
+                        result.push({column: i, row: j});
+                    }
+
+                } else { // other enemy figure
+                    var list = getRangeFor(i, j);
+
+                    list.forEach(function(element){
+
+                        if(element.column == column && element.row == row){
+                            result.push({column: i, row: j});
+                        }
+                    });
+                }
+            }
+        }
+
+        return result;
     };
 
     var getRangeForRocks = function (column, row) {
@@ -308,7 +358,26 @@ module.exports = function BoardAccessor(match) {
     };
 
     var getRangeForZenith = function(column, row) {
+        var result = [];
 
+        var ownFigure = getFigure(column, row);
+
+        var possiblePositions = [{x:1,y:1},{x:1,y:-1},{x:-1,y:1},{x:-1,y:-1},{x:1,y:0},{x:-1,y:0},{x:0,y:1},{x:0,y:-1}];
+        var tmpResult = findTargets(ownFigure, column, row, possiblePositions);
+
+        result = result.concat(tmpResult);
+
+
+        var originCoordinate = match.size == model.BoardSize.BIG ? 4 : 3;
+        if(Math.abs(column - originCoordinate) <= 1 && Math.abs(row - originCoordinate) <= 1){
+            var threatenFields = getThreatenFields(column, row);
+
+            if(threatenFields.length == 0){
+                result.push({column: originCoordinate, row: originCoordinate});
+            }
+        }
+
+        return result;
     };
 
 
