@@ -36,8 +36,8 @@ module.exports = function BoardAccessor(match) {
         }
     };
 
-    var checkOutOfBoard = function(column, row){
-        return !!(column < 0 || column >= match.size || row < 0 || row >= match.size);
+    var isOutOfBoard = function(column, row){
+        return (column < 0 || column >= match.size || row < 0 || row >= match.size);
     };
 
     /**
@@ -163,7 +163,7 @@ module.exports = function BoardAccessor(match) {
         result = result.concat(diagonalResults);
 
 
-        // the woman can go on the horizontal and vertical directions.
+        // the man can go on the horizontal and vertical directions.
         var straightDirections = [{x:-1, y:0},{x:1, y:0}, {x:0, y:-1}, {x:0, y:1}];
         var straightResult = findTargetsInDirections(currentFigure.color, column, row, straightDirections);
         result = result.concat(straightResult);
@@ -197,7 +197,7 @@ module.exports = function BoardAccessor(match) {
             var targetColumn = column + relativeTarget.column;
             var targetRow = row + relativeTarget.row;
 
-            if(checkOutOfBoard(targetColumn, targetRow)){
+            if(isOutOfBoard(targetColumn, targetRow)){
                 continue;
             }
 
@@ -212,11 +212,81 @@ module.exports = function BoardAccessor(match) {
 
 
     var getRangeForKnowledge = function(column, row) {
+        var result = [];
 
+        var currentFigure = getFigure(column, row);
+
+        var diagonalDirections = [{x:1,y:1},{x:1,y:-1},{x:-1,y:1},{x:-1,y:-1}];
+        var diagonalResults = findTargetsInDirections(currentFigure.color, column, row, diagonalDirections);
+        result = result.concat(diagonalResults);
+
+        var straightDirections = [{x:-1, y:0},{x:1, y:0}, {x:0, y:-1}, {x:0, y:1}];
+        var straightResult = findTargetsInDirections(currentFigure.color, column, row, straightDirections);
+        result = result.concat(straightResult);
+
+
+        return result;
     };
 
     var getRangeForFaith = function(column, row) {
+        var result = [];
 
+        var ownFigure = getFigure(column, row);
+
+
+        var queue = [];
+        queue.push({x:column, y:row, r: 2});
+
+        while(queue.length > 0){
+
+            var currentElement = queue.pop();
+
+            if(isOutOfBoard(currentElement.x, currentElement.y)){
+                continue;
+            }
+
+            var isOwnPosition = (currentElement.x == column && currentElement.y == row);
+
+            for(var i=0 ; i<result.length ; i++){
+                if(result[i].column == currentElement.x && result[i].row == currentElement.y) {
+                    result.splice(i, 1);
+                    break;
+                }
+            }
+
+            var currentField = getField(currentElement.x, currentElement.y);
+
+            var elementHasFigure = (currentField.figure && !isOwnPosition);
+
+            if(elementHasFigure && currentField.figure.color == ownFigure.color){
+                continue;
+            }
+
+            if(currentElement.r > 0 && !elementHasFigure){
+                //linear
+                queue.push({x: currentElement.x, y: currentElement.y + 1, r: currentElement.r - 1});
+                queue.push({x: currentElement.x, y: currentElement.y - 1, r: currentElement.r - 1});
+                queue.push({x: currentElement.x + 1, y: currentElement.y, r: currentElement.r - 1});
+                queue.push({x: currentElement.x - 1, y: currentElement.y, r: currentElement.r - 1});
+                //diagonal
+                queue.push({x: currentElement.x + 1, y: currentElement.y + 1, r: currentElement.r - 1});
+                queue.push({x: currentElement.x + 1, y: currentElement.y - 1, r: currentElement.r - 1});
+                queue.push({x: currentElement.x - 1, y: currentElement.y + 1, r: currentElement.r - 1});
+                queue.push({x: currentElement.x - 1, y: currentElement.y - 1, r: currentElement.r - 1});
+            }
+
+            if(isOwnPosition){
+                continue;
+            }
+
+            if(!isOrigin(currentElement.x, currentElement.y)){
+                result.push({column: currentElement.x, row: currentElement.y});
+            }
+
+        }
+
+
+        return result;
     };
 
     var getRangeForWoman = function(column, row) {
@@ -224,12 +294,12 @@ module.exports = function BoardAccessor(match) {
 
         var currentFigure = getFigure(column, row);
 
-        // the man can go one field in vertical and horizontal direction
+        // the woman can go one field in vertical and horizontal direction
         var straightOneFieldDirections = [{x:-1, y:0},{x:1, y:0}, {x:0, y:-1}, {x:0, y:1}];
         var straightResults = findTargets(currentFigure, column, row, straightOneFieldDirections);
         result = result.concat(straightResults);
 
-        // the man can go on the diagonals
+        // the woman can go on the diagonals
         var diagonalDirections = [{x:1,y:1},{x:1,y:-1},{x:-1,y:1},{x:-1,y:-1}];
         var diagonalResults = findTargetsInDirections(currentFigure.color, column, row, diagonalDirections);
         result = result.concat(diagonalResults);
@@ -295,7 +365,7 @@ module.exports = function BoardAccessor(match) {
             tmpColumn = tmpColumn + direction.x;
             tmpRow = tmpRow + direction.y;
 
-            if(checkOutOfBoard(tmpColumn,tmpRow)){
+            if(isOutOfBoard(tmpColumn,tmpRow)){
                 break;
             }
 
@@ -363,7 +433,7 @@ module.exports = function BoardAccessor(match) {
      */
     var isValidTarget = function(currentFigure, targetColumn, targetRow){
 
-        if(checkOutOfBoard(targetColumn, targetRow)){
+        if(isOutOfBoard(targetColumn, targetRow)){
             return false;
         }
 

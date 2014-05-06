@@ -55,7 +55,7 @@ describe("getRangeFor", function () {
 
             assert.include(range, {column: 0, row: 4});
 
-        })
+        });
 
         it("should be one field downwards for white from start", function () {
             var range = accessor.getRangeFor(0, 1); // left white rocks
@@ -502,7 +502,7 @@ describe("getRangeFor", function () {
             var range = accessor.getRangeFor(2, 4);
 
             assert.notInclude(range, {column: 3, row: 3});
-        })
+        });
 
         it("should not include fields out of the board", function(){
             board.getField(0, 0).figure = new Figure({type: FigureType.KNIGHT, color: Color.BLACK});
@@ -605,10 +605,14 @@ describe("getRangeFor", function () {
         });
     });
 
-    describe.skip("Knowledge", function() {
+    describe("Knowledge", function() {
         beforeEach(function () {
             match = modelFactory.createEmptyMatch(model.BoardSize.BIG);
-            board = match.getCurrentSnapshot();
+            board = modelFactory.createEmptySnapshot(model.BoardSize.BIG);
+            // mocking the getCurrentSnapshot
+            match.getCurrentSnapshot = function(){
+                return board;
+            };
             accessor = new BoardAccessor(match);
         });
 
@@ -620,6 +624,8 @@ describe("getRangeFor", function () {
             assert.include(range, {column: 0, row: 3});
             assert.include(range, {column: 2, row: 5});
             assert.include(range, {column: 3, row: 6});
+            assert.include(range, {column: 4, row: 7});
+            assert.include(range, {column: 5, row: 8});
 
             assert.include(range, {column: 0, row: 5});
             assert.include(range, {column: 2, row: 3});
@@ -630,9 +636,9 @@ describe("getRangeFor", function () {
 
         it("should include the row and column", function(){
 
-            board.getField(1, 4).figure = new Figure({type:FigureType.KNOWLEDGE, color: Color.BLACK});
+            board.getField(1, 5).figure = new Figure({type:FigureType.KNOWLEDGE, color: Color.BLACK});
 
-            var range = accessor.getRangeFor(1,4);
+            var range = accessor.getRangeFor(1, 5);
 
             assert.isArray(range);
 
@@ -641,16 +647,20 @@ describe("getRangeFor", function () {
             assert.include(range, {column: 1, row: 1});
             assert.include(range, {column: 1, row: 2});
             assert.include(range, {column: 1, row: 3});
-            assert.include(range, {column: 1, row: 5});
+            assert.include(range, {column: 1, row: 4});
             assert.include(range, {column: 1, row: 6});
+            assert.include(range, {column: 1, row: 7});
+            assert.include(range, {column: 1, row: 8});
 
             // include the row without the current field.
-            assert.include(range, {column: 0, row: 4});
-            assert.include(range, {column: 2, row: 4});
-            assert.include(range, {column: 3, row: 4});
-            assert.include(range, {column: 4, row: 4});
-            assert.include(range, {column: 5, row: 4});
-            assert.include(range, {column: 6, row: 4});
+            assert.include(range, {column: 0, row: 5});
+            assert.include(range, {column: 2, row: 5});
+            assert.include(range, {column: 3, row: 5});
+            assert.include(range, {column: 4, row: 5});
+            assert.include(range, {column: 5, row: 5});
+            assert.include(range, {column: 6, row: 5});
+            assert.include(range, {column: 7, row: 5});
+            assert.include(range, {column: 8, row: 5});
         });
 
         it("should include fields with enemy figures", function(){
@@ -690,25 +700,30 @@ describe("getRangeFor", function () {
 
             var range = accessor.getRangeFor(3, 5);
 
-            assert.notInclude(range, {column: 3, row: 3});
+            assert.notInclude(range, {column: 4, row: 4});
         });
 
         it("should include fields behind the origin", function(){
-            board.getField(3, 5).figure = new Figure({type: FigureType.KNOWLEDGE, color: Color.BLACK});
+            board.getField(2, 4).figure = new Figure({type: FigureType.KNOWLEDGE, color: Color.BLACK});
 
-            var range = accessor.getRangeFor(3, 5);
+            var range = accessor.getRangeFor(2, 4);
 
-            assert.notInclude(range, {column: 3, row: 2});
-            assert.notInclude(range, {column: 3, row: 1});
-            assert.notInclude(range, {column: 3, row: 0});
+            assert.include(range, {column: 5, row: 4});
+            assert.include(range, {column: 6, row: 4});
+            assert.include(range, {column: 7, row: 4});
+            assert.include(range, {column: 8, row: 4});
         });
 
     });
 
-    describe.skip("Faith", function() {
+    describe("Faith", function() {
         beforeEach(function () {
             match = modelFactory.createEmptyMatch(model.BoardSize.BIG);
-            board = match.getCurrentSnapshot();
+            board = modelFactory.createEmptySnapshot(model.BoardSize.BIG);
+            // mocking the getCurrentSnapshot
+            match.getCurrentSnapshot = function(){
+                return board;
+            };
             accessor = new BoardAccessor(match);
         });
 
@@ -718,6 +733,7 @@ describe("getRangeFor", function () {
 
             var range = accessor.getRangeFor(2, 2);
 
+            assert.equal(range.length, 23);
 
             assert.include(range, {column: 0, row: 0});
             assert.include(range, {column: 1, row: 0});
@@ -753,7 +769,7 @@ describe("getRangeFor", function () {
         it("should only include those fields that can be reached by two moves", function(){
             board.getField(3, 5).figure = new Figure({type: FigureType.FAITH, color: Color.BLACK});
             board.getField(2, 5).figure = new Figure({type: FigureType.ROCKS, color: Color.BLACK});
-            board.getField(2, 6).figure = new Figure({type: FigureType.ROCKs, color: Color.WHITE});
+            board.getField(2, 6).figure = new Figure({type: FigureType.ROCKS, color: Color.WHITE});
 
             var range = accessor.getRangeFor(3, 5);
 
@@ -766,7 +782,7 @@ describe("getRangeFor", function () {
 
             var range = accessor.getRangeFor(3, 5);
 
-            assert.notInclude(range, {column: 3, row: 3});
+            assert.notInclude(range, {column: 4, row: 4});
         });
 
         it("should include fields with enemy figures", function(){
