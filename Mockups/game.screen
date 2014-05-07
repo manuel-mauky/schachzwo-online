@@ -124,8 +124,6 @@
   </widgets>
   <widgets xsi:type="model:Icon" id="26" x="650" y="190" measuredWidth="32" measuredHeight="32" icon="user (large)"/>
   <widgets xsi:type="model:Icon" id="27" x="786" y="190" measuredWidth="32" measuredHeight="32" foreground="#999999" icon="user (large)"/>
-  <widgets xsi:type="model:Icon" id="28" x="743" y="198" measuredWidth="16" measuredHeight="16" icon="edit (small)"/>
-  <widgets xsi:type="model:Icon" id="29" x="880" y="198" measuredWidth="16" measuredHeight="16" icon="edit (small)"/>
   <hRuler/>
   <vRuler/>
   <font size="12px"/>
