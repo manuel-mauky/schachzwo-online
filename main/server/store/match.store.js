@@ -22,9 +22,9 @@ module.exports.get = function (id) {
  * @returns {Object} the created match
  */
 module.exports.create = function (match) {
-
-    //TODO store[id] = ...
-    return undefined;
+    match.matchId = createID();
+    store[match.matchId] = match;
+    return match;
 };
 
 /**
@@ -34,8 +34,14 @@ module.exports.create = function (match) {
  * @returns {Boolean} false if the operation failed or the match does not exist, true otherwise
  */
 module.exports.update = function (match) {
-    //TODO store[id] = ...
+    store[match.matchId] = match;
     return true;
+};
+
+
+var _id = 1;
+var createID = function() {
+   return (_id++).toString();
 };
 
 
