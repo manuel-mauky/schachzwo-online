@@ -297,6 +297,19 @@ describe("Match", function(){
             assert.isFalse(result);
         });
     });
+
+
+    describe("historyContainsMoveFrom",function(){
+        it("should be return false on empty history",function(){
+            var match = modelFactory.createMatch(BoardSize.SMALL);
+            assert.equal(match.historyContainsMoveFrom(4,2),false);
+        });
+        it("should be return true",function(){
+            var match = modelFactory.createMatch(BoardSize.SMALL);
+            match.history.push(new Move({figure: {color: Color.WHITE,type: FigureType.ROCKS},from: {column: 1,row: 1},to: {column: 1,row: 2}}));
+            assert.equal(match.historyContainsMoveFrom(1,1),true);
+        });
+    });
 });
 
 

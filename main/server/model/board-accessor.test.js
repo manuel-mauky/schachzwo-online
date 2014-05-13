@@ -273,7 +273,7 @@ describe("getRangeFor", function () {
             assert.notInclude(range, {column: 3, row: 3});
         });
 
-        it.skip("should include two fields diagonal from the start position when it wasn't moved yet for big boards", function(){
+        it("should include two fields diagonal from the start position when it wasn't moved yet for big boards", function(){
             // we create a big board for this test.
             match = modelFactory.createEmptyMatch(model.BoardSize.BIG);
             board = modelFactory.createEmptySnapshot(model.BoardSize.BIG);
@@ -293,7 +293,7 @@ describe("getRangeFor", function () {
 
         });
 
-        it.skip("should only include those two-distance-diagonal fields that aren't blocked by enemy figures", function(){
+        it("should only include those two-distance-diagonal fields that aren't blocked by enemy figures", function(){
            // the rules say that from the start the man can go 2 fields in every direction but only
            // when there is no figure in the way.
 
@@ -339,8 +339,7 @@ describe("getRangeFor", function () {
             accessor = new BoardAccessor(match);
         });
 
-
-        // todo: Implement the start position with two zeniths on the origin.
+// todo: Implement the start position with two zeniths on the origin.
         it.skip("should be empty at the begin as there are figures around the woman", function(){
             // we create a match with the start lineup for this test.
             match = modelFactory.createMatch(model.BoardSize.SMALL); // for this test we use a board with start lineup of figures

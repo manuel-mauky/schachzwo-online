@@ -133,6 +133,7 @@ var helper_fillWithEmptyFields = function (board, size) {
  * This helper is used to place the figures man, woman and knight on the given row.
  * With the size param this function can be reused for big and small boards.
  */
+// todo: Implement the start position with two zeniths on the origin.
 var helper_fillWithSpecialFigures = function (board, color, row, size) {
     board.getField(0, row).figure = new model.Figure({color: color, type: FigureType.MAN});
     board.getField(1, row).figure = new model.Figure({color: color, type: FigureType.KNIGHT});

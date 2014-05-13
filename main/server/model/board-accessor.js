@@ -218,6 +218,10 @@ module.exports = function BoardAccessor(match) {
         var straightResult = findTargetsInDirections(currentFigure.color, column, row, straightDirections);
         result = result.concat(straightResult);
 
+        if(! match.historyContainsMoveFrom(row,column))
+        {
+            result = result.concat(findTargetsInRange(column, row,2));
+        }
 
         return result;
     };
@@ -279,64 +283,7 @@ module.exports = function BoardAccessor(match) {
     };
 
     var getRangeForFaith = function(column, row) {
-        var result = [];
-
-        var ownFigure = getFigure(column, row);
-
-
-        var queue = [];
-        queue.push({x:column, y:row, r: 2});
-
-        while(queue.length > 0){
-
-            var currentElement = queue.pop();
-
-            if(isOutOfBoard(currentElement.x, currentElement.y)){
-                continue;
-            }
-
-            var isOwnPosition = (currentElement.x == column && currentElement.y == row);
-
-            for(var i=0 ; i<result.length ; i++){
-                if(result[i].column == currentElement.x && result[i].row == currentElement.y) {
-                    result.splice(i, 1);
-                    break;
-                }
-            }
-
-            var currentField = getField(currentElement.x, currentElement.y);
-
-            var elementHasFigure = (currentField.figure && !isOwnPosition);
-
-            if(elementHasFigure && currentField.figure.color == ownFigure.color){
-                continue;
-            }
-
-            if(currentElement.r > 0 && !elementHasFigure){
-                //linear
-                queue.push({x: currentElement.x, y: currentElement.y + 1, r: currentElement.r - 1});
-                queue.push({x: currentElement.x, y: currentElement.y - 1, r: currentElement.r - 1});
-                queue.push({x: currentElement.x + 1, y: currentElement.y, r: currentElement.r - 1});
-                queue.push({x: currentElement.x - 1, y: currentElement.y, r: currentElement.r - 1});
-                //diagonal
-                queue.push({x: currentElement.x + 1, y: currentElement.y + 1, r: currentElement.r - 1});
-                queue.push({x: currentElement.x + 1, y: currentElement.y - 1, r: currentElement.r - 1});
-                queue.push({x: currentElement.x - 1, y: currentElement.y + 1, r: currentElement.r - 1});
-                queue.push({x: currentElement.x - 1, y: currentElement.y - 1, r: currentElement.r - 1});
-            }
-
-            if(isOwnPosition){
-                continue;
-            }
-
-            if(!isOrigin(currentElement.x, currentElement.y)){
-                result.push({column: currentElement.x, row: currentElement.y});
-            }
-
-        }
-
-
-        return result;
+        return findTargetsInRange(column, row,2);
     };
 
     var getRangeForWoman = function(column, row) {
@@ -380,6 +327,68 @@ module.exports = function BoardAccessor(match) {
         return result;
     };
 
+    /**
+     * Return valid Targets based on a Flood Algorithm from the current Position to <range> next Positions
+     * @param column
+     * @param row
+     * @param range
+     */
+
+    function findTargetsInRange(column, row,range) {
+        var result = [];
+        var queue = [];
+        var ownFigure = getFigure(column, row);
+        queue.push({x: column, y: row, r: range});
+
+        while (queue.length > 0) {
+
+            var currentElement = queue.pop();
+
+            if (isOutOfBoard(currentElement.x, currentElement.y)) {
+                continue;
+            }
+
+            var isOwnPosition = (currentElement.x == column && currentElement.y == row);
+
+            for (var i = 0; i < result.length; i++) {
+                if (result[i].column == currentElement.x && result[i].row == currentElement.y) {
+                    result.splice(i, 1);
+                    break;
+                }
+            }
+
+            var currentField = getField(currentElement.x, currentElement.y);
+
+            var elementHasFigure = (currentField.figure && !isOwnPosition);
+
+            if (elementHasFigure && currentField.figure.color == ownFigure.color) {
+                continue;
+            }
+
+            if (currentElement.r > 0 && !elementHasFigure) {
+                //linear
+                queue.push({x: currentElement.x, y: currentElement.y + 1, r: currentElement.r - 1});
+                queue.push({x: currentElement.x, y: currentElement.y - 1, r: currentElement.r - 1});
+                queue.push({x: currentElement.x + 1, y: currentElement.y, r: currentElement.r - 1});
+                queue.push({x: currentElement.x - 1, y: currentElement.y, r: currentElement.r - 1});
+                //diagonal
+                queue.push({x: currentElement.x + 1, y: currentElement.y + 1, r: currentElement.r - 1});
+                queue.push({x: currentElement.x + 1, y: currentElement.y - 1, r: currentElement.r - 1});
+                queue.push({x: currentElement.x - 1, y: currentElement.y + 1, r: currentElement.r - 1});
+                queue.push({x: currentElement.x - 1, y: currentElement.y - 1, r: currentElement.r - 1});
+            }
+
+            if (isOwnPosition) {
+                continue;
+            }
+
+            if (!isOrigin(currentElement.x, currentElement.y)) {
+                result.push({column: currentElement.x, row: currentElement.y});
+            }
+
+        }
+        return result;
+    }
 
     /**
      * checks the fields based on the given column and row and the array of directions
