@@ -298,6 +298,17 @@ var Match = function (json) {
         this.history.push(move);
     };
 
+    this.historyContainsMoveFrom = function(row, column){
+        var contains = false;
+        this.history.forEach(function(move){
+            if(move.from.column == column && move.from.row == row){
+                contains = true;
+                return;
+            }
+        });
+        return contains;
+    };
+
     return this;
 }
 
