@@ -239,13 +239,17 @@ var Player = function (json) {
 var Match = function (json) {
     var json = json || 0;
 
-    this.playerWhite = new Player(json.playerWhite);
-    this.playerBlack = new Player(json.playerBlack);
+    if(json.playerWhite){
+        this.playerWhite = new Player(json.playerWhite);
+    }
+    if(json.playerBlack){
+        this.playerBlack = new Player(json.playerBlack);
+    }
 
     this.matchId = json.matchId;
     this.state = json.state || State.READY;
 
-    this.history = new Array();
+    this.history = [];
     // for every json-entry create a move instance.
     if (Array.isArray(json.history)) {
         json.history.forEach(function (entry) {
@@ -297,6 +301,40 @@ var Match = function (json) {
         //zielfeld gültig -> validator
         this.history.push(move);
     };
+
+    /**
+     * Adds new player to the match.
+     *
+     * The param can either be a JSON representation of the player or an instance
+     * of the Player class.
+     *
+     * When the match has no player yet, the first player added by this function will become the "black" player.
+     *
+     * The second one will become "white".
+     *
+     * Any player that is added after that (meaning that black and white are already set) won't be added
+     * to the game. This method will return <code>false</code> in this case.
+     *
+     * @param player the player that should be added, either as Player instance or JSON
+     * @returns {boolean} <code>true</code> when a player was successfully added, otherwise <code>false</code>
+     */
+    this.addPlayer = function(player){
+
+        if(! (player instanceof Player)){
+            player = new Player(player);
+        }
+
+        if(!this.playerBlack){
+            this.playerBlack = player;
+            return true;
+        }else if(!this.playerWhite){
+            this.playerWhite = player;
+            return true;
+        }
+
+        return false;
+
+    }
 
     return this;
 }
