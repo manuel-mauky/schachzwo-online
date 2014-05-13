@@ -6,6 +6,8 @@ var modelFactory = require("../model/model.factory");
 var model = require("../model/model");
 var matchStore = require("../store/match.store.js");
 
+var uuid = require("node-uuid");
+
 var route = express.Router();
 
 var PLAYER_COOKIE_NAME = 'player_id';
@@ -47,6 +49,7 @@ route.post("/", function (req, res) {
 
         res.statusCode = 201;
         res.header('Location', req.url + match.matchId);
+        delete match.history;
         return res.json(match);
 
     } catch (error) {
@@ -69,13 +72,23 @@ route.post("/:id/login", function (req, res) {
 
     var name;
     if (req.body) {
-        name = req.body.name;
+        if(req.body.name){
+            name = req.body.name;
+        }else{
+            res.statusCode = 400;
+            return res.json(
+                {
+                    name: "Bad login request",
+                    message: "No 'name' attribute in body found"
+                }
+            );
+        }
     }
 
-    //var player = match.join(name); TODO join method in match
-    var player = { playerId: 1, name: name }; //Mock
+    var player = new model.Player({playerId: uuid.v4(), name: name});
+    var successfullyAdded = match.addPlayer(player);
 
-    if (player) {
+    if (successfullyAdded) {
 
         if (matchStore.update(match)) {
 

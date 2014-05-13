@@ -11,7 +11,8 @@
     "express": "4.x",
     "request": "latest",
     "body-parser": "latest",
-    "cookie-parser": "latest"
+    "cookie-parser": "latest",
+    "node-uuid" : "latest"
   },
   "devDependencies": {
     "request": "latest",
