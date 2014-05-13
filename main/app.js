@@ -2,10 +2,12 @@ var express = require("express");
 var app = express();
 
 var bodyParser = require("body-parser");
+var cookieParser = require("cookie-parser");
 
 app.use(bodyParser());
+app.use(cookieParser());
 
-app.use("/match", require("./server/rest/match").route);
+app.use("/matches", require("./server/rest/matches").route);
 
 app.use(express.static(__dirname + "/client"));
 
