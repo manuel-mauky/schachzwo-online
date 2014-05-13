@@ -64,9 +64,7 @@ route.post("/", function (req, res) {
 route.post("/:id/login", function (req, res) {
 
     var match = matchStore.get(req.params.id);
-    if (match) {
-        match = new model.Match(match);
-    } else {
+    if (!match){
         return match404(req, res);
     }
 
@@ -121,7 +119,6 @@ route.get("/:id/board", function (req, res) {
 
     var match = matchStore.get(req.params.id);
     if (match) {
-        match = new model.Match(match);
         return  res.json(match.getCurrentSnapshot());
     } else {
         return match404(req, res);
@@ -134,7 +131,6 @@ route.get("/:id/moves", function (req, res) {
 
     var match = matchStore.get(req.params.id);
     if (match) {
-        match = new model.Match(match);
         return  res.json(match.history);
     } else {
         return match404(req, res);
@@ -149,9 +145,10 @@ route.post("/:id/moves", function (req, res) {
         return match404(req, res);
     }
 
-    var playerId = authenticate(req);
+    var playerId = findPlayerId(req);
 
-    if (!playerId) {
+    if (!playerId ||
+        (playerId != match.playerBlack.playerId && playerId != match.playerWhite.playerId)) {
         res.statusCode = 401;
         return res.json(
             {
@@ -160,19 +157,51 @@ route.post("/:id/moves", function (req, res) {
             });
     }
 
-    if (!req.body) {
+    var moveFailed = function(res, message){
         res.statusCode = 400;
-        return res.json(
-            {
-                name: 'Move failed',
-                message: 'Move can not be applied because the request is invalid.'
-            });
+        return res.json({
+            name: "Move failed",
+            message: message
+        });
+    };
+
+    if (!req.body) {
+        return moveFailed(res, 'Move can not be applied because the request is invalid.');
     }
+
 
     var move = req.body;
 
-    //TODO Check whether it's his turn
+
+    // even history length means that it's blacks turn.
+    if(match.history.length % 2 == 0){
+        // blacks turn
+
+        if(match.playerBlack.playerId != playerId){
+            return moveFailed(res, "Move can not be applied because it's not the players turn");
+        }
+
+        if(!move.figure || move.figure.color == model.Color.WHITE ){
+            return moveFailed(res, "Move can not be applied because you can't move an enemies figure");
+        }
+
+    }else{
+        // whites turn
+
+        if(match.playerWhite.playerId != playerId){
+            return moveFailed(res, "Move can not be applied because it's not the players turn");
+        }
+
+        if(!move.figure || move.figure.color == model.Color.BLACK){
+            return moveFailed(res, "Move can not be applied because you can't move an enemies figure");
+        }
+    }
+
+
     //TODO Link to game logic
+    match.addMove(move);
+
+    matchStore.update(match);
 
     res.statusCode = 201;
     return res.json(move);
@@ -184,7 +213,18 @@ route.post("/:id/moves", function (req, res) {
 //TODO GET /matches/:matchId/valid-moves
 
 
-var authenticate = function (req) {
+/**
+ * Returns the playerId (if any) from the given request.
+ *
+ * There are several ways to define a playerId in a request, f.e. in a cookie.
+ *
+ * If a playerId was found in the given request it will be returned. Otherwise
+ * nothing/undefined will be returned.
+ *
+ * @param req
+ * @returns {*}
+ */
+var findPlayerId = function (req) {
 
     var playerId = req.cookies[PLAYER_COOKIE_NAME];
     if (!playerId) {

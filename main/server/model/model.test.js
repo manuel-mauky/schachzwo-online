@@ -299,6 +299,56 @@ describe("Match", function(){
     });
 
 
+    describe("AddMove function of Match", function () {
+        var match;
+
+        var validMove = {figure: {color: model.Color.BLACK, type: model.FigureType.ROCKS},
+            from: {column: 2, row: 5},
+            to: {column: 2, row: 4}};
+
+        var invalidMove = {figure: {color: model.Color.BLACK, type: model.FigureType.ROCKS},
+            from: {column: 2, row: 5},
+            to: {column: 3, row: 4}};
+
+        beforeEach(function(){
+            match  = modelFactory.createEmptyMatch(BoardSize.SMALL);
+        });
+
+        it("should add a validMove given as JSON param", function () {
+            var result = match.addMove(validMove);
+
+            assert.isTrue(result);
+
+            assert.equal(match.history.length, 1);
+        });
+
+        it("should add a validMove given as Move instance", function () {
+            var result = match.addMove(new model.Move(validMove));
+
+            assert.isTrue(result);
+
+            assert.equal(match.history.length, 1);
+        });
+
+        it("should not add invalid JSON", function(){
+            var result = match.addMove({something: "other"});
+
+            assert.isFalse(result);
+
+            assert.equal(match.history.length, 0);
+        })
+
+        it.skip("should not add an invalid validMove", function(){
+            var result = match.addMove(invalidMove);
+
+            assert.isFalse(result);
+
+            assert.equal(match.history.length, 0);
+        })
+
+    });
+
+
     describe("historyContainsMoveFrom",function(){
         it("should be return false on empty history",function(){
             var match = modelFactory.createMatch(BoardSize.SMALL);

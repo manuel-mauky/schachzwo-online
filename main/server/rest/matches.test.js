@@ -62,7 +62,7 @@ describe('Mock REST API test /matches', function () {
         });
     });
 
-    describe.skip('POST /matches', function () {
+    describe('POST /matches', function () {
 
         it("should return new match", function (done) {
 
@@ -72,9 +72,8 @@ describe('Mock REST API test /matches', function () {
                 .expect(201)
                 .expect('location', /\/\w+/)
                 .expect(function (res) {
-                    console.log(res.body);
-                    assert.isDefined(res.body.playerWhite);
-                    assert.isDefined(res.body.playerBlack);
+                    assert.isUndefined(res.body.playerWhite);
+                    assert.isUndefined(res.body.playerBlack);
                     assert.isDefined(res.body.matchId);
                     assert.isDefined(res.body.state);
                     assert.isDefined(res.body.size);
@@ -96,7 +95,7 @@ describe('Mock REST API test /matches', function () {
     });
 
 
-    describe.skip('GET /matches/:matchId/board', function () {
+    describe('GET /matches/:matchId/board', function () {
 
         it("should return actual board snapshot", function (done) {
 
@@ -109,10 +108,18 @@ describe('Mock REST API test /matches', function () {
                 .get('/matches/' + match.matchId + '/board')
                 .expect(200)
                 .expect(function (res) {
-                    assert.isArray(res.body);
+                    assert.ok(res.body);
+
+                    var board = new model.Snapshot(res.body);
+                    assert.ok(board);
                 })
                 .end(done);
+        });
 
+        it("should return 404 when there is no match with this id", function(done){
+           request(app)
+               .get('/matches/someId/board')
+               .expect(404,done);
         });
 
     });
@@ -204,32 +211,53 @@ describe('Mock REST API test /matches', function () {
                 playerBlack: {playerId: 1, name: 'player1'},
                 playerWhite: {playerId: 2, name: 'player2'}});
 
+            match.addMove(new model.Move(
+                {
+                    figure: {
+                        color: model.Color.BLACK,
+                        type: model.FigureType.ROCKS
+                    },
+                    from: {column: 0, row: 5},
+                    to: {column: 0, row: 4}
+                }));
+
             request(app)
                 .get('/matches/' + match.matchId + '/moves')
                 .expect(200)
                 .expect(function (res) {
                     assert.isArray(res.body);
+                    assert.equal(res.body.length, 1);
+                    assert.deepEqual(res.body[0].from, {column:0, row:5}); // test sample
                 })
                 .end(done);
+        });
 
+        it("should return 404 when there is no match with this id", function(done){
+            request(app)
+                .get('/matches/someId/moves')
+                .expect(404,done);
         });
 
 
     });
 
-    describe.skip('POST /matches/:matchId/moves', function () {
+    describe('POST /matches/:matchId/moves', function () {
 
-        var match = matchStore.create({
-            size: 7,
-            playerBlack: {playerId: 1, name: 'player1'},
-            playerWhite: {playerId: 2, name: 'player2'}});
+        var match;
+
+        beforeEach(function(){
+            match = matchStore.create({
+                size: 7,
+                playerBlack: {playerId: 1, name: 'player1'},
+                playerWhite: {playerId: 2, name: 'player2'}});
+        });
+
 
         var move = {figure: {color: model.Color.BLACK, type: model.FigureType.ROCKS},
-            from: {column: 2, row: 1},
-            to: {column: 2, row: 2}};
+            from: {column: 2, row: 5},
+            to: {column: 2, row: 4}};
 
-
-        it("should not perform moves, if you are not authenticates", function (done) {
+        it("should not perform moves, if you are not authenticated", function (done) {
 
             request(app)
                 .post('/matches/'+  match.matchId + '/moves')
@@ -248,30 +276,118 @@ describe('Mock REST API test /matches', function () {
 
         });
 
+
         it("should add a new move", function (done) {
+            var storedMatch = matchStore.get(match.matchId);
+
+            //before
+            assert.equal(storedMatch.history.length, 0);
 
 
             request(app)
                 .post('/matches/'+  match.matchId + '/moves')
                 .set('Cookie', [matches.PLAYER_COOKIE_NAME + '=1'])
-                .send(match)
+                .send(move)
                 .expect(201)
                 .expect(function (res) {
                     assert.isDefined(res.body);
                 })
-                .end(done);
+                .end(function(err, res){
+                    if(err) return done(err);
+
+                    storedMatch = matchStore.get(match.matchId);
+
+                    // after
+                    assert.equal(storedMatch.history.length, 1);
+                    assert.deepEqual(storedMatch.history[0], move);
+
+                    done();
+                });
         });
 
-        it("should not add invalid move", function (done) {
+
+        it("should not add move when it's not the players turn", function(done){
+
+            var secondMove = {figure: {color: model.Color.WHITE, type: model.FigureType.ROCKS},
+                from: {column: 0, row: 1},
+                to: {column: 0, row: 2}};
+
+            match.addMove(move);
+            matchStore.update(match);
+
+            request(app)
+                .post('/matches/' + match.matchId + '/moves')
+                .set('Cookie', [matches.PLAYER_COOKIE_NAME + "=1"]) // black
+                .send(secondMove)
+                .expect(400)
+                .end(function(err){
+                    if(err) throw err;
+
+                    // now its ok
+                    request(app)
+                        .post('/matches/' + match.matchId + '/moves')
+                        .set('Cookie', [matches.PLAYER_COOKIE_NAME + "=2"]) // now white is doing the move
+                        .send(secondMove)
+                        .expect(201)
+                        .end(function(err){
+                            if(err) throw err;
+
+                            var thirdMove = {figure: {color: model.Color.BLACK, type: model.FigureType.ROCKS},
+                                from: {column: 2, row: 4},
+                                to: {column: 2, row: 3}};
+
+                            // now white tries to cheat
+                            request(app)
+                                .post('/matches/' + match.matchId + '/moves')
+                                .set('Cookie', [matches.PLAYER_COOKIE_NAME + "=2"]) // white
+                                .send(thirdMove)
+                                .expect(400)
+                                .end(function(err){
+                                    if(err) throw err;
+
+                                    // it's blacks turn
+                                    request(app)
+                                        .post('/matches/' + match.matchId + '/moves')
+                                        .set('Cookie', [matches.PLAYER_COOKIE_NAME + "=1"]) // black
+                                        .send(thirdMove)
+                                        .expect(201,done);
+                                });
+                        });
+                });
+        });
+
+
+
+        it("should not add move when the player tries to move an enemy figure", function(done){
+            var enemyMove = {figure: {color: model.Color.WHITE, type: model.FigureType.ROCKS},
+                from: {column: 0, row: 1},
+                to: {column: 0, row: 2}};
+
+            request(app)
+                .post('/matches/' + match.matchId + '/moves')
+                .set('Cookie', [matches.PLAYER_COOKIE_NAME + "=1"])
+                .send(enemyMove)
+                .expect(400, done);
+
+        });
+
+
+        it.skip("should not add invalid move", function (done) {
 
             var move = {figure: {color: model.Color.BLACK, type: model.FigureType.ROCKS},
-                from: {column: 2, row: 2},
-                to: {column: 3, row: 2}};
+                from: {column: 2, row: 5},
+                to: {column: 2, row: 3}};
 
             request(app)
                 .post('/matches/'+  match.matchId + '/moves', move)
                 .set('Cookie', [matches.PLAYER_COOKIE_NAME + '=1'])
                 .expect(400, done);
+        });
+
+        it("should return 404 when there is no match with this id", function(done){
+            request(app)
+                .post('/matches/someId/moves')
+                .expect(404,done);
         });
 
     });

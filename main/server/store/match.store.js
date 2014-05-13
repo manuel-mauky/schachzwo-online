@@ -1,5 +1,7 @@
 "use strict";
 
+var model = require("../model/model");
+
 // Store as a simple data structure in memory
 var store = {};
 
@@ -22,8 +24,10 @@ module.exports.get = function (id) {
  * @returns {Object} the created match
  */
 module.exports.create = function (match) {
+    match = new model.Match(match);
     match.matchId = createID();
     store[match.matchId] = match;
+
     return match;
 };
 

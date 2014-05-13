@@ -112,9 +112,15 @@ var Position = function(json){
 var Move = function(json){
     var json = json || 0;
 
-    this.figure = new Figure(json.figure);
-    this.from = new Position(json.from);
-    this.to = new Position(json.to);
+    if(json.figure){
+        this.figure = new Figure(json.figure);
+    }
+    if(json.from){
+        this.from = new Position(json.from);
+    }
+    if(json.to){
+        this.to = new Position(json.to);
+    }
     return this;
 }
 
@@ -131,7 +137,7 @@ var Snapshot = function (json) {
 
     var json = json || 0;
 
-    this.board = new Array();
+    this.board = [];
     if (Array.isArray(json.board)) {
         // for every json-entry create a field instance.
         json.board.forEach(function (entry) {
@@ -296,10 +302,21 @@ var Match = function (json) {
     }
 
     this.addMove = function(move){
+
+        if(! (move instanceof Move)){
+            move = new Move(move);
+        }
+
+        if(!move.figure || !move.from || !move.to){
+            return false;
+        }
+
         //todo error handling
         //figur auf schachbrett vorhanden
         //zielfeld gültig -> validator
         this.history.push(move);
+
+        return true;
     };
 
     /**
