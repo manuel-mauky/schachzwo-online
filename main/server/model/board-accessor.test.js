@@ -356,8 +356,6 @@ describe("getRangeFor", function () {
 
             board = match.getCurrentSnapshot();
 
-            board.debugPrint();
-
             var range = accessor.getRangeFor(2,6);
 
             assert.isArray(range);
@@ -883,9 +881,6 @@ describe("isThreatenFrom",function(){
 
 
         board.getField(1, 3).figure = new Figure({type: FigureType.ZENITH, color: Color.BLACK});
-
-
-        board.debugPrint();
 
         var list = accessor.getThreatenFields(2,2);
 
