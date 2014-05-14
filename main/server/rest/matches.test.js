@@ -389,6 +389,7 @@ describe('Mock REST API test /matches', function () {
 
             request(app)
                 .post('/matches/'+  match.matchId + '/moves', move)
+                .send({something: "other"})
                 .set('Cookie', [matches.PLAYER_COOKIE_NAME + '=1'])
                 .expect(400, done);
         });
