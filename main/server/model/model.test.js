@@ -301,10 +301,6 @@ describe("Match", function(){
             from: {column: 2, row: 5},
             to: {column: 2, row: 4}};
 
-        var invalidMove = {figure: {color: model.Color.BLACK, type: model.FigureType.ROCKS},
-            from: {column: 2, row: 5},
-            to: {column: 3, row: 4}};
-
         beforeEach(function(){
             match  = modelFactory.createEmptyMatch(BoardSize.SMALL);
         });
@@ -332,15 +328,6 @@ describe("Match", function(){
 
             assert.equal(match.history.length, 0);
         })
-
-        it.skip("should not add an invalid validMove", function(){
-            var result = match.addMove(invalidMove);
-
-            assert.isFalse(result);
-
-            assert.equal(match.history.length, 0);
-        })
-
     });
 
 

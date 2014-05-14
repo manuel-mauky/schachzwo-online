@@ -275,6 +275,17 @@ var Match = function (json) {
     }
 
     /**
+     * return the Color of the active Player who is on turn
+     * @returns the Color of the active Player
+     */
+    this.getColorOfActivePlayer = function(){
+        if(match.history.length % 2 == 0){
+            return Color.BLACK;
+        }
+        else return Color.WHITE;
+    }
+
+    /**
      * Generate a Snapshot up to the given History entry
      * @param number
      * @returns {*}

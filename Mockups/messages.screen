@@ -37,7 +37,7 @@
       <widgets ref="129" text="Mitspieler einladen"/>
     </overrides>
   </widgets>
-  <widgets xsi:type="model:TextArea" id="13" x="83" y="400" width="423" height="137" text="Hier steht der Einladungstext.&#xA;&#xA;Link zum Spiel: *http://www.schachzwo.de/der-link-zum-spiel*&#xA;&#xA;Hier steht vielleicht auch noch etwas." measuredWidth="423" measuredHeight="137">
+  <widgets xsi:type="model:TextArea" id="13" x="83" y="400" width="423" height="137" text="Du wurdest zu einer Partie SchachZWO eingeladen. Klicke einfach auf &#xA;den unten stehenden Link und du gelangst zum Spiel.&#xA;&#xA;Link zum Spiel: *http://www.schachzwo.de/der-link-zum-spiel*&#xA;&#xA;" measuredWidth="423" measuredHeight="137">
     <font/>
   </widgets>
   <widgets xsi:type="model:Master" id="14" x="216" y="577" measuredWidth="148" measuredHeight="30">
@@ -56,19 +56,16 @@
       <widgets ref="129" text="Willkommen"/>
     </overrides>
   </widgets>
-  <widgets xsi:type="model:Text" id="18" x="680" y="143" width="273" height="30" text="Gib deinen Spielernamen ein und betrete die Partie." measuredWidth="273" measuredHeight="30">
+  <widgets xsi:type="model:TextField" id="19" x="792" y="153" width="177" text="Spielername" measuredWidth="177" measuredHeight="23">
     <font/>
   </widgets>
-  <widgets xsi:type="model:TextField" id="19" x="792" y="176" width="177" text="Spielername" measuredWidth="177" measuredHeight="23">
+  <widgets xsi:type="model:Label" id="20" x="656" y="153" text="Spielernamen eingeben:" measuredWidth="133" measuredHeight="23">
     <font/>
   </widgets>
-  <widgets xsi:type="model:Label" id="20" x="656" y="176" text="Spielernamen eingeben:" measuredWidth="133" measuredHeight="23">
-    <font/>
-  </widgets>
-  <widgets xsi:type="model:Master" id="21" x="752" y="220" measuredWidth="118" measuredHeight="30">
+  <widgets xsi:type="model:Master" id="21" x="752" y="197" measuredWidth="132" measuredHeight="30">
     <screen xsi:type="model:WidgetGroup" href="assets/Bootstrap/Bootstrap.screen#Button%20Primary"/>
     <overrides>
-      <widgets ref="3" text="Partie betreten"/>
+      <widgets ref="3" text="Zum Schachbrett"/>
     </overrides>
   </widgets>
   <widgets xsi:type="model:Panel" id="22" x="592" y="320" width="441" height="233" measuredWidth="441" measuredHeight="233"/>
@@ -81,13 +78,13 @@
   <widgets xsi:type="model:Text" id="24" x="671" y="413" width="282" height="48" text="Dein Mitspieler hat dir Remis angeboten. &#xD;&#xA;Möchtest du das Remis annehmen?" measuredWidth="282" measuredHeight="48" textAlignment="Center">
     <font/>
   </widgets>
-  <widgets xsi:type="model:Master" id="25" x="712" y="480" measuredWidth="91" measuredHeight="30">
+  <widgets xsi:type="model:Master" id="25" x="720" y="480" measuredWidth="91" measuredHeight="30">
     <screen xsi:type="model:WidgetGroup" href="assets/Bootstrap/Bootstrap.screen#Button"/>
     <overrides>
       <widgets ref="2" text="Annehmen"/>
     </overrides>
   </widgets>
-  <widgets xsi:type="model:Master" id="26" x="816" y="480" measuredWidth="83" measuredHeight="30">
+  <widgets xsi:type="model:Master" id="26" x="824" y="480" measuredWidth="83" measuredHeight="30">
     <screen xsi:type="model:WidgetGroup" href="assets/Bootstrap/Bootstrap.screen#Button"/>
     <overrides>
       <widgets ref="2" text="Ablehnen"/>

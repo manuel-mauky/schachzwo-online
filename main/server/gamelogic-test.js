@@ -12,6 +12,7 @@ var GameLogic = require("./gamelogic");
 var Color = model.Color;
 var FigureType = model.FigureType;
 var Figure = model.Figure;
+var BoardSize = model.BoardSize;
 
 var modelFactory = require("./model/model.factory");
 
@@ -64,6 +65,28 @@ describe("gamelogic", function () {
             board.getField(2, 2).figure = new Figure({type: FigureType.ZENITH, color: Color.BLACK});
             assert.equal(logic.isCheck(Color.BLACK), true);
             assert.equal(logic.isCheck(Color.WHITE), true);
+        });
+    });
+
+    describe("isValidMove",function(){
+        var match;
+        var validMove = new model.Move({figure: {color: model.Color.BLACK, type: model.FigureType.ROCKS},
+            from: {column: 2, row: 5},
+            to: {column: 2, row: 4}});
+        var invalidMove = new model.Move({figure: {color: model.Color.BLACK, type: model.FigureType.ROCKS},
+            from: {column: 2, row: 5},
+            to: {column: 3, row: 4}});
+
+        beforeEach(function(){
+            match  = modelFactory.createMatch(BoardSize.SMALL);
+        });
+
+        it("should accept an validMove", function(){
+            assert.isTrue(logic.isValidMove(validMove));
+        });
+
+        it("should not accept an invalidMove", function(){
+            assert.isFalse(logic.isValidMove(invalidMove));
         });
     });
 
