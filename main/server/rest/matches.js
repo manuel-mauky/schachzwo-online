@@ -22,6 +22,7 @@ route.get("/:id", function (req, res) {
         return match404(req, res);
     }
 
+
     if (match.playerBlack) {
         delete match.playerBlack.playerId;
     }
