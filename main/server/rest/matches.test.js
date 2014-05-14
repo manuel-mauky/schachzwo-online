@@ -3,7 +3,6 @@
 var request = require('supertest');
 var express = require("express");
 var assert = require("chai").assert;
-
 var model = require("../model/model");
 
 var app = require('../../app').app;

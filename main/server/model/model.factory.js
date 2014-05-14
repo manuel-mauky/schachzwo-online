@@ -71,16 +71,13 @@ var createBigMatch = function () {
 var helper_createEmptyMatch = function(size){
     var match = new model.Match();
 
-    match.matchId = createMatchId();
     match.size = size;
     match.state = model.State.READY;
 
     return match;
 }
 
-var createMatchId = function () {
-    return 123; // needs to be replaces by GUID
-}
+
 
 
 var createSmallStartSnapshot = function () {
