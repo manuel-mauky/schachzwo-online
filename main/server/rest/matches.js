@@ -64,15 +64,15 @@ route.post("/", function (req, res) {
 route.post("/:id/login", function (req, res) {
 
     var match = matchStore.get(req.params.id);
-    if (!match){
+    if (!match) {
         return match404(req, res);
     }
 
     var name;
     if (req.body) {
-        if(req.body.name){
+        if (req.body.name) {
             name = req.body.name;
-        }else{
+        } else {
             res.statusCode = 400;
             return res.json(
                 {
@@ -157,7 +157,7 @@ route.post("/:id/moves", function (req, res) {
             });
     }
 
-    var moveFailed = function(res, message){
+    var moveFailed = function (res, message) {
         res.statusCode = 400;
         return res.json({
             name: "Move failed",
@@ -165,34 +165,36 @@ route.post("/:id/moves", function (req, res) {
         });
     };
 
-    if (!req.body) {
+
+    var move;
+
+    try {
+        move = new model.Move(req.body);
+    } catch (error) {
         return moveFailed(res, 'Move can not be applied because the request is invalid.');
     }
 
 
-    var move = req.body;
-
-
     // even history length means that it's blacks turn.
-    if(match.history.length % 2 == 0){
+    if (match.history.length % 2 == 0) {
         // blacks turn
 
-        if(match.playerBlack.playerId != playerId){
+        if (match.playerBlack.playerId != playerId) {
             return moveFailed(res, "Move can not be applied because it's not the players turn");
         }
 
-        if(!move.figure || move.figure.color == model.Color.WHITE ){
+        if (!move.figure || move.figure.color == model.Color.WHITE) {
             return moveFailed(res, "Move can not be applied because you can't move an enemies figure");
         }
 
-    }else{
+    } else {
         // whites turn
 
-        if(match.playerWhite.playerId != playerId){
+        if (match.playerWhite.playerId != playerId) {
             return moveFailed(res, "Move can not be applied because it's not the players turn");
         }
 
-        if(!move.figure || move.figure.color == model.Color.BLACK){
+        if (!move.figure || move.figure.color == model.Color.BLACK) {
             return moveFailed(res, "Move can not be applied because you can't move an enemies figure");
         }
     }
