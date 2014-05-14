@@ -413,7 +413,7 @@ describe('Mock REST API test /matches', function () {
             request(app)
                 .post('/matches/' + match.matchId + '/moves')
                 .send(move)
-                .set('Authorization', matches.HTTP_AUTHORRIZATION_METHOD + ' 1')
+                .set('Authorization', matches.HTTP_AUTHORIZATION_METHOD + ' 1')
                 .expect(201, done);
         });
 

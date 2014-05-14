@@ -77,14 +77,17 @@ describe("gamelogic", function () {
 
         beforeEach(function(){
             match  = modelFactory.createMatch(BoardSize.SMALL);
+            match.playerBlack = {playerId: 1, name: 'player1'};
+            match.playerWhite=  {playerId: 2, name: 'player2'};
+            logic = new GameLogic(match);
         });
 
         it("should accept an validMove", function(){
-            assert.isTrue(logic.isValidMove(validMove));
+            assert.isTrue(logic.isValidMove(1, validMove));
         });
 
         it("should not accept an invalidMove", function(){
-            assert.isFalse(logic.isValidMove(invalidMove));
+            assert.isFalse(logic.isValidMove(1, invalidMove));
         });
     });
 

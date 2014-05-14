@@ -6,14 +6,14 @@ var express = require("express");
 var modelFactory = require("../model/model.factory");
 var model = require("../model/model");
 var matchStore = require("../store/match.store");
-var gamelogic = require("../gamelogic");
+var GameLogic = require("../gamelogic");
 
 var uuid = require("node-uuid");
 
 var route = express.Router();
 
 var PLAYER_COOKIE_NAME = 'player_id';
-var HTTP_AUTHORRIZATION_METHOD = "PLAYER_ID";
+var HTTP_AUTHORIZATION_METHOD = "PLAYER_ID";
 
 route.get("/:id", function (req, res) {
 
@@ -176,46 +176,25 @@ route.post("/:id/moves", function (req, res) {
         return moveFailed(res, 'Move can not be applied because the request is invalid.');
     }
 
+    var gl = new GameLogic(match);
 
-    // even history length means that it's blacks turn.
-    if (match.getColorOfActivePlayer() == model.Color.BLACK) {
-        // blacks turn
-
-        if (match.playerBlack.playerId != playerId) {
-            return moveFailed(res, "Move can not be applied because it's not the players turn");
-        }
-
-        if (!move.figure || move.figure.color == model.Color.WHITE) {
-            return moveFailed(res, "Move can not be applied because you can't move an enemies figure");
-        }
-
+    if (gl.isValidMove(playerId, move)) {
+        match.addMove(move);
+        matchStore.update(match);
+        res.statusCode = 201;
+        return res.json(move);
     } else {
-        // whites turn
-
-        if (match.playerWhite.playerId != playerId) {
-            return moveFailed(res, "Move can not be applied because it's not the players turn");
-        }
-
-        if (!move.figure || move.figure.color == model.Color.BLACK) {
-            return moveFailed(res, "Move can not be applied because you can't move an enemies figure");
-        }
+        return moveFailed(res, 'Move can not be applied because the move is invalid.');
     }
 
 
-    //TODO Link to game logic
-    match.addMove(move);
-
-    matchStore.update(match);
-
-    res.statusCode = 201;
-    return res.json(move);
 });
 
 route.get("/:id/threats", function (req, res) {
 
     var match = matchStore.get(req.params.id);
     if (match) {
-        return json(new gamelogic.GameLogic(match).getThreats());
+        return json(new GameLogic(match).getThreats());
     } else {
         return match404(req, res);
     }
@@ -226,7 +205,7 @@ route.get("/:id/valid-moves", function (req, res) {
 
     var match = matchStore.get(req.params.id);
     if (match) {
-        return json(new gamelogic.GameLogic(match).getValidMoves());
+        return json(new GameLogic(match).getValidMoves());
     } else {
         return match404(req, res);
     }
@@ -255,7 +234,7 @@ var findPlayerId = function (req) {
         if (header) {
             var value = header.split(/\s+/);
             var id = value.pop();
-            if (HTTP_AUTHORRIZATION_METHOD === value.pop()) {
+            if (HTTP_AUTHORIZATION_METHOD === value.pop()) {
                 playerId = id;
             }
         }
@@ -279,7 +258,7 @@ module.exports.route = route;
 
 //Export constants
 module.exports.PLAYER_COOKIE_NAME = PLAYER_COOKIE_NAME;
-module.exports.HTTP_AUTHORRIZATION_METHOD = HTTP_AUTHORRIZATION_METHOD;
+module.exports.HTTP_AUTHORIZATION_METHOD = HTTP_AUTHORIZATION_METHOD;
 
 
 
