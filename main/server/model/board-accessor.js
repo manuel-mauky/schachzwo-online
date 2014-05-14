@@ -80,11 +80,33 @@ module.exports = function BoardAccessor(match) {
 
     };
 
+    var applyMethodToEatchFigureOnBoard = function(color,applyFunction){
+        if(!color) color = match.getColorOfActivePlayer();
+        for(var i=0 ; i< match.size ; i++){
+            for(var j=0 ; j<match.size ; j++){
+                var field = getField(i, j);
+                var figure = field.figure;
+                if(isOrigin(i, j) || !figure || figure.color != color){
+                    continue;
+                }
+                var list = applyFunction(i, j);
+                result.push({figure: figure,fields: list});
+            }
+        }
+    }
+
+    //Pro Feld mit eigner Figur eine Liste von Spielfeldern mit gegnerischen Figuren, die eigene Figur bedrohen
+    var getThreats = this.getThreats = function(color){
+        return applyMethodToEatchFigureOnBoard(color,getThreatenFields);
+    };
+    //Pro Feld mit eigener Figur eine Liste von gültigen Spielfeldern
+    var getValidMoves = this.getValidMoves = function(color){
+        return applyMethodToEatchFigureOnBoard(color,getRangeFor);
+    }
+
     var getThreatenFields = this. getThreatenFields = function(column, row){
         var result = [];
-
         var ownFigure = getFigure(column, row);
-
         if(!ownFigure){
             return result;
         }
@@ -96,16 +118,7 @@ module.exports = function BoardAccessor(match) {
                 var field = getField(i, j);
                 var figure = field.figure;
 
-                if(isOrigin(i, j)){
-                    continue;
-                }
-
-
-                if(! figure){
-                    continue;
-                }
-
-                if(figure.color == ownFigure.color){
+                if(isOrigin(i, j) || !figure || figure.color == ownFigure.color){
                     continue;
                 }
 
@@ -113,12 +126,9 @@ module.exports = function BoardAccessor(match) {
                     if(Math.abs(column - i) <= 1 && Math.abs(row - j) <= 1) {
                         result.push({column: i, row: j});
                     }
-
                 } else { // other enemy figure
                     var list = getRangeFor(i, j);
-
                     list.forEach(function(element){
-
                         if(element.column == column && element.row == row){
                             result.push({column: i, row: j});
                         }
