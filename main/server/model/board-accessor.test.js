@@ -866,8 +866,6 @@ describe("isThreatenFrom",function(){
     it("should include an enemy zenith", function(){
 
         board.getField(2,2).figure = new Figure({type: FigureType.ROCKS, color: Color.WHITE}); // myself
-
-
         board.getField(1, 3).figure = new Figure({type: FigureType.ZENITH, color: Color.BLACK});
 
         var list = accessor.getThreatenFields(2,2);
@@ -877,18 +875,19 @@ describe("isThreatenFrom",function(){
 
     });
 
-    it.skip("should return one rocks and one Faith",function(){
+    it("should return one rocks and one Faith",function(){
 
-        board.getField(5,4).figure = new Figure({type: FigureType.ZENIT, color: Color.BLACK});
-        board.getField(3,3).figure = new Figure({type: FigureType.MAN, color: Color.WHITE});
-        board.getField(5,3).figure = new Figure({type: FigureType.FAITH, color: Color.WHITE});
-        board.getField(3,6).figure = new Figure({type: FigureType.ROCKS, color: Color.WHITE});
-        board.getField(5,6).figure = new Figure({type: FigureType.ROCKS, color: Color.BLACK});
+        board = modelFactory.createEmptySnapshot(model.BoardSize.BIG);
+        board.getField(4,5).figure = new Figure({type: FigureType.ZENITH, color: Color.WHITE});
+        board.getField(3,3).figure = new Figure({type: FigureType.MAN, color: Color.BLACK});
+        board.getField(5,3).figure = new Figure({type: FigureType.FAITH, color: Color.BLACK});
+        board.getField(3,6).figure = new Figure({type: FigureType.ROCKS, color: Color.BLACK});
+        board.getField(5,6).figure = new Figure({type: FigureType.ROCKS, color: Color.WHITE});
 
-        var list = accessor.getThreatenFields(2,2);
-
+        var list = accessor.getThreatenFields(4,5);
+    console.log(list);
         assert.equal(list.length,2);
         assert.include(list,{column: 5, row: 3});
-        assert.include(list,{column: 3, row: 5});
+        assert.include(list,{column: 3, row: 6});
     });
 });

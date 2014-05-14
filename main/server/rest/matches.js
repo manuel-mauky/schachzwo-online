@@ -251,7 +251,14 @@ var findPlayerId = function (req) {
 
     var playerId = req.cookies[PLAYER_COOKIE_NAME];
     if (!playerId) {
-        //TODO playerID read out from the authorization header
+        var header = req.header('Authorization');
+        if (header) {
+            var value = header.split(/\s+/);
+            var id = value.pop();
+            if (HTTP_AUTHORRIZATION_METHOD === value.pop()) {
+                playerId = id;
+            }
+        }
     }
 
     return playerId;
@@ -272,6 +279,7 @@ module.exports.route = route;
 
 //Export constants
 module.exports.PLAYER_COOKIE_NAME = PLAYER_COOKIE_NAME;
+module.exports.HTTP_AUTHORRIZATION_METHOD = HTTP_AUTHORRIZATION_METHOD;
 
 
 
