@@ -81,8 +81,7 @@ describe('Mock REST API test /matches', function () {
                 .end(function(err, res){
                     var persistedStore = matchStore.get(res.body.matchId);
 
-                    assert.ok()
-
+                    assert.ok(persistedStore);
 
                     done();
                 });

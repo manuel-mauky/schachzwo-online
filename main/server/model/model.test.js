@@ -21,13 +21,10 @@ var modelFactory = require("./model.factory");
 
 describe("Creation of Figure", function () {
 
-    it("should be possible to with empty constructor", function () {
-
-        var rocks = new Figure();
-
-        assert.ok(rocks);
-        assert.notOk(rocks.color);
-        assert.notOk(rocks.type);
+    it("should not be possible to with empty constructor", function () {
+        assert.throws(function(){
+            new Figure();
+        });
     });
 
 
@@ -259,9 +256,7 @@ describe("Match", function(){
 
         it("should add a player from a Player instance param", function(){
 
-            var bob = new model.Player();
-            bob.playerId = 1;
-            bob.name = "bob";
+            var bob = new model.Player({playerId:1, name:"bob"});
 
             match.addPlayer(bob);
 

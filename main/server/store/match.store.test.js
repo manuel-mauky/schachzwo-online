@@ -1,6 +1,7 @@
 /**
  * Created by Marlene on 13.05.2014.
  */
+"use strict";
 
 var matchStore = require('../store/match.store');
 var model = require("../model/model");
@@ -31,13 +32,6 @@ describe('store tests',function(){
         assert.instanceOf(loadedMatch, model.Match);
         assert.equal(loadedMatch.matchId, persistedMatch.matchId);
         assert.deepEqual(loadedMatch.playerBlack, match.playerBlack);
-
-
-        var allMatches = matchStore.getAll();
-
-        assert.isArray(allMatches);
-        assert.equal(allMatches.length, 1);
-
 
 
         loadedMatch.playerWhite = new model.Player({playerId: 2, name: "alice"});
