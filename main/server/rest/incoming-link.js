@@ -4,12 +4,32 @@ var express = require("express");
 
 var route = express.Router();
 
+var matchStore = require("../store/match.store");
 
 route.get("/:matchId", function (req, res) {
 
-    console.log("matchID:" + req.params.matchId);
+    var matchId = req.params.matchId;
 
-    return res.json(req.params.matchId);
+    if(!matchId){
+        return res.status(404).send("Match not found");
+    }
+
+    var match = matchStore.get(matchId);
+
+    if(!match){
+        return res.status(404).send("Match not found");
+    }
+
+    if(match.isMatchFullyOccupied()){
+        console.log("zuschauer");
+        // todo redirect zur Zuschauerseite
+        return res.redirect("/");
+    }else{
+        console.log("login");
+        // todo redirect zur Anmeldeseite
+        return res.redirect("/");
+    }
+
 });
 
 

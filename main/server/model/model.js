@@ -366,7 +366,6 @@ var Match = function (json) {
         }
 
         return false;
-
     };
 
     this.historyContainsMoveFrom = function(row, column){
@@ -378,6 +377,14 @@ var Match = function (json) {
             }
         });
         return contains;
+    };
+
+    /**
+     * returns <code>true</code> when both player are set in the game.
+     * otherwise <code>false</code>
+     */
+    this.isMatchFullyOccupied = function(){
+      return (this.playerBlack && this.playerWhite);
     };
 
     return this;
