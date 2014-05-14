@@ -3,9 +3,12 @@
 var request = require('supertest');
 var express = require("express");
 var assert = require("chai").assert;
-var model = require("../model/model");
+
 
 var app = require('../../app').app;
+var model = require('../model/model');
+var modelFactory = require('../model/model.factory');
+
 var matchStore = require('../store/match.store');
 var matches = require('./matches');
 
@@ -78,7 +81,7 @@ describe('Mock REST API test /matches', function () {
                     assert.isDefined(res.body.size);
                     assert.isUndefined(res.body.history);
                 })
-                .end(function(err, res){
+                .end(function (err, res) {
                     var persistedStore = matchStore.get(res.body.matchId);
 
                     assert.ok(persistedStore);
@@ -124,10 +127,10 @@ describe('Mock REST API test /matches', function () {
                 .end(done);
         });
 
-        it("should return 404 when there is no match with this id", function(done){
-           request(app)
-               .get('/matches/someId/board')
-               .expect(404,done);
+        it("should return 404 when there is no match with this id", function (done) {
+            request(app)
+                .get('/matches/someId/board')
+                .expect(404, done);
         });
 
     });
@@ -140,10 +143,10 @@ describe('Mock REST API test /matches', function () {
             var match = matchStore.create({size: 7});
 
             request(app)
-                .post('/matches/'+  match.matchId + '/login')
+                .post('/matches/' + match.matchId + '/login')
                 .send({name: 'Bob'})
                 .expect(200)
-                .expect('set-cookie',  /\w+/)
+                .expect('set-cookie', /\w+/)
                 .expect(function (res) {
                     assert.equal(res.body.name, 'Bob');
                     assert.isDefined(res.body.playerId);
@@ -161,10 +164,10 @@ describe('Mock REST API test /matches', function () {
             });
 
             request(app)
-                .post('/matches/'+  match.matchId + '/login')
+                .post('/matches/' + match.matchId + '/login')
                 .send({name: 'Jane'})
                 .expect(200)
-                .expect('set-cookie',  /\w+/)
+                .expect('set-cookie', /\w+/)
                 .expect(function (res) {
                     assert.equal(res.body.name, 'Jane');
                     assert.isDefined(res.body.playerId);
@@ -176,7 +179,7 @@ describe('Mock REST API test /matches', function () {
 
         });
 
-        it("should return 404 when match can't be found", function(done) {
+        it("should return 404 when match can't be found", function (done) {
 
             request(app)
                 .post('/matches/someId/login')
@@ -184,8 +187,8 @@ describe('Mock REST API test /matches', function () {
                 .expect(404, done);
         });
 
-        it("should return 400 when a body without name was send", function(done){
-           var match = matchStore.create({size: 7});
+        it("should return 400 when a body without name was send", function (done) {
+            var match = matchStore.create({size: 7});
 
             request(app)
                 .post('/matches/' + match.matchId + '/login')
@@ -202,7 +205,7 @@ describe('Mock REST API test /matches', function () {
             });
 
             request(app)
-                .post('/matches/'+  match.matchId + '/login')
+                .post('/matches/' + match.matchId + '/login')
                 .send({name: 'Joe'})
                 .expect(409, done);
         });
@@ -235,15 +238,15 @@ describe('Mock REST API test /matches', function () {
                 .expect(function (res) {
                     assert.isArray(res.body);
                     assert.equal(res.body.length, 1);
-                    assert.deepEqual(res.body[0].from, {column:0, row:5}); // test sample
+                    assert.deepEqual(res.body[0].from, {column: 0, row: 5}); // test sample
                 })
                 .end(done);
         });
 
-        it("should return 404 when there is no match with this id", function(done){
+        it("should return 404 when there is no match with this id", function (done) {
             request(app)
                 .get('/matches/someId/moves')
-                .expect(404,done);
+                .expect(404, done);
         });
 
 
@@ -253,7 +256,7 @@ describe('Mock REST API test /matches', function () {
 
         var match;
 
-        beforeEach(function(){
+        beforeEach(function () {
             match = matchStore.create({
                 size: 7,
                 playerBlack: {playerId: 1, name: 'player1'},
@@ -268,7 +271,7 @@ describe('Mock REST API test /matches', function () {
         it("should not perform moves, if you are not authenticated", function (done) {
 
             request(app)
-                .post('/matches/'+  match.matchId + '/moves')
+                .post('/matches/' + match.matchId + '/moves')
                 .send(move)
                 .expect(401, done);
 
@@ -277,7 +280,7 @@ describe('Mock REST API test /matches', function () {
         it("should not perform any moves when you are not logged in this game", function (done) {
 
             request(app)
-                .post('/matches/'+  match.matchId + '/moves')
+                .post('/matches/' + match.matchId + '/moves')
                 .set('Cookie', [matches.PLAYER_COOKIE_NAME + '=5'])
                 .send(move)
                 .expect(401, done);
@@ -293,15 +296,15 @@ describe('Mock REST API test /matches', function () {
 
 
             request(app)
-                .post('/matches/'+  match.matchId + '/moves')
+                .post('/matches/' + match.matchId + '/moves')
                 .set('Cookie', [matches.PLAYER_COOKIE_NAME + '=1'])
                 .send(move)
                 .expect(201)
                 .expect(function (res) {
                     assert.isDefined(res.body);
                 })
-                .end(function(err, res){
-                    if(err) return done(err);
+                .end(function (err, res) {
+                    if (err) return done(err);
 
                     storedMatch = matchStore.get(match.matchId);
 
@@ -314,7 +317,7 @@ describe('Mock REST API test /matches', function () {
         });
 
 
-        it("should not add move when it's not the players turn", function(done){
+        it("should not add move when it's not the players turn", function (done) {
 
             var secondMove = {figure: {color: model.Color.WHITE, type: model.FigureType.ROCKS},
                 from: {column: 0, row: 1},
@@ -328,8 +331,8 @@ describe('Mock REST API test /matches', function () {
                 .set('Cookie', [matches.PLAYER_COOKIE_NAME + "=1"]) // black
                 .send(secondMove)
                 .expect(400)
-                .end(function(err){
-                    if(err) throw err;
+                .end(function (err) {
+                    if (err) throw err;
 
                     // now its ok
                     request(app)
@@ -337,8 +340,8 @@ describe('Mock REST API test /matches', function () {
                         .set('Cookie', [matches.PLAYER_COOKIE_NAME + "=2"]) // now white is doing the move
                         .send(secondMove)
                         .expect(201)
-                        .end(function(err){
-                            if(err) throw err;
+                        .end(function (err) {
+                            if (err) throw err;
 
                             var thirdMove = {figure: {color: model.Color.BLACK, type: model.FigureType.ROCKS},
                                 from: {column: 2, row: 4},
@@ -350,23 +353,22 @@ describe('Mock REST API test /matches', function () {
                                 .set('Cookie', [matches.PLAYER_COOKIE_NAME + "=2"]) // white
                                 .send(thirdMove)
                                 .expect(400)
-                                .end(function(err){
-                                    if(err) throw err;
+                                .end(function (err) {
+                                    if (err) throw err;
 
                                     // it's blacks turn
                                     request(app)
                                         .post('/matches/' + match.matchId + '/moves')
                                         .set('Cookie', [matches.PLAYER_COOKIE_NAME + "=1"]) // black
                                         .send(thirdMove)
-                                        .expect(201,done);
+                                        .expect(201, done);
                                 });
                         });
                 });
         });
 
 
-
-        it("should not add move when the player tries to move an enemy figure", function(done){
+        it("should not add move when the player tries to move an enemy figure", function (done) {
             var enemyMove = {figure: {color: model.Color.WHITE, type: model.FigureType.ROCKS},
                 from: {column: 0, row: 1},
                 to: {column: 0, row: 2}};
@@ -387,16 +389,16 @@ describe('Mock REST API test /matches', function () {
                 to: {column: 2, row: 3}};
 
             request(app)
-                .post('/matches/'+  match.matchId + '/moves', move)
+                .post('/matches/' + match.matchId + '/moves', move)
                 .send({something: "other"})
                 .set('Cookie', [matches.PLAYER_COOKIE_NAME + '=1'])
                 .expect(400, done);
         });
 
-        it("should return 404 when there is no match with this id", function(done){
+        it("should return 404 when there is no match with this id", function (done) {
             request(app)
                 .post('/matches/someId/moves')
-                .expect(404,done);
+                .expect(404, done);
         });
 
     });
@@ -415,9 +417,48 @@ describe('Mock REST API test /matches', function () {
                 .get('/matches/' + match.matchId + '/valid-moves')
                 .expect(200)
                 .expect(function (res) {
+                    console.log(res.body);
                     assert.isArray(res.body);
+                    assert.isTrue(res.body.length() > 0);
                 })
                 .end(done);
+        });
+
+        it("should return 404 when there is no match with this id", function (done) {
+            request(app)
+                .post('/matches/someId/valid-moves')
+                .expect(404, done);
+        });
+
+    });
+
+    describe.skip('GET /matches/:matchId/threats', function () {
+
+        it("should return all threats", function (done) {
+
+            var match = modelFactory.createMatch(model.BoardSize.SMALL);
+            var board = match.getCurrentSnapshot();
+            board.getField(3, 6).figure = new model.Figure(
+                {
+                    type: model.FigureType.ZENITH,
+                    color: model.Color.BLACK
+                });
+
+            request(app)
+                .get('/matches/' + match.matchId + '/threats')
+                .expect(200)
+                .expect(function (res) {
+                    console.log(res.body);
+                    assert.isArray(res.body);
+                    assert.isTrue(res.body.length() > 0);
+                })
+                .end(done);
+        });
+
+        it("should return 404 when there is no match with this id", function (done) {
+            request(app)
+                .post('/matches/someId/threats')
+                .expect(404, done);
         });
 
     });
