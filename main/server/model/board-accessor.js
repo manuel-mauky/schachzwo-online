@@ -20,23 +20,23 @@ module.exports = function BoardAccessor(match) {
     this.match = match;
 
 
-    var getField = function(column, row){
+    var getField = function (column, row) {
         var board = match.getCurrentSnapshot();
 
         return board.getField(column, row);
     };
 
-    var getFigure = function(column, row){
+    var getFigure = function (column, row) {
         var field = getField(column, row);
 
-        if(field){
+        if (field) {
             return field.figure;
-        }else{
+        } else {
             return undefined;
         }
     };
 
-    var isOutOfBoard = function(column, row){
+    var isOutOfBoard = function (column, row) {
         return (column < 0 || column >= match.size || row < 0 || row >= match.size);
     };
 
@@ -58,7 +58,7 @@ module.exports = function BoardAccessor(match) {
 
             case FigureType.MAN:
                 return getRangeForMan(column, row);
-            
+
             case FigureType.KNIGHT:
                 return getRangeForKnight(column, row);
 
@@ -80,56 +80,58 @@ module.exports = function BoardAccessor(match) {
 
     };
 
-    var applyMethodToEatchFigureOnBoard = function(color,applyFunction){
-        if(!color) color = match.getColorOfActivePlayer();
-        for(var i=0 ; i< match.size ; i++){
-            for(var j=0 ; j<match.size ; j++){
+    var applyMethodToEatchFigureOnBoard = function (color, applyFunction) {
+        if (!color) color = match.getColorOfActivePlayer();
+        var result = new Array();
+        for (var i = 0; i < match.size; i++) {
+            for (var j = 0; j < match.size; j++) {
                 var field = getField(i, j);
                 var figure = field.figure;
-                if(isOrigin(i, j) || !figure || figure.color != color){
+                if (isOrigin(i, j) || !figure || figure.color != color) {
                     continue;
                 }
                 var list = applyFunction(i, j);
-                result.push({figure: figure,fields: list});
+                result.push({figure: figure, fields: list});
             }
         }
+        return result;
     }
 
     //Pro Feld mit eigner Figur eine Liste von Spielfeldern mit gegnerischen Figuren, die eigene Figur bedrohen
-    var getThreats = this.getThreats = function(color){
-        return applyMethodToEatchFigureOnBoard(color,getThreatenFields);
+    var getThreats = this.getThreats = function (color) {
+        return applyMethodToEatchFigureOnBoard(color, getThreatenFields);
     };
     //Pro Feld mit eigener Figur eine Liste von gültigen Spielfeldern
-    var getValidMoves = this.getValidMoves = function(color){
-        return applyMethodToEatchFigureOnBoard(color,getRangeFor);
+    var getValidMoves = this.getValidMoves = function (color) {
+        return applyMethodToEatchFigureOnBoard(color, getRangeFor);
     }
 
-    var getThreatenFields = this. getThreatenFields = function(column, row){
+    var getThreatenFields = this.getThreatenFields = function (column, row) {
         var result = [];
         var ownFigure = getFigure(column, row);
-        if(!ownFigure){
+        if (!ownFigure) {
             return result;
         }
 
         var list = [];
 
-        for(var i=0 ; i< match.size ; i++){
-            for(var j=0 ; j<match.size ; j++){
+        for (var i = 0; i < match.size; i++) {
+            for (var j = 0; j < match.size; j++) {
                 var field = getField(i, j);
                 var figure = field.figure;
 
-                if(isOrigin(i, j) || !figure || figure.color == ownFigure.color){
+                if (isOrigin(i, j) || !figure || figure.color == ownFigure.color) {
                     continue;
                 }
 
-                if(figure.type == FigureType.ZENITH){ // enemy zenith
-                    if(Math.abs(column - i) <= 1 && Math.abs(row - j) <= 1) {
+                if (figure.type == FigureType.ZENITH) { // enemy zenith
+                    if (Math.abs(column - i) <= 1 && Math.abs(row - j) <= 1) {
                         result.push({column: i, row: j});
                     }
                 } else { // other enemy figure
                     var list = getRangeFor(i, j);
-                    list.forEach(function(element){
-                        if(element.column == column && element.row == row){
+                    list.forEach(function (element) {
+                        if (element.column == column && element.row == row) {
                             result.push({column: i, row: j});
                         }
                     });
@@ -218,54 +220,63 @@ module.exports = function BoardAccessor(match) {
         var currentFigure = getFigure(column, row);
 
         // the man can go one field in every diagonal direction
-        var diagonalOneFieldDirections = [{x:1,y:1},{x:1,y:-1},{x:-1,y:1},{x:-1,y:-1}];
+        var diagonalOneFieldDirections = [
+            {x: 1, y: 1},
+            {x: 1, y: -1},
+            {x: -1, y: 1},
+            {x: -1, y: -1}
+        ];
         var diagonalResults = findTargets(currentFigure, column, row, diagonalOneFieldDirections);
         result = result.concat(diagonalResults);
 
 
         // the man can go on the horizontal and vertical directions.
-        var straightDirections = [{x:-1, y:0},{x:1, y:0}, {x:0, y:-1}, {x:0, y:1}];
+        var straightDirections = [
+            {x: -1, y: 0},
+            {x: 1, y: 0},
+            {x: 0, y: -1},
+            {x: 0, y: 1}
+        ];
         var straightResult = findTargetsInDirections(currentFigure.color, column, row, straightDirections);
         result = result.concat(straightResult);
 
-        if(! match.historyContainsMoveFrom(row,column))
-        {
-            result = result.concat(findTargetsInRange(column, row,2));
+        if (!match.historyContainsMoveFrom(row, column)) {
+            result = result.concat(findTargetsInRange(column, row, 2));
         }
 
         return result;
     };
 
 
-
     var getRangeForKnight = function (column, row) {
         var result = new Array();
 
         var relativeTargets = [
-            {column:-1,row:-2},
-            {column:1,row:-2},
-            {column:-2,row:-1},
-            {column:2,row:-1},
-            {column:-2,row:1},
-            {column:2,row:1},
-            {column:-1,row:2},
-            {column:1,row:2}];
+            {column: -1, row: -2},
+            {column: 1, row: -2},
+            {column: -2, row: -1},
+            {column: 2, row: -1},
+            {column: -2, row: 1},
+            {column: 2, row: 1},
+            {column: -1, row: 2},
+            {column: 1, row: 2}
+        ];
 
-        var currentFigure = getFigure(column,row);
+        var currentFigure = getFigure(column, row);
 
 
-        for(var i=0 ; i<relativeTargets.length ; i++){
+        for (var i = 0; i < relativeTargets.length; i++) {
             var relativeTarget = relativeTargets[i];
 
 
             var targetColumn = column + relativeTarget.column;
             var targetRow = row + relativeTarget.row;
 
-            if(isOutOfBoard(targetColumn, targetRow)){
+            if (isOutOfBoard(targetColumn, targetRow)) {
                 continue;
             }
 
-            if(isValidTarget(currentFigure,targetColumn,targetRow)){
+            if (isValidTarget(currentFigure, targetColumn, targetRow)) {
                 result.push({column: targetColumn, row: targetRow});
             }
         }
@@ -275,16 +286,26 @@ module.exports = function BoardAccessor(match) {
     };
 
 
-    var getRangeForKnowledge = function(column, row) {
+    var getRangeForKnowledge = function (column, row) {
         var result = [];
 
         var currentFigure = getFigure(column, row);
 
-        var diagonalDirections = [{x:1,y:1},{x:1,y:-1},{x:-1,y:1},{x:-1,y:-1}];
+        var diagonalDirections = [
+            {x: 1, y: 1},
+            {x: 1, y: -1},
+            {x: -1, y: 1},
+            {x: -1, y: -1}
+        ];
         var diagonalResults = findTargetsInDirections(currentFigure.color, column, row, diagonalDirections);
         result = result.concat(diagonalResults);
 
-        var straightDirections = [{x:-1, y:0},{x:1, y:0}, {x:0, y:-1}, {x:0, y:1}];
+        var straightDirections = [
+            {x: -1, y: 0},
+            {x: 1, y: 0},
+            {x: 0, y: -1},
+            {x: 0, y: 1}
+        ];
         var straightResult = findTargetsInDirections(currentFigure.color, column, row, straightDirections);
         result = result.concat(straightResult);
 
@@ -292,44 +313,63 @@ module.exports = function BoardAccessor(match) {
         return result;
     };
 
-    var getRangeForFaith = function(column, row) {
-        return findTargetsInRange(column, row,2);
+    var getRangeForFaith = function (column, row) {
+        return findTargetsInRange(column, row, 2);
     };
 
-    var getRangeForWoman = function(column, row) {
+    var getRangeForWoman = function (column, row) {
         var result = [];
 
         var currentFigure = getFigure(column, row);
 
         // the woman can go one field in vertical and horizontal direction
-        var straightOneFieldDirections = [{x:-1, y:0},{x:1, y:0}, {x:0, y:-1}, {x:0, y:1}];
+        var straightOneFieldDirections = [
+            {x: -1, y: 0},
+            {x: 1, y: 0},
+            {x: 0, y: -1},
+            {x: 0, y: 1}
+        ];
         var straightResults = findTargets(currentFigure, column, row, straightOneFieldDirections);
         result = result.concat(straightResults);
 
         // the woman can go on the diagonals
-        var diagonalDirections = [{x:1,y:1},{x:1,y:-1},{x:-1,y:1},{x:-1,y:-1}];
+        var diagonalDirections = [
+            {x: 1, y: 1},
+            {x: 1, y: -1},
+            {x: -1, y: 1},
+            {x: -1, y: -1}
+        ];
         var diagonalResults = findTargetsInDirections(currentFigure.color, column, row, diagonalDirections);
         result = result.concat(diagonalResults);
 
         return result;
     };
 
-    var getRangeForZenith = function(column, row) {
+    var getRangeForZenith = function (column, row) {
         var result = [];
 
         var ownFigure = getFigure(column, row);
 
-        var possiblePositions = [{x:1,y:1},{x:1,y:-1},{x:-1,y:1},{x:-1,y:-1},{x:1,y:0},{x:-1,y:0},{x:0,y:1},{x:0,y:-1}];
+        var possiblePositions = [
+            {x: 1, y: 1},
+            {x: 1, y: -1},
+            {x: -1, y: 1},
+            {x: -1, y: -1},
+            {x: 1, y: 0},
+            {x: -1, y: 0},
+            {x: 0, y: 1},
+            {x: 0, y: -1}
+        ];
         var tmpResult = findTargets(ownFigure, column, row, possiblePositions);
 
         result = result.concat(tmpResult);
 
 
         var originCoordinate = match.size == model.BoardSize.BIG ? 4 : 3;
-        if(Math.abs(column - originCoordinate) <= 1 && Math.abs(row - originCoordinate) <= 1){
+        if (Math.abs(column - originCoordinate) <= 1 && Math.abs(row - originCoordinate) <= 1) {
             var threatenFields = getThreatenFields(column, row);
 
-            if(threatenFields.length == 0){
+            if (threatenFields.length == 0) {
                 result.push({column: originCoordinate, row: originCoordinate});
             }
         }
@@ -344,7 +384,7 @@ module.exports = function BoardAccessor(match) {
      * @param range
      */
 
-    function findTargetsInRange(column, row,range) {
+    function findTargetsInRange(column, row, range) {
         var result = [];
         var queue = [];
         var ownFigure = getFigure(column, row);
@@ -410,16 +450,16 @@ module.exports = function BoardAccessor(match) {
      * @param directions
      * @returns {Array} an array of valid targets.
      */
-    var findTargets = function(currentFigure, column, row, directions){
+    var findTargets = function (currentFigure, column, row, directions) {
         var result = [];
 
-        for(var i=0 ; i<directions.length; i++){
+        for (var i = 0; i < directions.length; i++) {
             var direction = directions[i];
 
             var tmpColumn = column + direction.x;
             var tmpRow = row + direction.y;
 
-            if(isValidTarget(currentFigure, tmpColumn, tmpRow)){
+            if (isValidTarget(currentFigure, tmpColumn, tmpRow)) {
                 result.push({column: tmpColumn, row: tmpRow});
             }
         }
@@ -443,33 +483,33 @@ module.exports = function BoardAccessor(match) {
      * @param direction
      * @returns {Array} an array with the valid target positions.
      */
-    var findTargetsInOneDirection = function (ownColor, startColumn, startRow, direction){
+    var findTargetsInOneDirection = function (ownColor, startColumn, startRow, direction) {
         var result = new Array();
 
         var tmpColumn = startColumn;
         var tmpRow = startRow;
 
-        for(var j=0 ; j<match.size ; j++){
+        for (var j = 0; j < match.size; j++) {
             tmpColumn = tmpColumn + direction.x;
             tmpRow = tmpRow + direction.y;
 
-            if(isOutOfBoard(tmpColumn,tmpRow)){
+            if (isOutOfBoard(tmpColumn, tmpRow)) {
                 break;
             }
 
-            if(isOrigin(tmpColumn, tmpRow)){
+            if (isOrigin(tmpColumn, tmpRow)) {
                 continue;
             }
 
             var figure = getFigure(tmpColumn, tmpRow)
 
-            if(figure){
-                if(figure.color != ownColor){
+            if (figure) {
+                if (figure.color != ownColor) {
                     result.push({column: tmpColumn, row: tmpRow});
                 }
                 break;
-            }else{
-                result.push({column: tmpColumn, row:tmpRow});
+            } else {
+                result.push({column: tmpColumn, row: tmpRow});
             }
         }
 
@@ -489,10 +529,10 @@ module.exports = function BoardAccessor(match) {
     var findTargetsInDirections = function (ownColor, startColumn, startRow, directions) {
         var result = [];
 
-        for(var i=0 ; i< directions.length ; i++){
+        for (var i = 0; i < directions.length; i++) {
             var direction = directions[i];
 
-            var partialResult = findTargetsInOneDirection(ownColor, startColumn, startRow, direction );
+            var partialResult = findTargetsInOneDirection(ownColor, startColumn, startRow, direction);
 
             result = result.concat(partialResult);
         }
@@ -519,13 +559,13 @@ module.exports = function BoardAccessor(match) {
      * This function returns false if the target field is out of the board OR
      * the target field is the origin OR there is an enemy figure on the target field.
      */
-    var isValidTarget = function(currentFigure, targetColumn, targetRow){
+    var isValidTarget = function (currentFigure, targetColumn, targetRow) {
 
-        if(isOutOfBoard(targetColumn, targetRow)){
+        if (isOutOfBoard(targetColumn, targetRow)) {
             return false;
         }
 
-        if(isOrigin(targetColumn, targetRow)){
+        if (isOrigin(targetColumn, targetRow)) {
             return false;
         }
 

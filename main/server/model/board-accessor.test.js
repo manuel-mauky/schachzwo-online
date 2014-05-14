@@ -885,7 +885,7 @@ describe("isThreatenFrom",function(){
         board.getField(5,6).figure = new Figure({type: FigureType.ROCKS, color: Color.WHITE});
 
         var list = accessor.getThreatenFields(4,5);
-    console.log(list);
+
         assert.equal(list.length,2);
         assert.include(list,{column: 5, row: 3});
         assert.include(list,{column: 3, row: 6});

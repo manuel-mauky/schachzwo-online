@@ -426,7 +426,7 @@ describe('Mock REST API test /matches', function () {
     });
 
 
-    describe.skip('GET /matches/:matchId/valid-moves', function () {
+    describe('GET /matches/:matchId/valid-moves', function () {
 
         it("should return all valid moves", function (done) {
 
@@ -439,9 +439,9 @@ describe('Mock REST API test /matches', function () {
                 .get('/matches/' + match.matchId + '/valid-moves')
                 .expect(200)
                 .expect(function (res) {
-                    console.log(res.body);
+
                     assert.isArray(res.body);
-                    assert.isTrue(res.body.length() > 0);
+                    assert.isTrue(res.body.length > 0);
                 })
                 .end(done);
         });
@@ -454,11 +454,11 @@ describe('Mock REST API test /matches', function () {
 
     });
 
-    describe.skip('GET /matches/:matchId/threats', function () {
+    describe('GET /matches/:matchId/threats', function () {
 
         it("should return all threats", function (done) {
 
-            var match = modelFactory.createMatch(model.BoardSize.SMALL);
+            var match = matchStore.create(modelFactory.createMatch(model.BoardSize.SMALL));
             var board = match.getCurrentSnapshot();
             board.getField(3, 6).figure = new model.Figure(
                 {
@@ -470,9 +470,8 @@ describe('Mock REST API test /matches', function () {
                 .get('/matches/' + match.matchId + '/threats')
                 .expect(200)
                 .expect(function (res) {
-                    console.log(res.body);
                     assert.isArray(res.body);
-                    assert.isTrue(res.body.length() > 0);
+                    assert.isTrue(res.body.length > 0);
                 })
                 .end(done);
         });

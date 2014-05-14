@@ -7,6 +7,7 @@ var modelFactory = require("../model/model.factory");
 var model = require("../model/model");
 var matchStore = require("../store/match.store");
 var GameLogic = require("../gamelogic");
+var BoardAccessor = require('../model/board-accessor');
 
 var uuid = require("node-uuid");
 
@@ -194,7 +195,7 @@ route.get("/:id/threats", function (req, res) {
 
     var match = matchStore.get(req.params.id);
     if (match) {
-        return json(new GameLogic(match).getThreats());
+        return res.json(new BoardAccessor(match).getThreats());
     } else {
         return match404(req, res);
     }
@@ -205,7 +206,7 @@ route.get("/:id/valid-moves", function (req, res) {
 
     var match = matchStore.get(req.params.id);
     if (match) {
-        return json(new GameLogic(match).getValidMoves());
+        return res.json(new BoardAccessor(match).getValidMoves());
     } else {
         return match404(req, res);
     }
