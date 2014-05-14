@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore" xmlns:o="http://wireframesketcher.com/1.0/model/overrides">
+  <widgets xsi:type="model:Master" id="1" measuredWidth="697" measuredHeight="695">
+    <screen xsi:type="model:Screen" href="chessboard.screen#/"/>
+    <overrides>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Circle" x="320" y="319" width="60" height="60">
+          <font/>
+        </object>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" x="396" y="595"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" x="396" y="496" background="#999999"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" x="597" y="398"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" x="498" y="398" background="#999999"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" x="498" y="595" background="#999999"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" x="597" y="595"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" x="597" y="496" background="#999999"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" x="498" y="496"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" x="597" y="299" background="#999999"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" x="597" y="200"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" x="498" y="299"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" x="498" y="200" background="#999999"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" x="498" y="99"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" x="597" y="99" background="#999999"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" x="597"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" x="498" background="#999999"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" x="297" y="595" background="#999999"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" x="297" y="496"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" x="198" y="496" background="#999999"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" x="198" y="595"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" y="595"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" x="99" y="595" background="#999999"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" x="99" y="496"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" y="496" background="#999999"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" x="99" y="299"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" x="396" y="398"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" x="297" y="398" background="#999999"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" x="198" y="398"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" x="396" y="299" background="#999999"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" x="297" y="299"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" x="396" y="200"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" x="297" y="200" background="#999999"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" x="396" y="99" background="#999999"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" x="297" y="99"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" x="396"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" x="297" background="#999999"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" x="198"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" x="198" y="99" background="#999999"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" x="198" y="200"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" y="398"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" x="99" y="200" background="#999999"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" x="198" y="299" background="#999999"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" x="99" y="398" background="#999999"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" y="299" background="#999999"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" y="200"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" y="99" background="#999999"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" x="99" y="99"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" x="99" background="#999999"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="1">
+        <object xsi:type="model:Panel" width="697" height="695"/>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Delete" ref="84"/>
+    </overrides>
+  </widgets>
+  <hRuler/>
+  <vRuler/>
+  <font size="12px"/>
+</model:Screen>

@@ -11,14 +11,25 @@ var Figure = model.Figure;
 
 module.exports = function GameLogic(match){
     var accessor = new BoardAccessor(match);
+
+    /**
+     * checks if a Player with the given Color is in Check.
+     * If color is not set, it takes the Color from the active Player
+     * @type {isCheck}
+     */
     var isCheck = this.isCheck = function(color){
-        var bord = match.getCurrentSnapshot();
-        var zenithField = getZenithPosition(color,bord);
+        if(!color) color = match.getColorOfActivePlayer();
+        var board = match.getCurrentSnapshot();
+        var zenithField = getZenithPosition(color,board);
         var threadenFields = accessor.getThreatenFields(zenithField.position.column,zenithField.position.row);
         if(threadenFields.length > 0) return true;
         else return false;
     };
 
+    /**
+     * Returns the Position of the Zenith of the given Playercolor on the given board
+     * @type {getZenithPosition}
+     */
     var getZenithPosition = this.getZenithPosition = function(color,bord) {
         for (var i = 0; i < match.size; i++) {
             for (var j = 0; j < match.size; j++) {
@@ -30,7 +41,29 @@ module.exports = function GameLogic(match){
         }
     };
 
+    /**
+     * Checks if a Move is valid on checking the move.from Field with the snapshot and the move.to field with the Range of this figure
+     * @type {isValidMove}
+     */
+    var isValidMove = this.isValidMove = function(move){
+        var board = match.getCurrentSnapshot();
+        var field = board.getField(move.from.column,move.from.row);
+        if(JSON.stringify(field.figure) != JSON.stringify(move.figure)) return false;
+        var range = accessor.getRangeFor(move.from.column,move.from.row);
+        var isValid = false;
+        range.forEach(function(element){
+           if(element.column == move.to.column && element.row == move.to.row) isValid = true;
+        });
+        return isValid;
+    }
+
+    /**
+     * checks if a Player with the given Color is in CheckMate
+     * If color is not set, it takes the Color from the active Player
+     * @type {isCheckMate}
+     */
     var isCheckMate = this.isCheckMate = function(color){
+        if(!color) color = match.getColorOfActivePlayer();
         var isCheckMate = true;
         if(!isCheck(color)) return false;
         var zenithField = getZenithPosition(color,bord);
@@ -63,7 +96,7 @@ module.exports = function GameLogic(match){
             if(!isCheckMate) return;
         });
 
-        //figuren blokieren welche zenith bedrohen //schnittmenge aus eigenen figuren und gegnerrücken
+        //figuren blokieren welche zenith bedrohen
         zenithThreadenFields.forEach(function(enemyField){
             var enemyRangeList = accessor.getRangeFor(enemyField.position.column,enemyField.position.row);
             enemyRangeList.forEach(function(element){

@@ -1,6 +1,9 @@
 "use strict"
 
 
+var assert = require("assert");
+
+
 /**
  * The size that the board can have.
  *
@@ -58,7 +61,9 @@ var State = {
  * @constructor
  */
 var Figure = function (json) {
-    var json = json || 0;
+    assert.ok(json);
+    assert.ok(json.color);
+    assert.ok(json.type);
 
     this.color = json.color;
     this.type = json.type;
@@ -76,12 +81,11 @@ var Figure = function (json) {
  * @constructor
  */
 var Field = function (json) {
-    var json = json || 0;
+    assert.ok(json);
+    assert.ok(json.position);
 
     if (json.figure) {
         this.figure = new Figure(json.figure);
-    } else {
-        this.figure = undefined;
     }
 
     this.position = new Position(json.position);
@@ -96,7 +100,9 @@ var Field = function (json) {
  * @constructor
  */
 var Position = function(json){
-    var json = json || 0;
+    assert.ok(json);
+    assert.equal(typeof json.column, "number");
+    assert.equal(typeof json.row, "number");
 
     this.column = json.column;
     this.row = json.row;
@@ -110,17 +116,15 @@ var Position = function(json){
  * @constructor
  */
 var Move = function(json){
-    var json = json || 0;
+    assert.ok(json);
+    assert.ok(json.figure);
+    assert.ok(json.from);
+    assert.ok(json.to);
 
-    if(json.figure){
-        this.figure = new Figure(json.figure);
-    }
-    if(json.from){
-        this.from = new Position(json.from);
-    }
-    if(json.to){
-        this.to = new Position(json.to);
-    }
+    this.figure = new Figure(json.figure);
+    this.from = new Position(json.from);
+    this.to = new Position(json.to);
+
     return this;
 }
 
@@ -134,8 +138,7 @@ var Move = function(json){
  * @constructor
  */
 var Snapshot = function (json) {
-
-    var json = json || 0;
+    var json = json || {};
 
     this.board = [];
     if (Array.isArray(json.board)) {
@@ -162,7 +165,7 @@ var Snapshot = function (json) {
 
     this.getFieldFromPosition = function(position){
         return this.getField(position.column,position.row);
-    }
+    };
 
     /**
      * This method can be used for debugging. It prints the current board
@@ -226,7 +229,9 @@ var Snapshot = function (json) {
  * @constructor
  */
 var Player = function (json) {
-    var json = json || 0;
+    assert.ok(json);
+    assert.ok(json.playerId);
+    assert.ok(json.name);
 
     this.playerId = json.playerId;
     this.name = json.name;
@@ -243,7 +248,7 @@ var Player = function (json) {
  * @constructor
  */
 var Match = function (json) {
-    var json = json || 0;
+    var json = json || {};
 
     if(json.playerWhite){
         this.playerWhite = new Player(json.playerWhite);
@@ -267,6 +272,17 @@ var Match = function (json) {
         this.size = BoardSize.BIG;
     }else{
         this.size = BoardSize.SMALL;
+    }
+
+    /**
+     * return the Color of the active Player who is on turn
+     * @returns the Color of the active Player
+     */
+    this.getColorOfActivePlayer = function(){
+        if(this.history.length % 2 == 0){
+            return Color.BLACK;
+        }
+        else return Color.WHITE;
     }
 
     /**
@@ -299,16 +315,16 @@ var Match = function (json) {
      */
     this.getCurrentSnapshot = function(){
         return this.generateSnapshot(this.history.length);
-    }
+    };
 
     this.addMove = function(move){
 
         if(! (move instanceof Move)){
-            move = new Move(move);
-        }
-
-        if(!move.figure || !move.from || !move.to){
-            return false;
+            try{
+                move = new Move(move);
+            } catch(err){
+                return false;
+            }
         }
 
         //todo error handling
@@ -351,7 +367,7 @@ var Match = function (json) {
 
         return false;
 
-    }
+    };
 
     this.historyContainsMoveFrom = function(row, column){
         var contains = false;
