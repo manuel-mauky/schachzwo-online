@@ -279,7 +279,7 @@ var Match = function (json) {
      * @returns the Color of the active Player
      */
     this.getColorOfActivePlayer = function(){
-        if(match.history.length % 2 == 0){
+        if(this.history.length % 2 == 0){
             return Color.BLACK;
         }
         else return Color.WHITE;
