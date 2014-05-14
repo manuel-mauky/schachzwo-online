@@ -33,12 +33,12 @@ describe("gamelogic", function () {
         logic = new GameLogic(match);
     });
 
-    describe("getZenitPosition",function(){
+    describe("getZenithPosition",function(){
         it("should return start Position on start Snapshot",function(){
-            var field = logic.getZenitPosition(Color.WHITE,board);
+            var field = logic.getZenithPosition(Color.WHITE,board);
             assert.equal(field.position.column,3);
             assert.equal(field.position.row,0);
-            var field = logic.getZenitPosition(Color.BLACK,board);
+            var field = logic.getZenithPosition(Color.BLACK,board);
             assert.equal(field.position.column,3);
             assert.equal(field.position.row,6);
         });
