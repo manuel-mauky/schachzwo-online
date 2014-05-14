@@ -5,16 +5,173 @@
     <overrides>
       <widgetChanges xsi:type="o:Delete" ref="190"/>
       <widgetChanges xsi:type="o:Delete" ref="184"/>
-      <widgets ref="188"/>
       <widgets ref="189" x="272" y="7"/>
+      <widgets ref="188" width="119"/>
     </overrides>
   </widgets>
-  <widgets xsi:type="model:Master" id="5" x="10" y="56" measuredWidth="833" measuredHeight="313">
+  <widgets xsi:type="model:Master" id="5" x="10" y="56" height="505" measuredWidth="833" measuredHeight="505">
     <screen xsi:type="model:WidgetGroup" href="assets/Bootstrap/Bootstrap.screen#Hero%20Unit"/>
     <overrides>
-      <widgets ref="59" y="50" text="SchachZWO"/>
-      <widgets ref="60" height="73" text="Wenn du SchachZWO mit einem Freund spielen möchtest, klicke einfach auf &quot;Neue Partie&quot; und du erhältst einen Link, mit dem du deinen Freund einladen kannst!"/>
-      <widgets ref="61" x="60" y="216" width="135" text="Neue Partie"/>
+      <widgetChanges xsi:type="o:Insert" newIndex="4">
+        <object xsi:type="model:Text" x="374" y="408" width="43" height="43" text="9x9">
+          <font size="18px"/>
+        </object>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="4">
+        <object xsi:type="model:Text" x="60" y="408" width="43" height="43" text="7x7">
+          <font size="18px"/>
+        </object>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Delete" ref="61"/>
+      <widgets ref="58" height="505"/>
+      <widgets ref="59" y="44" text="SchachZWO"/>
+      <widgets ref="60" y="120" height="97" text="Wenn du SchachZWO mit einem Freund spielen möchtest, klicke auf die gewünschte Spielfeldgröße und du erhältst du einen Link, mit dem du deinen Freund einladen kannst!"/>
+    </overrides>
+  </widgets>
+  <widgets xsi:type="model:Master" id="9" x="384" y="282" width="182" height="183" measuredWidth="182" measuredHeight="183">
+    <screen xsi:type="model:Screen" href="assets/ownAssets/chessboard.screen#/"/>
+    <overrides>
+      <widgets ref="84" x="-792" y="-512" width="182" height="183"/>
+      <widgets ref="1" width="182" height="183"/>
+      <widgets ref="2" width="18" height="19"/>
+      <widgets ref="3" x="18" width="18" height="19"/>
+      <widgets ref="4" x="18" y="19" width="18" height="19"/>
+      <widgets ref="5" y="19" width="18" height="19"/>
+      <widgets ref="6" y="39" width="18" height="19"/>
+      <widgets ref="7" y="59" width="18" height="19"/>
+      <widgets ref="8" x="18" y="80" width="18" height="19"/>
+      <widgets ref="9" x="38" y="59" width="18" height="19"/>
+      <widgets ref="10" x="18" y="39" width="18" height="19"/>
+      <widgets ref="11" y="80" width="18" height="19"/>
+      <widgets ref="12" x="38" y="39" width="18" height="19"/>
+      <widgets ref="13" x="38" y="19" width="18" height="19"/>
+      <widgets ref="14" x="38" width="18" height="19"/>
+      <widgets ref="15" x="59" width="18" height="19"/>
+      <widgets ref="16" x="79" width="18" height="19"/>
+      <widgets ref="17" x="59" y="19" width="18" height="19"/>
+      <widgets ref="18" x="79" y="19" width="18" height="19"/>
+      <widgets ref="19" x="59" y="39" width="18" height="19"/>
+      <widgets ref="20" x="79" y="39" width="18" height="19"/>
+      <widgets ref="21" x="59" y="59" width="18" height="19"/>
+      <widgets ref="22" x="79" y="59" width="18" height="19"/>
+      <widgets ref="23" x="38" y="80" width="18" height="19"/>
+      <widgets ref="24" x="59" y="80" width="18" height="19"/>
+      <widgets ref="25" x="79" y="80" width="18" height="19"/>
+      <widgets ref="26" x="18" y="59" width="18" height="19"/>
+      <widgets ref="27" y="99" width="18" height="19"/>
+      <widgets ref="28" x="18" y="99" width="18" height="19"/>
+      <widgets ref="29" x="18" y="119" width="18" height="19"/>
+      <widgets ref="30" y="119" width="18" height="19"/>
+      <widgets ref="31" y="140" width="18" height="19"/>
+      <widgets ref="32" y="160" width="18" height="19"/>
+      <widgets ref="33" x="38" y="160" width="18" height="19"/>
+      <widgets ref="34" x="18" y="140" width="18" height="19"/>
+      <widgets ref="35" x="38" y="140" width="18" height="19"/>
+      <widgets ref="36" x="38" y="119" width="18" height="19"/>
+      <widgets ref="37" x="38" y="99" width="18" height="19"/>
+      <widgets ref="38" x="59" y="99" width="18" height="19"/>
+      <widgets ref="39" x="59" y="119" width="18" height="19"/>
+      <widgets ref="40" x="59" y="140" width="18" height="19"/>
+      <widgets ref="41" x="59" y="160" width="18" height="19"/>
+      <widgets ref="42" x="18" y="160" width="18" height="19"/>
+      <widgets ref="43" x="98" width="18" height="19"/>
+      <widgets ref="44" x="118" width="18" height="19"/>
+      <widgets ref="45" x="118" y="19" width="18" height="19"/>
+      <widgets ref="46" x="98" y="19" width="18" height="19"/>
+      <widgets ref="47" x="98" y="39" width="18" height="19"/>
+      <widgets ref="48" x="98" y="59" width="18" height="19"/>
+      <widgets ref="49" x="139" y="59" width="18" height="19"/>
+      <widgets ref="50" x="118" y="39" width="18" height="19"/>
+      <widgets ref="51" x="139" y="39" width="18" height="19"/>
+      <widgets ref="52" x="139" y="19" width="18" height="19"/>
+      <widgets ref="53" x="139" width="18" height="19"/>
+      <widgets ref="54" x="159" width="18" height="19"/>
+      <widgets ref="55" x="159" y="19" width="18" height="19"/>
+      <widgets ref="56" x="159" y="39" width="18" height="19"/>
+      <widgets ref="57" x="159" y="59" width="18" height="19"/>
+      <widgets ref="58" x="118" y="59" width="18" height="19"/>
+      <widgets ref="59" x="98" y="99" width="18" height="19"/>
+      <widgets ref="60" x="118" y="99" width="18" height="19"/>
+      <widgets ref="61" x="118" y="119" width="18" height="19"/>
+      <widgets ref="62" x="98" y="119" width="18" height="19"/>
+      <widgets ref="63" x="98" y="140" width="18" height="19"/>
+      <widgets ref="64" x="98" y="160" width="18" height="19"/>
+      <widgets ref="65" x="139" y="160" width="18" height="19"/>
+      <widgets ref="66" x="118" y="140" width="18" height="19"/>
+      <widgets ref="67" x="139" y="140" width="18" height="19"/>
+      <widgets ref="68" x="139" y="119" width="18" height="19"/>
+      <widgets ref="69" x="139" y="99" width="18" height="19"/>
+      <widgets ref="70" x="159" y="99" width="18" height="19"/>
+      <widgets ref="71" x="159" y="119" width="18" height="19"/>
+      <widgets ref="72" x="159" y="140" width="18" height="19"/>
+      <widgets ref="73" x="159" y="160" width="18" height="19"/>
+      <widgets ref="74" x="118" y="160" width="18" height="19"/>
+      <widgets ref="75" x="98" y="80" width="18" height="19"/>
+      <widgets ref="76" x="118" y="80" width="18" height="19"/>
+      <widgets ref="77" x="139" y="80" width="18" height="19"/>
+      <widgets ref="78" x="159" y="80" width="18" height="19"/>
+      <widgets ref="79" x="79" y="99" width="18" height="19"/>
+      <widgets ref="80" x="79" y="119" width="18" height="19"/>
+      <widgets ref="81" x="79" y="140" width="18" height="19"/>
+      <widgets ref="82" x="79" y="160" width="18" height="19"/>
+      <widgets ref="83" x="82" y="83" width="11" height="11"/>
+    </overrides>
+  </widgets>
+  <widgets xsi:type="model:Master" id="10" x="70" y="282" height="183" measuredWidth="190" measuredHeight="183">
+    <screen xsi:type="model:Screen" href="assets/ownAssets/smallChess.screen#/"/>
+    <overrides>
+      <widgets ref="1" x="-150" y="-630" width="190" height="183"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.0" x="-150" y="-630" width="190" height="183"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.1" x="-150" y="-630" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.2" x="-126" y="-630" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.3" x="-126" y="-607" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.4" x="-150" y="-607" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.5" x="-150" y="-579" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.6" x="-150" y="-553" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.7" x="-126" y="-527" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.8" x="-97" y="-553" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.9" x="-126" y="-579" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.10" x="-150" y="-527" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.11" x="-97" y="-579" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.12" x="-97" y="-607" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.13" x="-97" y="-630" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.14" x="-71" y="-630" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.15" x="-44" y="-630" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.16" x="-71" y="-607" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.17" x="-44" y="-607" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.18" x="-71" y="-579" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.19" x="-44" y="-579" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.20" x="-71" y="-553" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.21" x="-44" y="-553" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.22" x="-97" y="-527" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.23" x="-71" y="-527" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.24" x="-44" y="-527" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.25" x="-126" y="-553" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.26" x="-150" y="-502" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.27" x="-126" y="-502" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.28" x="-126" y="-475" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.29" x="-150" y="-475" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.30" x="-97" y="-475" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.31" x="-97" y="-502" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.32" x="-71" y="-502" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.33" x="-71" y="-475" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.34" x="-17" y="-630" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.35" x="11" y="-630" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.36" x="11" y="-607" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.37" x="-17" y="-607" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.38" x="-17" y="-579" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.39" x="-17" y="-553" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.40" x="11" y="-579" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.41" x="11" y="-553" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.42" x="-17" y="-502" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.43" x="11" y="-502" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.44" x="11" y="-475" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.45" x="-17" y="-475" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.46" x="-17" y="-527" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.47" x="11" y="-527" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.48" x="-44" y="-502" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.49" x="-44" y="-475" width="24" height="23"/>
+      <widgets ref="/@widgets.0/@instance/@widgets.50" x="-65" y="-548" width="15" height="14"/>
     </overrides>
   </widgets>
   <hRuler/>
