@@ -5,7 +5,6 @@ var model = require("../model/model");
 // Store as a simple data structure in memory
 var store = {};
 
-
 /**
  * Returns a match with a given ID. If the requested match does not exist, undefined is returned.
  *
@@ -16,6 +15,19 @@ module.exports.get = function (id) {
     return store[id];
 };
 
+
+module.exports.getAll = function(){
+    var result = [];
+
+    for(var entry in store){
+        if(store.hasOwnProperty(entry)){
+            result.push(store[entry]);
+        }
+    }
+
+    return result;
+}
+
 /**
  * Creates a new match in the store. This created match with new set ID is returned.
  * Returns undefined when creating failed.
@@ -24,7 +36,10 @@ module.exports.get = function (id) {
  * @returns {Object} the created match
  */
 module.exports.create = function (match) {
-    match = new model.Match(match);
+    if(! (match instanceof model.Match)){
+        match = new model.Match(match);
+    }
+
     match.matchId = createID();
     store[match.matchId] = match;
 
