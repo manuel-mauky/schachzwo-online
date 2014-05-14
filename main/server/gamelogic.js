@@ -13,10 +13,12 @@ module.exports = function GameLogic(match){
     var accessor = new BoardAccessor(match);
 
     /**
-     * checks if a Player with the given Color is in Check
+     * checks if a Player with the given Color is in Check.
+     * If color is not set, it takes the Color from the active Player
      * @type {isCheck}
      */
     var isCheck = this.isCheck = function(color){
+        if(!color) color = match.getColorOfActivePlayer();
         var board = match.getCurrentSnapshot();
         var zenithField = getZenithPosition(color,board);
         var threadenFields = accessor.getThreatenFields(zenithField.position.column,zenithField.position.row);
@@ -57,9 +59,11 @@ module.exports = function GameLogic(match){
 
     /**
      * checks if a Player with the given Color is in CheckMate
+     * If color is not set, it takes the Color from the active Player
      * @type {isCheckMate}
      */
     var isCheckMate = this.isCheckMate = function(color){
+        if(!color) color = match.getColorOfActivePlayer();
         var isCheckMate = true;
         if(!isCheck(color)) return false;
         var zenithField = getZenithPosition(color,bord);
