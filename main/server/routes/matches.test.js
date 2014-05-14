@@ -7,9 +7,9 @@ var assert = require("chai").assert;
 
 var app = require('../../app').app;
 var model = require('../model/model');
-var modelFactory = require('../model/model.factory');
+var modelFactory = require('../model/model-factory.js');
 
-var matchStore = require('../store/match.store');
+var matchStore = require('../store/match-store.js');
 var matches = require('./matches');
 
 describe('Mock REST API test /matches', function () {

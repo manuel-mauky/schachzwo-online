@@ -3,7 +3,7 @@
 
 var assert = require("chai").assert;
 var model = require("./model");
-var modelFactory = require("./model.factory");
+var modelFactory = require("./model-factory.js");
 
 var FigureType = model.FigureType;
 

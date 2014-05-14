@@ -4,7 +4,7 @@ var express = require("express");
 
 var route = express.Router();
 
-var matchStore = require("../store/match.store");
+var matchStore = require("../store/match-store.js");
 
 route.get("/:matchId", function (req, res) {
 

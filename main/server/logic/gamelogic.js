@@ -2,8 +2,8 @@
  * Created by Erik Jähne on 09.05.2014.
  */
 
-var model = require("./model/model");
-var BoardAccessor = require("./model/board-accessor");
+var model = require("./../model/model");
+var BoardAccessor = require("./board-accessor");
 
 var FigureType = model.FigureType;
 var Color = model.Color;

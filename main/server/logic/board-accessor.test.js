@@ -9,13 +9,13 @@ var assert = require("chai").assert;
 
 var BoardAccessor = require("./board-accessor");
 
-var model = require("./model");
+var model = require("./../model/model");
 
 var Color = model.Color;
 var FigureType = model.FigureType;
 var Figure = model.Figure;
 
-var modelFactory = require("./model.factory");
+var modelFactory = require("./../model/model-factory.js");
 
 
 describe("getRangeFor", function () {

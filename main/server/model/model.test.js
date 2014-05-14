@@ -17,7 +17,7 @@ var Snapshot = model.Snapshot;
 var Position = model.Position;
 var Move = model.Move;
 
-var modelFactory = require("./model.factory");
+var modelFactory = require("./model-factory.js");
 
 describe("Creation of Figure", function () {
 

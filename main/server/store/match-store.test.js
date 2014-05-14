@@ -3,10 +3,10 @@
  */
 "use strict";
 
-var matchStore = require('../store/match.store');
+var matchStore = require('./match-store.js');
 var model = require("../model/model");
 
-var modelFactory = require("../model/model.factory");
+var modelFactory = require("../model/model-factory.js");
 
 var assert = require("chai").assert;
 

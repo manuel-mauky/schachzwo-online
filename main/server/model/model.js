@@ -294,7 +294,7 @@ var Match = function (json) {
         if(!this.history || this.history.length < number ){
             throw new Error("There is no move in the history for this number.");
         }
-        var modelFactory = require("./model.factory"); // required here to prevent recursive import as model.factory has a dependency to this model.js
+        var modelFactory = require("./model-factory.js"); // required here to prevent recursive import as model.factory has a dependency to this model.js
 
         //for performace reasons maybe as static json -> evaluation
         var snapshot = modelFactory.createStartSnapshot(this.size);

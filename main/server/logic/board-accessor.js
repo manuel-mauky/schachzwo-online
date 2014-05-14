@@ -7,7 +7,7 @@
 
 
 
-var model = require("./model");
+var model = require("./../model/model");
 
 var FigureType = model.FigureType;
 var Color = model.Color;

@@ -3,11 +3,11 @@
 var express = require("express");
 
 
-var modelFactory = require("../model/model.factory");
+var modelFactory = require("../model/model-factory.js");
 var model = require("../model/model");
-var matchStore = require("../store/match.store");
-var GameLogic = require("../gamelogic");
-var BoardAccessor = require('../model/board-accessor');
+var matchStore = require("../store/match-store.js");
+var GameLogic = require("../logic/gamelogic");
+var BoardAccessor = require('../logic/board-accessor');
 
 var uuid = require("node-uuid");
 
