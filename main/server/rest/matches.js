@@ -176,7 +176,7 @@ route.post("/:id/moves", function (req, res) {
 
 
     // even history length means that it's blacks turn.
-    if (match.history.length % 2 == 0) {
+    if (match.getColorOfActivePlayer() == model.Color.BLACK) {
         // blacks turn
 
         if (match.playerBlack.playerId != playerId) {
