@@ -25,8 +25,6 @@ describe("gamelogic", function () {
     beforeEach(function () {
         match = modelFactory.createMatch(model.BoardSize.SMALL);
         board = match.getCurrentSnapshot();
-        board.getField(3, 0).figure = new Figure({type: FigureType.ZENITH, color: Color.WHITE});
-        board.getField(3, 6).figure = new Figure({type: FigureType.ZENITH, color: Color.BLACK});
         // mocking the getCurrentSnapshot
         match.getCurrentSnapshot = function(){
             return board;

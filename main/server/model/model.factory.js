@@ -135,6 +135,7 @@ var helper_fillWithSpecialFigures = function (board, color, row, size) {
     board.getField(0, row).figure = new model.Figure({color: color, type: FigureType.MAN});
     board.getField(1, row).figure = new model.Figure({color: color, type: FigureType.KNIGHT});
     board.getField(2, row).figure = new model.Figure({color: color, type: FigureType.WOMAN});
+    board.getField(3, row).figure = new model.Figure({color: color, type: FigureType.ZENITH});
     board.getField(size - 3, row).figure = new model.Figure({color: color, type: FigureType.WOMAN});
     board.getField(size - 2, row).figure = new model.Figure({color: color, type: FigureType.KNIGHT});
     board.getField(size - 1, row).figure = new model.Figure({color: color, type: FigureType.MAN});

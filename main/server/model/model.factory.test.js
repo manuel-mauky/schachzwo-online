@@ -47,7 +47,7 @@ describe("modelFactory.createStartSnapshot", function () {
         assert.equal(snapshot.getField(0, 0).figure.type, FigureType.MAN);
         assert.equal(snapshot.getField(1, 0).figure.type, FigureType.KNIGHT);
         assert.equal(snapshot.getField(2, 0).figure.type, FigureType.WOMAN);
-        assert.notOk(snapshot.getField(3, 0).figure);  // at start the zeniths are placed on the origin in the middle of the field
+        assert.equal(snapshot.getField(3, 0).figure.type, FigureType.ZENITH);
         assert.equal(snapshot.getField(4, 0).figure.type, FigureType.WOMAN);
         assert.equal(snapshot.getField(5, 0).figure.type, FigureType.KNIGHT);
         assert.equal(snapshot.getField(6, 0).figure.type, FigureType.MAN);
@@ -56,7 +56,7 @@ describe("modelFactory.createStartSnapshot", function () {
         assert.equal(snapshot.getField(0, 6).figure.type, FigureType.MAN);
         assert.equal(snapshot.getField(1, 6).figure.type, FigureType.KNIGHT);
         assert.equal(snapshot.getField(2, 6).figure.type, FigureType.WOMAN);
-        assert.notOk(snapshot.getField(3, 6).figure);  // at start the zeniths are placed on the origin in the middle of the field
+        assert.equal(snapshot.getField(3, 6).figure.type, FigureType.ZENITH);
         assert.equal(snapshot.getField(4, 6).figure.type, FigureType.WOMAN);
         assert.equal(snapshot.getField(5, 6).figure.type, FigureType.KNIGHT);
         assert.equal(snapshot.getField(6, 6).figure.type, FigureType.MAN);
