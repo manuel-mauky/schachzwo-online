@@ -382,6 +382,15 @@ describe('Mock REST API test /matches', function () {
         });
 
 
+        it("should not add bad move", function (done) {
+
+            request(app)
+                .post('/matches/' + match.matchId + '/moves')
+                .send({something: "other"})
+                .set('Cookie', [matches.PLAYER_COOKIE_NAME + '=1'])
+                .expect(400, done);
+        });
+
         it("should not add invalid move", function (done) {
 
             var move = {figure: {color: model.Color.BLACK, type: model.FigureType.ROCKS},
@@ -389,10 +398,23 @@ describe('Mock REST API test /matches', function () {
                 to: {column: 2, row: 3}};
 
             request(app)
-                .post('/matches/' + match.matchId + '/moves', move)
-                .send({something: "other"})
+                .post('/matches/' + match.matchId + '/moves')
+                .send(move)
                 .set('Cookie', [matches.PLAYER_COOKIE_NAME + '=1'])
                 .expect(400, done);
+        });
+
+        it("should support HTTP Auth", function (done) {
+
+            var move = {figure: {color: model.Color.BLACK, type: model.FigureType.ROCKS},
+                from: {column: 2, row: 5},
+                to: {column: 2, row: 4}};
+
+            request(app)
+                .post('/matches/' + match.matchId + '/moves')
+                .send(move)
+                .set('Authorization', matches.HTTP_AUTHORRIZATION_METHOD + ' 1')
+                .expect(201, done);
         });
 
         it("should return 404 when there is no match with this id", function (done) {
