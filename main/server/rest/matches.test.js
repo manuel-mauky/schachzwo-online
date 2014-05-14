@@ -79,7 +79,17 @@ describe('Mock REST API test /matches', function () {
                     assert.isDefined(res.body.size);
                     assert.isUndefined(res.body.history);
                 })
-                .end(done);
+                .end(function(err, res){
+                    var persistedStore = matchStore.get(res.body.matchId);
+
+                    assert.ok()
+
+
+                    done();
+                });
+
+
+            // in DB angelegt?
         });
 
         it("should not return new match", function (done) {
@@ -185,7 +195,7 @@ describe('Mock REST API test /matches', function () {
                 .expect(400, done);
         });
 
-        it("should return 409", function (done) {
+        it("should return 409 when already two players in the game", function (done) {
 
             var match = matchStore.create({
                 size: 7,
@@ -261,7 +271,7 @@ describe('Mock REST API test /matches', function () {
 
             request(app)
                 .post('/matches/'+  match.matchId + '/moves')
-                .send(match)
+                .send(move)
                 .expect(401, done);
 
         });
@@ -271,7 +281,7 @@ describe('Mock REST API test /matches', function () {
             request(app)
                 .post('/matches/'+  match.matchId + '/moves')
                 .set('Cookie', [matches.PLAYER_COOKIE_NAME + '=5'])
-                .send(match)
+                .send(move)
                 .expect(401, done);
 
         });
