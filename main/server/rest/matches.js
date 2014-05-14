@@ -2,9 +2,11 @@
 
 var express = require("express");
 
+
 var modelFactory = require("../model/model.factory");
 var model = require("../model/model");
-var matchStore = require("../store/match.store.js");
+var matchStore = require("../store/match.store");
+var gamelogic = require("../gamelogic");
 
 var uuid = require("node-uuid");
 
@@ -209,11 +211,30 @@ route.post("/:id/moves", function (req, res) {
     return res.json(move);
 });
 
+route.get("/:id/threats", function (req, res) {
+
+    var match = matchStore.get(req.params.id);
+    if (match) {
+        return json(new gamelogic.GameLogic(match).getThreats());
+    } else {
+        return match404(req, res);
+    }
+
+});
+
+route.get("/:id/valid-moves", function (req, res) {
+
+    var match = matchStore.get(req.params.id);
+    if (match) {
+        return json(new gamelogic.GameLogic(match).getValidMoves());
+    } else {
+        return match404(req, res);
+    }
+
+});
+
 //TODO GET /matches/:matchId/draw
 //TODO PUT /matches/:matchId/draw
-//TODO GET /matches/:matchId/threats
-//TODO GET /matches/:matchId/valid-moves
-
 
 /**
  * Returns the playerId (if any) from the given request.
