@@ -371,7 +371,7 @@ describe('Mock REST API test /matches', function () {
         });
 
 
-        it.skip("should not add invalid move", function (done) {
+        it("should not add invalid move", function (done) {
 
             var move = {figure: {color: model.Color.BLACK, type: model.FigureType.ROCKS},
                 from: {column: 2, row: 5},
