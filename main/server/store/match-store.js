@@ -5,6 +5,7 @@ var model = require("../model/model");
 // Store as a simple data structure in memory
 var store = {};
 
+
 /**
  * Returns a match with a given ID. If the requested match does not exist, undefined is returned.
  *
@@ -12,7 +13,10 @@ var store = {};
  * @returns {Object} The match or undefined if not exists
  */
 module.exports.get = function (id) {
-    return store[id];
+    var result = store[id];
+    if(result){
+        return new model.Match(store[id]);
+    }
 };
 
 
