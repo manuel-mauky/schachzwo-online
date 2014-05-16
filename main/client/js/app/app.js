@@ -6,16 +6,23 @@ define([
 
     angular.module('schachzwoApp', [
         'ngRoute',
-        'game',
+        'match',
         'landing',
+        "login",
         'schachzwoBoard',
         'boardProvider']).
         config(['$routeProvider', function ($routeProvider) {
 
-            $routeProvider.when('/game',
+            $routeProvider.when("/match/:matchId/login",
                 {
-                    templateUrl: 'js/app/game/game.html',
-                    controller: 'gameCtrl'
+                    templateUrl: "js/app/login/login.html",
+                    controller: "loginCtrl"
+                });
+
+            $routeProvider.when('/match/:matchId',
+                {
+                    templateUrl: 'js/app/match/match.html',
+                    controller: 'matchCtrl'
                 });
 
             $routeProvider.when('/',
@@ -28,7 +35,7 @@ define([
 
         }]).
         value('version', '0.1').
-        value('endpoint', '../board').
+        value('endpoint', '../matches').
         controller('appCtrl', ['$scope', 'version',
             function ($scope, version) {
                 $scope.version = version;

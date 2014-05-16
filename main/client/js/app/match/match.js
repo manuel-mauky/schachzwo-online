@@ -2,8 +2,8 @@
 
 define(['angular'], function (angular) {
 
-    angular.module('game', []).
-        controller('gameCtrl', ['$scope', 'boardProvider', function ($scope, boardProvider) {
+    angular.module('match', []).
+        controller('matchCtrl', ['$scope', 'boardProvider', function ($scope, boardProvider) {
 
             $scope.boardSize = 7;
             $scope.board = [];

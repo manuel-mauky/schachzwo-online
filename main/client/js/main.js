@@ -10,7 +10,7 @@ requirejs.config({
         //jQuery
         jquery: 'libs/jquery/jquery-2.1.0.min',
         'jquery-ui': 'libs/jquery/jquery-ui.min',
-        'schachzwo-board.ui': 'app/game/directives/schachzwo-board.ui',
+        'schachzwo-board.ui': 'app/match/directives/schachzwo-board.ui',
 
         //other
         bootstrap: 'libs/bootstrap.min',
@@ -34,9 +34,10 @@ require([
         'angular',
         'app/app',
         'app/landing/landing',
-        'app/game/game',
-        'app/game/directives/schachzwo-board',
-        'app/game/services/board-provider'],
+        'app/match/match',
+        "app/login/login",
+        'app/match/directives/schachzwo-board',
+        'app/match/services/board-provider'],
     function (angular) {
         require(['domReady!'], function (document) {
 

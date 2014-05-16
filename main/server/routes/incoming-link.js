@@ -10,6 +10,8 @@ route.get("/:matchId", function (req, res) {
 
     var matchId = req.params.matchId;
 
+    console.log("matchID:" + matchId);
+
     if(!matchId){
         return res.status(404).send("Match not found");
     }
@@ -27,7 +29,7 @@ route.get("/:matchId", function (req, res) {
     }else{
         console.log("login");
         // todo redirect zur Anmeldeseite
-        return res.redirect("/");
+        return res.redirect("/#/match/" + matchId + "/login");
     }
 
 });
