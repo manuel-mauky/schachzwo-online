@@ -20,9 +20,8 @@ route.get("/:id", function (req, res) {
 
     var match = matchStore.get(req.params.id);
     if (!match) {
-        return match404(req, res);
+        return matchError404(req, res);
     }
-
 
     if (match.playerBlack) {
         delete match.playerBlack.playerId;
@@ -64,12 +63,64 @@ route.post("/", function (req, res) {
 
 });
 
+route.get("/:id/self", function (req, res) {
+
+    var match = matchStore.get(req.params.id);
+    if (!match) {
+        return matchError404(req, res);
+    }
+
+    var playerId = findPlayerId(req);
+    if (checkAccess(match, playerId)) {
+        return matchError401(req, res);
+    }
+
+    var player;
+
+    if (playerId == match.playerBlack.playerId) {
+        player = new model.Player(match.playerBlack);
+        player.color = model.Color.BLACK;
+    } else {
+        player = new model.Player(match.playerWhite);
+        player.color = model.Color.WHITE
+    }
+    return res.json(player);
+
+});
+
+route.get("/:id/opponent", function (req, res) {
+
+    var match = matchStore.get(req.params.id);
+    if (!match) {
+        return matchError404(req, res);
+    }
+
+    var playerId = findPlayerId(req);
+    if (checkAccess(match, playerId)) {
+        return matchError401(req, res);
+    }
+
+    var player;
+
+    if (playerId == match.playerWhite.playerId) {
+        player = new model.Player(match.playerBlack);
+        player.color = model.Color.BLACK;
+        delete player.playerId;
+    } else {
+        player = new model.Player(match.playerWhite);
+        player.color = model.Color.WHITE
+        delete player.playerId;
+    }
+    return res.json(player);
+
+});
+
 
 route.post("/:id/login", function (req, res) {
 
     var match = matchStore.get(req.params.id);
     if (!match) {
-        return match404(req, res);
+        return matchError404(req, res);
     }
 
     var name;
@@ -94,7 +145,9 @@ route.post("/:id/login", function (req, res) {
 
         if (matchStore.update(match)) {
 
-            player['color'] = player.playerId === match.playerBlack.playerId ? model.Color.BLACK : model.Color.WHITE;
+            player.color = (player.playerId == match.playerBlack.playerId
+                ? model.Color.BLACK :
+                model.Color.WHITE);
 
             res.cookie(PLAYER_COOKIE_NAME, player.playerId);
             res.json(player);
@@ -125,7 +178,7 @@ route.get("/:id/board", function (req, res) {
     if (match) {
         return  res.json(match.getCurrentSnapshot());
     } else {
-        return match404(req, res);
+        return matchError404(req, res);
     }
 
 
@@ -137,7 +190,7 @@ route.get("/:id/moves", function (req, res) {
     if (match) {
         return  res.json(match.history);
     } else {
-        return match404(req, res);
+        return matchError404(req, res);
     }
 
 });
@@ -146,19 +199,12 @@ route.post("/:id/moves", function (req, res) {
 
     var match = matchStore.get(req.params.id);
     if (!match) {
-        return match404(req, res);
+        return matchError404(req, res);
     }
 
     var playerId = findPlayerId(req);
-
-    if (!playerId ||
-        (playerId != match.playerBlack.playerId && playerId != match.playerWhite.playerId)) {
-        res.statusCode = 401;
-        return res.json(
-            {
-                name: 'Unauthorized',
-                message: 'You are not logged into this game.'
-            });
+    if (checkAccess(match, playerId)) {
+        return matchError401(req, res);
     }
 
     var moveFailed = function (res, message) {
@@ -198,7 +244,7 @@ route.get("/:id/threats", function (req, res) {
     if (match) {
         return res.json(new BoardAccessor(match).getThreats());
     } else {
-        return match404(req, res);
+        return matchError404(req, res);
     }
 
 });
@@ -209,7 +255,7 @@ route.get("/:id/valid-moves", function (req, res) {
     if (match) {
         return res.json(new BoardAccessor(match).getValidMoves());
     } else {
-        return match404(req, res);
+        return matchError404(req, res);
     }
 
 });
@@ -245,14 +291,29 @@ var findPlayerId = function (req) {
     return playerId;
 };
 
+var checkAccess = function (match, playerId) {
+    return !playerId || (playerId != match.playerBlack.playerId && playerId != match.playerWhite.playerId);
+};
 
-var match404 = function (req, res) {
+
+var matchError404 = function (req, res) {
     res.statusCode = 404;
     return res.json(
         {
             name: 'Match not found',
             message: 'Match with the given ID ' + req.params.id + ' does not exist.'
         });
+};
+
+var matchError401 = function (req, res) {
+
+    res.statusCode = 401;
+    return res.json(
+        {
+            name: 'Unauthorized',
+            message: 'You are not logged into this match.'
+        });
+
 };
 
 //Export route

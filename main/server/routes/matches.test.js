@@ -83,14 +83,9 @@ describe('Mock REST API test /matches', function () {
                 })
                 .end(function (err, res) {
                     var persistedStore = matchStore.get(res.body.matchId);
-
                     assert.ok(persistedStore);
-
                     done();
                 });
-
-
-            // in DB angelegt?
         });
 
         it("should not return new match", function (done) {
@@ -101,7 +96,6 @@ describe('Mock REST API test /matches', function () {
                 .expect(400, done);
 
         });
-
 
     });
 
@@ -209,6 +203,94 @@ describe('Mock REST API test /matches', function () {
                 .send({name: 'Joe'})
                 .expect(409, done);
         });
+
+    });
+
+    describe('GET /matches/:matchId/self', function () {
+
+        var match;
+
+        beforeEach(function () {
+            match = matchStore.create({
+                size: 7,
+                playerBlack: {playerId: 1, name: 'player1'},
+                playerWhite: {playerId: 2, name: 'player2'}});
+        });
+
+        it("should return the own player", function (done) {
+
+
+            request(app)
+                .get('/matches/' + match.matchId + "/self")
+                .set('Cookie', [matches.PLAYER_COOKIE_NAME + '=1'])
+                .expect(function (res) {
+                    assert.equal(res.body.name, 'player1');
+                    assert.equal(res.body.color, model.Color.BLACK);
+                    assert.isDefined(res.body.playerId);
+                })
+                .end(done);
+        });
+
+
+        it("should return 401, if you are not authenticated", function (done) {
+
+            request(app)
+                .get('/matches/' + match.matchId + '/self')
+                .expect(401, done);
+
+        });
+
+
+        it("should return 404 when there is no match with this id", function (done) {
+            request(app)
+                .get('/matches/someId/self')
+                .expect(404, done);
+        });
+
+
+    });
+
+    describe('GET /matches/:matchId/opponent', function () {
+
+        var match;
+
+        beforeEach(function () {
+            match = matchStore.create({
+                size: 7,
+                playerBlack: {playerId: 1, name: 'player1'},
+                playerWhite: {playerId: 2, name: 'player2'}});
+        });
+
+        it("should return the opposing player", function (done) {
+
+
+            request(app)
+                .get('/matches/' + match.matchId + "/opponent")
+                .set('Cookie', [matches.PLAYER_COOKIE_NAME + '=1'])
+                .expect(function (res) {
+                    assert.equal(res.body.name, 'player2');
+                    assert.equal(res.body.color, model.Color.WHITE);
+                    assert.isUndefined(res.body.playerId);
+                })
+                .end(done);
+        });
+
+
+        it("should return 401, if you are not authenticated", function (done) {
+
+            request(app)
+                .get('/matches/' + match.matchId + '/opponent')
+                .expect(401, done);
+
+        });
+
+
+        it("should return 404 when there is no match with this id", function (done) {
+            request(app)
+                .get('/matches/someId/opponent')
+                .expect(404, done);
+        });
+
 
     });
 
