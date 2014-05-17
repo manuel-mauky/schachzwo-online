@@ -19,19 +19,6 @@ module.exports.get = function (id) {
     }
 };
 
-
-module.exports.getAll = function(){
-    var result = [];
-
-    for(var entry in store){
-        if(store.hasOwnProperty(entry)){
-            result.push(store[entry]);
-        }
-    }
-
-    return result;
-}
-
 /**
  * Creates a new match in the store. This created match with new set ID is returned.
  * Returns undefined when creating failed.
