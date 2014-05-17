@@ -6,6 +6,7 @@ var express = require("express");
 var modelFactory = require("../model/model-factory.js");
 var model = require("../model/model");
 var matchStore = require("../store/match-store.js");
+var sse = require("../sse/sse");
 var GameLogic = require("../logic/gamelogic");
 var BoardAccessor = require('../logic/board-accessor');
 
@@ -23,15 +24,22 @@ route.get("/:id", function (req, res) {
         return matchError404(req, res);
     }
 
-    if (match.playerBlack) {
-        delete match.playerBlack.playerId;
-    }
-    if (match.playerWhite) {
-        delete match.playerWhite.playerId;
-    }
+    if (req.headers.accept == 'text/event-stream') {
+        var playerId = findPlayerId(req);
+        return sse.initClient(req, res, match.matchId, playerId);
+    } else {
 
-    delete match.history;
-    return res.json(match);
+
+        if (match.playerBlack) {
+            delete match.playerBlack.playerId;
+        }
+        if (match.playerWhite) {
+            delete match.playerWhite.playerId;
+        }
+
+        delete match.history;
+        return res.json(match);
+    }
 });
 
 
@@ -229,6 +237,10 @@ route.post("/:id/moves", function (req, res) {
     if (gl.isValidMove(playerId, move)) {
         match.addMove(move);
         matchStore.update(match);
+
+        //TODO send specific message for each client
+        sse.sendMessage(sse.SSEMessage.UPDATE, match.matchId);
+
         res.statusCode = 201;
         return res.json(move);
     } else {
