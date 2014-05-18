@@ -32,6 +32,7 @@ requirejs.config({
 // bootstrapping app
 require([
         'angular',
+        'bootstrap',
         'app/app',
         'app/landing/landing',
         'app/match/match',

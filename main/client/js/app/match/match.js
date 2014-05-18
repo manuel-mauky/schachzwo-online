@@ -3,10 +3,15 @@
 define(['angular'], function (angular) {
 
     angular.module('match', []).
-        controller('matchCtrl', ['$scope', 'boardProvider', function ($scope, boardProvider) {
+        controller('matchCtrl', ['$scope', '$routeParams', 'boardProvider', function ($scope, $routeParams, boardProvider) {
 
             $scope.boardSize = 7;
             $scope.board = [];
+
+            var matchId = $routeParams.matchId;
+
+            console.log(">" + matchId);
+            $scope.matchLink = "http://localhost:1337/match/" + matchId;
 
             var initBoard = function () {
                 if ($scope.boardSize === 7) {
