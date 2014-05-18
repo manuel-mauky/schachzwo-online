@@ -2,6 +2,8 @@
 
 var express = require("express");
 
+var restUtils = require("./rest-utils");
+
 var route = express.Router();
 
 var matchStore = require("../store/match-store.js");
@@ -9,8 +11,6 @@ var matchStore = require("../store/match-store.js");
 route.get("/:matchId", function (req, res) {
 
     var matchId = req.params.matchId;
-
-    console.log("matchID:" + matchId);
 
     if(!matchId){
         return res.status(404).send("Match not found");
@@ -22,13 +22,19 @@ route.get("/:matchId", function (req, res) {
         return res.status(404).send("Match not found");
     }
 
+
+    var playerId = restUtils.findPlayerId(req);
+
+    if(restUtils.isPlayerParticipating(match, playerId)){
+        return res.redirect("/#/match/" + matchId);
+    }
+
+
     if(match.isMatchFullyOccupied()){
         console.log("zuschauer");
-        // todo redirect zur Zuschauerseite
-        return res.redirect("/");
+        return res.redirect("/#/match/" + matchId);
     }else{
         console.log("login");
-        // todo redirect zur Anmeldeseite
         return res.redirect("/#/match/" + matchId + "/login");
     }
 

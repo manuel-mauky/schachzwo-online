@@ -10,6 +10,8 @@ var sse = require("../sse/sse");
 var GameLogic = require("../logic/gamelogic");
 var BoardAccessor = require('../logic/board-accessor');
 
+var restUtils = require("./rest-utils");
+
 var uuid = require("node-uuid");
 
 var route = express.Router();
@@ -25,7 +27,7 @@ route.get("/:id", function (req, res) {
     }
 
     if (req.headers.accept == 'text/event-stream') {
-        var playerId = findPlayerId(req);
+        var playerId = restUtils.findPlayerId(req);
         return sse.initClient(req, res, match.matchId, playerId);
     } else {
 
@@ -78,8 +80,8 @@ route.get("/:id/self", function (req, res) {
         return matchError404(req, res);
     }
 
-    var playerId = findPlayerId(req);
-    if (checkAccess(match, playerId)) {
+    var playerId = restUtils.findPlayerId(req);
+    if (!restUtils.isPlayerParticipating(match, playerId)) {
         return matchError401(req, res);
     }
 
@@ -103,8 +105,8 @@ route.get("/:id/opponent", function (req, res) {
         return matchError404(req, res);
     }
 
-    var playerId = findPlayerId(req);
-    if (checkAccess(match, playerId)) {
+    var playerId = restUtils.findPlayerId(req);
+    if (!restUtils.isPlayerParticipating(match, playerId)) {
         return matchError401(req, res);
     }
 
@@ -210,8 +212,8 @@ route.post("/:id/moves", function (req, res) {
         return matchError404(req, res);
     }
 
-    var playerId = findPlayerId(req);
-    if (checkAccess(match, playerId)) {
+    var playerId = restUtils.findPlayerId(req);
+    if (!restUtils.isPlayerParticipating(match, playerId)) {
         return matchError401(req, res);
     }
 
@@ -275,37 +277,6 @@ route.get("/:id/valid-moves", function (req, res) {
 //TODO GET /matches/:matchId/draw
 //TODO PUT /matches/:matchId/draw
 
-/**
- * Returns the playerId (if any) from the given request.
- *
- * There are several ways to define a playerId in a request, f.e. in a cookie.
- *
- * If a playerId was found in the given request it will be returned. Otherwise
- * nothing/undefined will be returned.
- *
- * @param req
- * @returns {*}
- */
-var findPlayerId = function (req) {
-
-    var playerId = req.cookies[PLAYER_COOKIE_NAME];
-    if (!playerId) {
-        var header = req.header('Authorization');
-        if (header) {
-            var value = header.split(/\s+/);
-            var id = value.pop();
-            if (HTTP_AUTHORIZATION_METHOD === value.pop()) {
-                playerId = id;
-            }
-        }
-    }
-
-    return playerId;
-};
-
-var checkAccess = function (match, playerId) {
-    return !playerId || (playerId != match.playerBlack.playerId && playerId != match.playerWhite.playerId);
-};
 
 
 var matchError404 = function (req, res) {
