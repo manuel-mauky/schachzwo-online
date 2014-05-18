@@ -41,7 +41,7 @@ describe('SSE tests', function () {
     });
 
 
-    it("should not be sent messages to clients of other games", function (done) {
+    it("should not send messages to clients of other games", function (done) {
 
 
         var otherMatch = matchStore.create({
@@ -66,7 +66,7 @@ describe('SSE tests', function () {
 
     });
 
-    it("should private messages can be sent", function (done) {
+    it("should send private messages only to specific clients", function (done) {
 
         var clientPlayer1 = new EventSource("http://localhost:8000/matches/" + match.matchId, {
             headers: {
@@ -86,7 +86,7 @@ describe('SSE tests', function () {
 
     });
 
-    it("should not be sent private messages to the opponent or spectator", function (done) {
+    it("should not send private messages to the opponent or spectator", function (done) {
 
 
         var listener = function (event) {
