@@ -11,11 +11,11 @@ define(['angular', 'jquery', 'schachzwo-board.ui'], function (angular, $) {
 
                     var modelInvoker = $parse(attrs.ngModel);
                     var boardSizeInvoker = $parse(attrs.boardSize);
-                    var selfColorInvoker = $parse(attrs.selfColor);
+                    var ownColorInvoker = $parse(attrs.ownColor);
                     var onSelectInvoker = $parse(attrs.onSelect);
 
                     $(element).schachzwo({
-                        selfColor: selfColorInvoker(scope) || 'black',
+                        ownColor: ownColorInvoker(scope) || 'black',
                         boardSize: boardSizeInvoker(scope) || 9,
                         onSelect: function (event, data) {
                             if (attrs.onSelect) {
@@ -31,7 +31,7 @@ define(['angular', 'jquery', 'schachzwo-board.ui'], function (angular, $) {
                         }
                     });
 
-                    scope.$watch(selfColorInvoker, function (val) {
+                    scope.$watch(ownColorInvoker, function (val) {
                         if (val) {
                             $(element).schachzwo('option', 'self', val);
                         }

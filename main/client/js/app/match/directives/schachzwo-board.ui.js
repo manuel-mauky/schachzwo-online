@@ -42,8 +42,8 @@
                 if (x >= 0 && x <= this.fieldSize * this.options.boardSize &&
                     y >= 0 && y <= this.fieldSize * this.options.boardSize) {
 
-                    var column = Math.floor(x / this.fieldSize);
-                    var row = Math.floor(y / this.fieldSize);
+                    var column = this._transformColumn(Math.floor(x / this.fieldSize));
+                    var row = this._transformRow(Math.floor(y / this.fieldSize));
                     this._trigger("onSelect", null, { column: column, row: row });
 
                 }
@@ -87,6 +87,14 @@
             if (boardSize != 7 && boardSize != 9) {
                 throw "Invalid board size, it should be 7 or 9.";
             }
+        },
+
+        _transformColumn: function(column) {
+            return this.options.self === Color.BLACK ? column : this.options.boardSize - column - 1;
+        },
+
+        _transformRow: function(row) {
+            return this.options.self === Color.BLACK ? row : this.options.boardSize - row - 1;
         },
 
         _draw: function (width, height) {
@@ -284,19 +292,19 @@
                 this._checkColRow(field.column);
 
                 if (field.accessible) {
-                    fillFloor(field.row, field.column, boardAccessibleFieldColor);
+                    fillFloor(this._transformRow(field.row), this._transformColumn(field.column), boardAccessibleFieldColor);
                 }
                 if (field.selected) {
-                    fillFloor(field.row, field.column, boardSelectedFieldColor);
+                    fillFloor(this._transformRow(field.row), this._transformColumn(field.column), boardSelectedFieldColor);
                 }
-
             }
 
             for (var i in this.fields) {
                 var field = this.fields[i];
                 if (field.figure) {
+
                     this._checkColor(field.figure.color);
-                    drawFigure(field.row, field.column, field.figure);
+                    drawFigure(this._transformRow(field.row), this._transformColumn(field.column), field.figure);
                 }
             }
 

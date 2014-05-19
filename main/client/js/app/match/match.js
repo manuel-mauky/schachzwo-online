@@ -6,6 +6,7 @@ define(['angular'], function (angular) {
         controller('matchCtrl', ['$scope', '$routeParams', 'boardProvider', function ($scope, $routeParams, boardProvider) {
 
             $scope.boardSize = 7;
+            $scope.ownColor = 'black';
             $scope.board = [];
 
             var matchId = $routeParams.matchId;
@@ -38,7 +39,8 @@ define(['angular'], function (angular) {
             $scope.switchBoardSize = function () {
                 $scope.boardSize = $scope.boardSize === 7 ? 9 : 7;
                 initBoard();
-            }
+            };
+
 
             initBoard();
 
