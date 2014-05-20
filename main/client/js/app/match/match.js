@@ -2,11 +2,17 @@
 
 define(['angular'], function (angular) {
 
-    angular.module('game', []).
-        controller('gameCtrl', ['$scope', 'boardProvider', function ($scope, boardProvider) {
+    angular.module('match', []).
+        controller('matchCtrl', ['$scope', '$routeParams', 'boardProvider', function ($scope, $routeParams, boardProvider) {
 
             $scope.boardSize = 7;
+            $scope.ownColor = 'black';
             $scope.board = [];
+
+            var matchId = $routeParams.matchId;
+
+            console.log(">" + matchId);
+            $scope.matchLink = "http://localhost:1337/match/" + matchId;
 
             var initBoard = function () {
                 if ($scope.boardSize === 7) {
@@ -33,7 +39,8 @@ define(['angular'], function (angular) {
             $scope.switchBoardSize = function () {
                 $scope.boardSize = $scope.boardSize === 7 ? 9 : 7;
                 initBoard();
-            }
+            };
+
 
             initBoard();
 

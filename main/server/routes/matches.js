@@ -6,8 +6,11 @@ var express = require("express");
 var modelFactory = require("../model/model-factory.js");
 var model = require("../model/model");
 var matchStore = require("../store/match-store.js");
+var sse = require("../sse/sse");
 var GameLogic = require("../logic/gamelogic");
 var BoardAccessor = require('../logic/board-accessor');
+
+var restUtils = require("./rest-utils");
 
 var uuid = require("node-uuid");
 
@@ -20,19 +23,25 @@ route.get("/:id", function (req, res) {
 
     var match = matchStore.get(req.params.id);
     if (!match) {
-        return match404(req, res);
+        return matchError404(req, res);
     }
 
+    if (req.headers.accept == 'text/event-stream') {
+        var playerId = restUtils.findPlayerId(req);
+        return sse.initClient(req, res, match.matchId, playerId);
+    } else {
 
-    if (match.playerBlack) {
-        delete match.playerBlack.playerId;
-    }
-    if (match.playerWhite) {
-        delete match.playerWhite.playerId;
-    }
 
-    delete match.history;
-    return res.json(match);
+        if (match.playerBlack) {
+            delete match.playerBlack.playerId;
+        }
+        if (match.playerWhite) {
+            delete match.playerWhite.playerId;
+        }
+
+        delete match.history;
+        return res.json(match);
+    }
 });
 
 
@@ -64,12 +73,64 @@ route.post("/", function (req, res) {
 
 });
 
+route.get("/:id/self", function (req, res) {
+
+    var match = matchStore.get(req.params.id);
+    if (!match) {
+        return matchError404(req, res);
+    }
+
+    var playerId = restUtils.findPlayerId(req);
+    if (!restUtils.isPlayerParticipating(match, playerId)) {
+        return matchError401(req, res);
+    }
+
+    var player;
+
+    if (playerId == match.playerBlack.playerId) {
+        player = new model.Player(match.playerBlack);
+        player.color = model.Color.BLACK;
+    } else {
+        player = new model.Player(match.playerWhite);
+        player.color = model.Color.WHITE
+    }
+    return res.json(player);
+
+});
+
+route.get("/:id/opponent", function (req, res) {
+
+    var match = matchStore.get(req.params.id);
+    if (!match) {
+        return matchError404(req, res);
+    }
+
+    var playerId = restUtils.findPlayerId(req);
+    if (!restUtils.isPlayerParticipating(match, playerId)) {
+        return matchError401(req, res);
+    }
+
+    var player;
+
+    if (playerId == match.playerWhite.playerId) {
+        player = new model.Player(match.playerBlack);
+        player.color = model.Color.BLACK;
+        delete player.playerId;
+    } else {
+        player = new model.Player(match.playerWhite);
+        player.color = model.Color.WHITE
+        delete player.playerId;
+    }
+    return res.json(player);
+
+});
+
 
 route.post("/:id/login", function (req, res) {
 
     var match = matchStore.get(req.params.id);
     if (!match) {
-        return match404(req, res);
+        return matchError404(req, res);
     }
 
     var name;
@@ -94,7 +155,9 @@ route.post("/:id/login", function (req, res) {
 
         if (matchStore.update(match)) {
 
-            player['color'] = player.playerId === match.playerBlack.playerId ? model.Color.BLACK : model.Color.WHITE;
+            player.color = (player.playerId == match.playerBlack.playerId
+                ? model.Color.BLACK :
+                model.Color.WHITE);
 
             res.cookie(PLAYER_COOKIE_NAME, player.playerId);
             res.json(player);
@@ -125,7 +188,7 @@ route.get("/:id/board", function (req, res) {
     if (match) {
         return  res.json(match.getCurrentSnapshot());
     } else {
-        return match404(req, res);
+        return matchError404(req, res);
     }
 
 
@@ -137,7 +200,7 @@ route.get("/:id/moves", function (req, res) {
     if (match) {
         return  res.json(match.history);
     } else {
-        return match404(req, res);
+        return matchError404(req, res);
     }
 
 });
@@ -146,19 +209,12 @@ route.post("/:id/moves", function (req, res) {
 
     var match = matchStore.get(req.params.id);
     if (!match) {
-        return match404(req, res);
+        return matchError404(req, res);
     }
 
-    var playerId = findPlayerId(req);
-
-    if (!playerId ||
-        (playerId != match.playerBlack.playerId && playerId != match.playerWhite.playerId)) {
-        res.statusCode = 401;
-        return res.json(
-            {
-                name: 'Unauthorized',
-                message: 'You are not logged into this game.'
-            });
+    var playerId = restUtils.findPlayerId(req);
+    if (!restUtils.isPlayerParticipating(match, playerId)) {
+        return matchError401(req, res);
     }
 
     var moveFailed = function (res, message) {
@@ -183,6 +239,10 @@ route.post("/:id/moves", function (req, res) {
     if (gl.isValidMove(playerId, move)) {
         match.addMove(move);
         matchStore.update(match);
+
+        //TODO send specific message for each client
+        sse.sendMessage(sse.SSEMessage.UPDATE, match.matchId);
+
         res.statusCode = 201;
         return res.json(move);
     } else {
@@ -198,7 +258,7 @@ route.get("/:id/threats", function (req, res) {
     if (match) {
         return res.json(new BoardAccessor(match).getThreats());
     } else {
-        return match404(req, res);
+        return matchError404(req, res);
     }
 
 });
@@ -209,7 +269,7 @@ route.get("/:id/valid-moves", function (req, res) {
     if (match) {
         return res.json(new BoardAccessor(match).getValidMoves());
     } else {
-        return match404(req, res);
+        return matchError404(req, res);
     }
 
 });
@@ -217,42 +277,26 @@ route.get("/:id/valid-moves", function (req, res) {
 //TODO GET /matches/:matchId/draw
 //TODO PUT /matches/:matchId/draw
 
-/**
- * Returns the playerId (if any) from the given request.
- *
- * There are several ways to define a playerId in a request, f.e. in a cookie.
- *
- * If a playerId was found in the given request it will be returned. Otherwise
- * nothing/undefined will be returned.
- *
- * @param req
- * @returns {*}
- */
-var findPlayerId = function (req) {
-
-    var playerId = req.cookies[PLAYER_COOKIE_NAME];
-    if (!playerId) {
-        var header = req.header('Authorization');
-        if (header) {
-            var value = header.split(/\s+/);
-            var id = value.pop();
-            if (HTTP_AUTHORIZATION_METHOD === value.pop()) {
-                playerId = id;
-            }
-        }
-    }
-
-    return playerId;
-};
 
 
-var match404 = function (req, res) {
+var matchError404 = function (req, res) {
     res.statusCode = 404;
     return res.json(
         {
             name: 'Match not found',
             message: 'Match with the given ID ' + req.params.id + ' does not exist.'
         });
+};
+
+var matchError401 = function (req, res) {
+
+    res.statusCode = 401;
+    return res.json(
+        {
+            name: 'Unauthorized',
+            message: 'You are not logged into this match.'
+        });
+
 };
 
 //Export route

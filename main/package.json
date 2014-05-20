@@ -19,6 +19,7 @@
     "supertest": "latest",
     "requirejs": "^2.1.11",
     "mocha": "latest",
-    "chai": "latest"
+    "chai": "latest",
+    "eventsource": "latest"
   }
 }
