@@ -2,7 +2,7 @@
  * Created by Admin on 15.05.2014.
  */
 
-MongoProvider = require("./mongoProvider");
+MongoDB = require("./mongodb");
 
 var StoreType = {
 
@@ -15,21 +15,21 @@ module.exports = function StoreProvider(storeType){
 
     switch (storeType){
         case StoreType.MEMORY:  store = new match.store();
-        case StoreType.MONGODB: store = new MongoProvider();
+        case StoreType.MONGODB: store = new MongoDB();
     }
 
     this.getMatch = function (id,resultCallback) {
-        store.getMatch(id,resultCallback);
+        return store.getMatch(id,resultCallback);
     };
-    this.getAllMatches = function(resultCallback){
-        store.getAllMatches(resultCallback);
-    };
+
     this.createMatch = function (match,resultCallback) {
         return store.createMatch(match,resultCallback);
     };
-    this.deleteMatch = function (match,resultCallback) {
-        store.deleteMatch(match,resultCallback);
+
+    this.deleteMatch = function (id,resultCallback) {
+        return store.deleteMatch(id,resultCallback);
     };
+
 }
 
 module.exports.StoreType = StoreType;
