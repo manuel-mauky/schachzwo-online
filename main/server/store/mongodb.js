@@ -7,7 +7,7 @@ var model = require("../model/model");
 
 var db = require('mongoskin').db('mongodb://localhost:27017/schachzwo');
 
-var MongDB = function(storeType) {
+var MongDB = function() {
 
     this.getMatch = function (id,resultCallback) {
         db.collection('matches').findOne({matchId: id}, function(err,item){
@@ -22,11 +22,16 @@ var MongDB = function(storeType) {
     };
 
     this.createMatch = function (match,resultCallback) {
-        match.matchId = uuid.v4();
-        db.collection('matches').insert(match,function(err){
-            if(resultCallback) resultCallback(err);
-        });
-        return match;
+        if(!!match){
+            match.matchId = uuid.v4();
+            db.collection('matches').insert(match,function(err){
+                if(resultCallback) resultCallback(err, match);
+            });
+        }else{
+            if(!!resultCallback){
+                resultCallback(new Error("Can't create match. First param has to be a valid match instance"), null);
+            }
+        }
     };
 
 };

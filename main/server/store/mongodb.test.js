@@ -3,11 +3,13 @@
  * Created by Erik Jähne on 15.05.2014.
  */
 
+"use strict";
+
 var Mongodb = require('./mongodb');
 var modelFactory = require('../model/model-factory');
 var assert = require("chai").assert;
 
-describe("storeProvider", function(){
+describe("mongodb", function(){
 
     var store = new Mongodb();
     var match = modelFactory.createMatch(9);
@@ -15,26 +17,40 @@ describe("storeProvider", function(){
 
     it("should support CRUD functionality",function(done){
         // Create Match Test
-        persistedMatch = store.createMatch(match,function(err){
+        store.createMatch(match,function(err, persistedMatch){
             assert.notOk(err);
+            assert.ok(persistedMatch);
+            assert.ok(persistedMatch.matchId);
+            var matchId = persistedMatch.matchId;
 
             //Get Match Test
-            store.getMatch(persistedMatch.matchId,function(err,match){
+            store.getMatch(matchId,function(err,loadedMatch){
                 try{ //mocha has problems with getting assert errors in async calls, so we must pass it manually
                     assert.notOk(err);
-                    assert.ok(match);
+                    assert.ok(loadedMatch);
 
                     //Delete Match test
-                    store.deleteMatch(persistedMatch.matchId,function(err){
+                    store.deleteMatch(matchId,function(err){
                         assert.notOk(err);
-                        done();
+
+
+                        store.getMatch(matchId, function(err, match){
+                            assert.notOk(err);
+                            assert.isNull(match);
+                            done();
+                        });
                     });
                 }catch(e){done(e);}
             });
         });
-        assert.ok(persistedMatch);
-        assert.ok(persistedMatch.matchId);
-        //check valid UUID v4
-        assert.isTrue(/([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})/.test(persistedMatch.matchId));
     });
+
+    it("createMatch should return an error when no valid match is passed", function(done){
+        store.createMatch(false, function(err, match){
+            assert.ok(err);
+            assert.notOk(match);
+
+            done();
+        });
+    })
 });
