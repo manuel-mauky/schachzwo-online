@@ -1,21 +1,43 @@
 
-/**
- * Created by Erik Jähne on 15.05.2014.
- */
-
 "use strict";
 
-var Mongodb = require('./mongodb');
+var storeProvider = require("./store-provider");
 var modelFactory = require('../model/model-factory');
 var assert = require("chai").assert;
 
-describe("mongodb", function(){
+describe("store provider", function(){
+    var match;
+    var store;
 
-    var store = new Mongodb();
-    var match = modelFactory.createMatch(9);
-    var persistedMatch;
 
-    it("should support CRUD functionality",function(done){
+
+    describe("mongodb", function(){
+        beforeEach(function(){
+            storeProvider.activeStoreType = storeProvider.StoreType.MONGODB;
+            store = storeProvider.getStore();
+            match = modelFactory.createMatch(9);
+        });
+
+
+        it("should support basic CRUD functionality", function(done){
+            testCRUD(done);
+        });
+    });
+
+    describe("inmemorydb", function(){
+        beforeEach(function(){
+            storeProvider.activeStoreType = storeProvider.StoreType.INMEMORY;
+            store = storeProvider.getStore();
+            match = modelFactory.createMatch(9);
+        });
+
+        it("should support basic CRUD functionality", function(done){
+            testCRUD( done);
+        });
+
+    });
+
+    var testCRUD = function( done){
         // Create Match Test
         store.createMatch(match,function(err, persistedMatch){
             assert.notOk(err);
@@ -43,14 +65,7 @@ describe("mongodb", function(){
                 }catch(e){done(e);}
             });
         });
-    });
+    };
 
-    it("createMatch should return an error when no valid match is passed", function(done){
-        store.createMatch(false, function(err, match){
-            assert.ok(err);
-            assert.notOk(match);
 
-            done();
-        });
-    })
 });

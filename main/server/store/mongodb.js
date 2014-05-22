@@ -1,6 +1,4 @@
-/**
- * Created by Admin on 15.05.2014.
- */
+"use strict";
 
 var uuid = require("node-uuid");
 var model = require("../model/model");
@@ -33,6 +31,12 @@ var MongDB = function() {
             }
         }
     };
+
+    this.updateMatch = function(match, resultCallback) {
+
+
+    }
+
 
 };
 

@@ -56,7 +56,6 @@ module.exports.initClient = function (req, res, matchId, playerId) {
         delete clients[clientId]
     });
 
-    return res;
 };
 
 /**

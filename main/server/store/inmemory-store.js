@@ -12,10 +12,10 @@ var store = {};
  * @param {String} id the ID of the match
  * @returns {Object} The match or undefined if not exists
  */
-module.exports.get = function (id) {
+module.exports.getMatch = function (id, callback) {
     var result = store[id];
-    if(result){
-        return new model.Match(store[id]);
+    if(!!callback){
+        callback(null, result);
     }
 };
 
@@ -26,7 +26,13 @@ module.exports.get = function (id) {
  * @param {Object} match Template for the new match
  * @returns {Object} the created match
  */
-module.exports.create = function (match) {
+module.exports.createMatch = function (match, callback) {
+    if(!match){
+        if(!!callback){
+            callback(new Error("Can't store the match because the first param 'match' was invalid."),null);
+        }
+    }
+
     if(! (match instanceof model.Match)){
         match = new model.Match(match);
     }
@@ -34,7 +40,11 @@ module.exports.create = function (match) {
     match.matchId = createID();
     store[match.matchId] = match;
 
-    return match;
+
+    if(!!callback){
+        callback(null, match);
+    }
+
 };
 
 /**
@@ -43,10 +53,20 @@ module.exports.create = function (match) {
  * @param {Object} match
  * @returns {Boolean} false if the operation failed or the match does not exist, true otherwise
  */
-module.exports.update = function (match) {
+module.exports.updateMatch = function (match, callback) {
     store[match.matchId] = match;
-    return true;
+    if(!!callback){
+        callback(null, match);
+    }
 };
+
+module.exports.deleteMatch = function(matchId, callback){
+    store[matchId] = null;
+
+    if(!!callback){
+        callback(null);
+    }
+}
 
 
 var _id = 1;

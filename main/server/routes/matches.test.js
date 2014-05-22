@@ -8,20 +8,29 @@ var app = require('../../app').app;
 var model = require('../model/model');
 var modelFactory = require('../model/model-factory');
 
-var matchStore = require('../store/match-store');
+var storeProvider = require("../store/store-provider");
+storeProvider.activeStoreType = storeProvider.StoreType.INMEMORY;
+var matchStore = storeProvider.getStore();
+
 var matches = require('./matches');
 
 describe('Mock REST API test /matches', function () {
 
     describe('GET /matches/:matchId', function () {
 
-        var match = matchStore.create({
+        var match = {
             size: 7,
             playerBlack: {playerId: 1, name: 'player1'},
-            playerWhite: {playerId: 2, name: 'player2'}});
+            playerWhite: {playerId: 2, name: 'player2'}};
+
+        beforeEach(function (done) {
+            matchStore.createMatch(match, function (err, createdMatch) {
+                match = createdMatch;
+                done();
+            });
+        });
 
         it("should be 200", function (done) {
-
             request(app)
                 .get('/matches/' + match.matchId)
                 .expect(200, done);
@@ -81,9 +90,11 @@ describe('Mock REST API test /matches', function () {
                     assert.isUndefined(res.body.history);
                 })
                 .end(function (err, res) {
-                    var persistedStore = matchStore.get(res.body.matchId);
-                    assert.ok(persistedStore);
-                    done();
+                    if (err) throw err;
+                    matchStore.getMatch(res.body.matchId, function (err, persistedStore) {
+                        assert.ok(persistedStore);
+                        done();
+                    });
                 });
         });
 
@@ -103,21 +114,23 @@ describe('Mock REST API test /matches', function () {
 
         it("should return actual board snapshot", function (done) {
 
-            var match = matchStore.create({
+            var match = {
                 size: 7,
                 playerBlack: {playerId: 1, name: 'player1'},
-                playerWhite: {playerId: 2, name: 'player2'}});
+                playerWhite: {playerId: 2, name: 'player2'}};
 
-            request(app)
-                .get('/matches/' + match.matchId + '/board')
-                .expect(200)
-                .expect(function (res) {
-                    assert.ok(res.body);
+            matchStore.createMatch(match, function (err, match) {
+                request(app)
+                    .get('/matches/' + match.matchId + '/board')
+                    .expect(200)
+                    .expect(function (res) {
+                        assert.ok(res.body);
 
-                    var board = new model.Snapshot(res.body);
-                    assert.ok(board);
-                })
-                .end(done);
+                        var board = new model.Snapshot(res.body);
+                        assert.ok(board);
+                    })
+                    .end(done);
+            });
         });
 
         it("should return 404 when there is no match with this id", function (done) {
@@ -133,43 +146,47 @@ describe('Mock REST API test /matches', function () {
 
         it("should return ID and save cookie for black player", function (done) {
 
-            var match = matchStore.create({size: 7});
+            matchStore.createMatch({size: 7}, function (err, match) {
 
-            request(app)
-                .post('/matches/' + match.matchId + '/login')
-                .send({name: 'Bob'})
-                .expect(200)
-                .expect('set-cookie', /\w+/)
-                .expect(function (res) {
-                    assert.equal(res.body.name, 'Bob');
-                    assert.isDefined(res.body.playerId);
-                    assert.equal(res.body.color, model.Color.BLACK);
-                })
-                .end(done);
+                request(app)
+                    .post('/matches/' + match.matchId + '/login')
+                    .send({name: 'Bob'})
+                    .expect(200)
+                    .expect('set-cookie', /\w+/)
+                    .expect(function (res) {
+                        assert.equal(res.body.name, 'Bob');
+                        assert.isDefined(res.body.playerId);
+                        assert.equal(res.body.color, model.Color.BLACK);
+                    })
+                    .end(done);
+
+            });
 
         });
 
+
         it("should return ID and save cookie for white player", function (done) {
 
-            var match = matchStore.create({
+            var match = {
                 size: 7,
-                playerBlack: {playerId: 1, name: 'Bob'}
+                playerBlack: {playerId: 1, name: 'Bob'}};
+            matchStore.createMatch(match, function (err, match) {
+
+                request(app)
+                    .post('/matches/' + match.matchId + '/login')
+                    .send({name: 'Jane'})
+                    .expect(200)
+                    .expect('set-cookie', /\w+/)
+                    .expect(function (res) {
+                        assert.equal(res.body.name, 'Jane');
+                        assert.isDefined(res.body.playerId);
+                        assert.notEqual(res.body.playerId, 1);
+                        assert.equal(res.body.color, model.Color.WHITE);
+
+                    })
+                    .end(done);
+
             });
-
-            request(app)
-                .post('/matches/' + match.matchId + '/login')
-                .send({name: 'Jane'})
-                .expect(200)
-                .expect('set-cookie', /\w+/)
-                .expect(function (res) {
-                    assert.equal(res.body.name, 'Jane');
-                    assert.isDefined(res.body.playerId);
-                    assert.notEqual(res.body.playerId, 1);
-                    assert.equal(res.body.color, model.Color.WHITE);
-
-                })
-                .end(done);
-
         });
 
         it("should return 404 when match can't be found", function (done) {
@@ -180,40 +197,45 @@ describe('Mock REST API test /matches', function () {
                 .expect(404, done);
         });
 
-        it("should return 400 when a body without name was send", function (done) {
-            var match = matchStore.create({size: 7});
 
-            request(app)
-                .post('/matches/' + match.matchId + '/login')
-                .send({something: "other"})
-                .expect(400, done);
+        it("should return 400 when a body without name was send", function (done) {
+            matchStore.createMatch({size: 7}, function (err, match) {
+
+                request(app)
+                    .post('/matches/' + match.matchId + '/login')
+                    .send({something: "other"})
+                    .expect(400, done);
+            });
         });
 
         it("should return 409 when already two players in the game", function (done) {
 
-            var match = matchStore.create({
+            matchStore.createMatch({
                 size: 7,
                 playerBlack: {playerId: 1, name: 'Bob'},
                 playerWhite: {playerId: 2, name: 'Jane'}
+            }, function (err, match) {
+                request(app)
+                    .post('/matches/' + match.matchId + '/login')
+                    .send({name: 'Joe'})
+                    .expect(409, done);
             });
-
-            request(app)
-                .post('/matches/' + match.matchId + '/login')
-                .send({name: 'Joe'})
-                .expect(409, done);
         });
 
     });
 
     describe('GET /matches/:matchId/self', function () {
 
-        var match;
+        var match = {
+            size: 7,
+            playerBlack: {playerId: 1, name: 'player1'},
+            playerWhite: {playerId: 2, name: 'player2'}};
 
-        beforeEach(function () {
-            match = matchStore.create({
-                size: 7,
-                playerBlack: {playerId: 1, name: 'player1'},
-                playerWhite: {playerId: 2, name: 'player2'}});
+        beforeEach(function (done) {
+            matchStore.createMatch(match, function (err, createdMatch) {
+                match = createdMatch;
+                done();
+            });
         });
 
         it("should return the own player", function (done) {
@@ -251,13 +273,16 @@ describe('Mock REST API test /matches', function () {
 
     describe('GET /matches/:matchId/opponent', function () {
 
-        var match;
+        var match = {
+            size: 7,
+            playerBlack: {playerId: 1, name: 'player1'},
+            playerWhite: {playerId: 2, name: 'player2'}};
 
-        beforeEach(function () {
-            match = matchStore.create({
-                size: 7,
-                playerBlack: {playerId: 1, name: 'player1'},
-                playerWhite: {playerId: 2, name: 'player2'}});
+        beforeEach(function (done) {
+            matchStore.createMatch(match, function (err, createdMatch) {
+                match = createdMatch;
+                done();
+            });
         });
 
         it("should return the opposing player", function (done) {
@@ -298,30 +323,35 @@ describe('Mock REST API test /matches', function () {
 
         it("should return done moves", function (done) {
 
-            var match = matchStore.create({
+
+            var match = {
                 size: 7,
                 playerBlack: {playerId: 1, name: 'player1'},
-                playerWhite: {playerId: 2, name: 'player2'}});
+                playerWhite: {playerId: 2, name: 'player2'}};
 
-            match.addMove(new model.Move(
-                {
-                    figure: {
-                        color: model.Color.BLACK,
-                        type: model.FigureType.ROCKS
-                    },
-                    from: {column: 0, row: 5},
-                    to: {column: 0, row: 4}
-                }));
+            matchStore.createMatch(match, function (err, match) {
 
-            request(app)
-                .get('/matches/' + match.matchId + '/moves')
-                .expect(200)
-                .expect(function (res) {
-                    assert.isArray(res.body);
-                    assert.equal(res.body.length, 1);
-                    assert.deepEqual(res.body[0].from, {column: 0, row: 5}); // test sample
-                })
-                .end(done);
+                match.addMove(new model.Move(
+                    {
+                        figure: {
+                            color: model.Color.BLACK,
+                            type: model.FigureType.ROCKS
+                        },
+                        from: {column: 0, row: 5},
+                        to: {column: 0, row: 4}
+                    }));
+
+                request(app)
+                    .get('/matches/' + match.matchId + '/moves')
+                    .expect(200)
+                    .expect(function (res) {
+                        assert.isArray(res.body);
+                        assert.equal(res.body.length, 1);
+                        assert.deepEqual(res.body[0].from, {column: 0, row: 5}); // test sample
+                    })
+                    .end(done);
+
+            });
         });
 
         it("should return 404 when there is no match with this id", function (done) {
@@ -335,13 +365,18 @@ describe('Mock REST API test /matches', function () {
 
     describe('POST /matches/:matchId/moves', function () {
 
-        var match;
 
-        beforeEach(function () {
-            match = matchStore.create({
-                size: 7,
-                playerBlack: {playerId: 1, name: 'player1'},
-                playerWhite: {playerId: 2, name: 'player2'}});
+        var match;
+        beforeEach(function (done) {
+            matchStore.createMatch({
+                    size: 7,
+                    playerBlack: {playerId: 1, name: 'player1'},
+                    playerWhite: {playerId: 2, name: 'player2'}},
+                function (err, createdMatch) {
+                    match = createdMatch;
+                    console.log("")
+                    done();
+                });
         });
 
 
@@ -370,10 +405,9 @@ describe('Mock REST API test /matches', function () {
 
 
         it("should add a new move", function (done) {
-            var storedMatch = matchStore.get(match.matchId);
 
             //before
-            assert.equal(storedMatch.history.length, 0);
+            assert.equal(match.history.length, 0);
 
 
             request(app)
@@ -387,13 +421,13 @@ describe('Mock REST API test /matches', function () {
                 .end(function (err, res) {
                     if (err) return done(err);
 
-                    storedMatch = matchStore.get(match.matchId);
+                    matchStore.getMatch(match.matchId, function (err, storedMatch) {
+                        // after
+                        assert.equal(storedMatch.history.length, 1);
+                        assert.deepEqual(storedMatch.history[0], move);
 
-                    // after
-                    assert.equal(storedMatch.history.length, 1);
-                    assert.deepEqual(storedMatch.history[0], move);
-
-                    done();
+                        done();
+                    });
                 });
         });
 
@@ -405,47 +439,50 @@ describe('Mock REST API test /matches', function () {
                 to: {column: 0, row: 2}};
 
             match.addMove(move);
-            matchStore.update(match);
+            matchStore.updateMatch(match, function (err, match) {
 
-            request(app)
-                .post('/matches/' + match.matchId + '/moves')
-                .set('Cookie', [matches.PLAYER_COOKIE_NAME + "=1"]) // black
-                .send(secondMove)
-                .expect(400)
-                .end(function (err) {
-                    if (err) throw err;
+                request(app)
+                    .post('/matches/' + match.matchId + '/moves')
+                    .set('Cookie', [matches.PLAYER_COOKIE_NAME + "=1"]) // black
+                    .send(secondMove)
+                    .expect(400)
+                    .end(function (err) {
+                        if (err) throw err;
 
-                    // now its ok
-                    request(app)
-                        .post('/matches/' + match.matchId + '/moves')
-                        .set('Cookie', [matches.PLAYER_COOKIE_NAME + "=2"]) // now white is doing the move
-                        .send(secondMove)
-                        .expect(201)
-                        .end(function (err) {
-                            if (err) throw err;
+                        // now its ok
+                        request(app)
+                            .post('/matches/' + match.matchId + '/moves')
+                            .set('Cookie', [matches.PLAYER_COOKIE_NAME + "=2"]) // now white is doing the move
+                            .send(secondMove)
+                            .expect(201)
+                            .end(function (err) {
+                                if (err) throw err;
 
-                            var thirdMove = {figure: {color: model.Color.BLACK, type: model.FigureType.ROCKS},
-                                from: {column: 2, row: 4},
-                                to: {column: 2, row: 3}};
+                                var thirdMove = {figure: {color: model.Color.BLACK, type: model.FigureType.ROCKS},
+                                    from: {column: 2, row: 4},
+                                    to: {column: 2, row: 3}};
 
-                            // now white tries to cheat
-                            request(app)
-                                .post('/matches/' + match.matchId + '/moves')
-                                .set('Cookie', [matches.PLAYER_COOKIE_NAME + "=2"]) // white
-                                .send(thirdMove)
-                                .expect(400)
-                                .end(function (err) {
-                                    if (err) throw err;
+                                // now white tries to cheat
+                                request(app)
+                                    .post('/matches/' + match.matchId + '/moves')
+                                    .set('Cookie', [matches.PLAYER_COOKIE_NAME + "=2"]) // white
+                                    .send(thirdMove)
+                                    .expect(400)
+                                    .end(function (err) {
+                                        if (err) throw err;
 
-                                    // it's blacks turn
-                                    request(app)
-                                        .post('/matches/' + match.matchId + '/moves')
-                                        .set('Cookie', [matches.PLAYER_COOKIE_NAME + "=1"]) // black
-                                        .send(thirdMove)
-                                        .expect(201, done);
-                                });
-                        });
-                });
+                                        // it's blacks turn
+                                        request(app)
+                                            .post('/matches/' + match.matchId + '/moves')
+                                            .set('Cookie', [matches.PLAYER_COOKIE_NAME + "=1"]) // black
+                                            .send(thirdMove)
+                                            .expect(201, done);
+                                    });
+                            });
+                    });
+
+            });
+
         });
 
 
@@ -511,20 +548,24 @@ describe('Mock REST API test /matches', function () {
 
         it("should return all valid moves", function (done) {
 
-            var match = matchStore.create({
+            var match = {
                 size: 7,
                 playerBlack: {playerId: 1, name: 'player1'},
-                playerWhite: {playerId: 2, name: 'player2'}});
+                playerWhite: {playerId: 2, name: 'player2'}};
 
-            request(app)
-                .get('/matches/' + match.matchId + '/valid-moves')
-                .expect(200)
-                .expect(function (res) {
+            matchStore.createMatch(match, function (err, match) {
 
-                    assert.isArray(res.body);
-                    assert.isTrue(res.body.length > 0);
-                })
-                .end(done);
+                request(app)
+                    .get('/matches/' + match.matchId + '/valid-moves')
+                    .expect(200)
+                    .expect(function (res) {
+
+                        assert.isArray(res.body);
+                        assert.isTrue(res.body.length > 0);
+                    })
+                    .end(done);
+
+            });
         });
 
         it("should return 404 when there is no match with this id", function (done) {
@@ -539,22 +580,28 @@ describe('Mock REST API test /matches', function () {
 
         it("should return all threats", function (done) {
 
-            var match = matchStore.create(modelFactory.createMatch(model.BoardSize.SMALL));
-            var board = match.getCurrentSnapshot();
-            board.getField(3, 6).figure = new model.Figure(
-                {
-                    type: model.FigureType.ZENITH,
-                    color: model.Color.BLACK
-                });
+            var match = modelFactory.createMatch(model.BoardSize.SMALL);
 
-            request(app)
-                .get('/matches/' + match.matchId + '/threats')
-                .expect(200)
-                .expect(function (res) {
-                    assert.isArray(res.body);
-                    assert.isTrue(res.body.length > 0);
-                })
-                .end(done);
+            matchStore.createMatch(modelFactory.createMatch(model.BoardSize.SMALL), function (err, match) {
+
+
+                var board = match.getCurrentSnapshot();
+                board.getField(3, 6).figure = new model.Figure(
+                    {
+                        type: model.FigureType.ZENITH,
+                        color: model.Color.BLACK
+                    });
+
+                request(app)
+                    .get('/matches/' + match.matchId + '/threats')
+                    .expect(200)
+                    .expect(function (res) {
+                        assert.isArray(res.body);
+                        assert.isTrue(res.body.length > 0);
+                    })
+                    .end(done);
+
+            });
         });
 
         it("should return 404 when there is no match with this id", function (done) {

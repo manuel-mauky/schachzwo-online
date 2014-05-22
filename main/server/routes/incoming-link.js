@@ -6,7 +6,7 @@ var restUtils = require("./rest-utils");
 
 var route = express.Router();
 
-var matchStore = require("../store/match-store.js");
+var matchStore = require("../store/inmemory-store.js");
 
 route.get("/:matchId", function (req, res) {
 
