@@ -3,6 +3,7 @@
  */
 
 MongoDB = require("./mongodb");
+match = require("./match-store");
 
 var StoreType = {
 
@@ -10,11 +11,13 @@ var StoreType = {
     MONGODB: 2
 }
 
-module.exports = function StoreProvider(storeType){
+var activeStoreType = module.exports.activeStoreType = StoreType.MEMORY;
+
+module.exports.StoreProvider = function StoreProvider(){
     var store;
 
-    switch (storeType){
-        case StoreType.MEMORY:  store = new match.store();
+    switch (activeStoreType){
+        case StoreType.MEMORY:  store = match;
         case StoreType.MONGODB: store = new MongoDB();
     }
 
