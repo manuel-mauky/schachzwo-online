@@ -72,7 +72,7 @@ var helper_createEmptyMatch = function(size){
     var match = new model.Match();
 
     match.size = size;
-    match.state = model.State.READY;
+    match.state = model.State.PREPARING;
 
     return match;
 }

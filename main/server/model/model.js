@@ -42,10 +42,10 @@ var FigureType = {
 /**
  * The states that the match can have.
  *
- * @type {{READY: string, PAUSE: string, FINISHED: string, PLAYING: string}}
+ * @type {{PREPARING: string, PAUSE: string, FINISHED: string, PLAYING: string}}
  */
 var State = {
-    READY: "ready",
+    PREPARING: "preparing",
     PAUSE: "pause",
     FINISHED: "finished",
     PLAYING: "playing"
@@ -258,7 +258,7 @@ var Match = function (json) {
     }
 
     this.matchId = json.matchId;
-    this.state = json.state || State.READY;
+    this.state = json.state || State.PREPARING;
 
     this.history = [];
     // for every json-entry create a move instance.

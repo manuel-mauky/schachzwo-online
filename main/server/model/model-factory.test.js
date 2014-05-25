@@ -14,7 +14,7 @@ describe("modelFactory.createMatch", function () {
 
         assert.ok(match);
 
-        assert.equal(match.state, model.State.READY);
+        assert.equal(match.state, model.State.PREPARING);
 
         assert.isArray(match.history);
 
