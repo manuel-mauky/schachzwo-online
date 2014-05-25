@@ -7,6 +7,7 @@
  */
 module.exports.SSEMessage = {
     UPDATE: "update",
+    GAME_STARTED: "game-started",
     DRAW_OFFERED: "draw-offered",
     DRAW_ACCEPTED: "draw-accepted",
     DRAW_REJECTED: "draw-rejected",

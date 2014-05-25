@@ -15,6 +15,8 @@ var restUtils = require("./rest-utils");
 
 var uuid = require("node-uuid");
 
+var sse = require("../sse/sse");
+
 var route = express.Router();
 
 var PLAYER_COOKIE_NAME = 'player_id';
@@ -149,6 +151,15 @@ route.post("/:id/login", function (req, res) {
             return matchError404(req, res);
         }
 
+        if(match.isMatchFullyOccupied()){
+            res.statusCode = 409;
+            return res.json(
+                {
+                    name: 'Login failed',
+                    message: 'No more free places.'
+                });
+        }
+
         var name;
         if (req.body) {
             if (req.body.name) {
@@ -163,6 +174,8 @@ route.post("/:id/login", function (req, res) {
                 );
             }
         }
+
+
 
         var player = new model.Player({playerId: uuid.v4(), name: name});
         var successfullyAdded = match.addPlayer(player);
@@ -184,6 +197,13 @@ route.post("/:id/login", function (req, res) {
                     model.Color.WHITE);
 
                 res.cookie(PLAYER_COOKIE_NAME, player.playerId);
+
+
+                if(match.isMatchFullyOccupied()){
+                    sse.sendMessage(sse.SSEMessage.GAME_STARTED, match.matchId);
+                }
+
+
                 return res.json(player);
             });
 

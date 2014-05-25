@@ -3,6 +3,7 @@
 var assert = require("chai").assert;
 var EventSource = require('eventsource');
 
+var request = require("request");
 
 var app = require('../../app').app;
 var sse = require('./sse');
@@ -29,6 +30,33 @@ describe('SSE tests', function () {
 
     });
 
+    it("shoud send GAME_STARTED when second player logs into the game", function(done){
+       matchStore.createMatch({
+           size: 7,
+           playerBlack: {playerId: 1, name: 'player1'}}, function(err, createdMatch){
+
+
+           var source = new EventSource("http://localhost:8000/matches/" + createdMatch.matchId);
+
+           source.addEventListener("message", function (event) {
+               assert.equal(event.data, sse.SSEMessage.GAME_STARTED);
+               done();
+           }, false);
+
+
+           setTimeout(function () {
+               request.post({
+                   url: "http://localhost:8000/matches/" + createdMatch.matchId + "/login",
+                   form: {name: 'player2'}
+               }, null);
+           }, 10);
+
+
+       });
+
+
+    });
+
     it("should send messages to all clients of the game", function (done) {
 
         var source = new EventSource("http://localhost:8000/matches/" + match.matchId);
@@ -45,7 +73,6 @@ describe('SSE tests', function () {
 
 
     it("should not send messages to clients of other games", function (done) {
-
 
         matchStore.createMatch({
             size: 9,
@@ -93,7 +120,6 @@ describe('SSE tests', function () {
 
     it("should not send private messages to the opponent or spectator", function (done) {
 
-
         var listener = function (event) {
             assert.fail(undefined, undefined, "The message should not have been received.");
             done();
@@ -125,3 +151,4 @@ describe('SSE tests', function () {
 
 
 });
+
