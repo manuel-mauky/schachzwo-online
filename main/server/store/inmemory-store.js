@@ -7,24 +7,29 @@ var store = {};
 
 
 /**
- * Returns a match with a given ID. If the requested match does not exist, undefined is returned.
+ * Loads the match with the given ID.
+ * If the match doesn't exist, the callback will get "null" as match param (which means that not finding
+ * the match isn't an error case).
  *
  * @param {String} id the ID of the match
- * @returns {Object} The match or undefined if not exists
+ * @param {Function} callback, 1. param: err, 2. param: the found match or null if no match can be found
  */
 module.exports.getMatch = function (id, callback) {
     var result = store[id];
     if(!!callback){
-        callback(null, result);
+        if(result){
+            callback(null, result);
+        }else{
+            callback(null, null);
+        }
     }
 };
 
 /**
- * Creates a new match in the store. This created match with new set ID is returned.
- * Returns undefined when creating failed.
+ * Creates a new match in the store.
  *
  * @param {Object} match Template for the new match
- * @returns {Object} the created match
+ * @param {Function} callback, 1. param: err, 2. param: the created match
  */
 module.exports.createMatch = function (match, callback) {
     if(!match){
@@ -48,18 +53,26 @@ module.exports.createMatch = function (match, callback) {
 };
 
 /**
- * Updates the given match in the store. Returns false if the operation failed or the match does not exist.
+ * Updates the given match in the store.
  *
  * @param {Object} match
- * @returns {Boolean} false if the operation failed or the match does not exist, true otherwise
+ * @param {Function} callback, 1. param: err, 2. param: the updated match
  */
 module.exports.updateMatch = function (match, callback) {
     store[match.matchId] = match;
     if(!!callback){
         callback(null, match);
     }
+
+
 };
 
+/**
+ * Deletes the match with the given id.
+ *
+ * @param matchId
+ * @param callback
+ */
 module.exports.deleteMatch = function(matchId, callback){
     store[matchId] = null;
 

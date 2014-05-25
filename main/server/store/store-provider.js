@@ -13,11 +13,12 @@ var StoreType = {
     MONGODB: 2
 }
 
-var activeStoreType = module.exports.activeStoreType = StoreType.INMEMORY;
+module.exports.activeStoreType = StoreType.INMEMORY;
 
 module.exports.getStore = function(){
     "use strict";
-    switch (activeStoreType){
+    console.log("type:" + module.exports.activeStoreType);
+    switch (module.exports.activeStoreType){
         case StoreType.INMEMORY:  return inmemoryStore;
         case StoreType.MONGODB: return new MongoDB();
     }

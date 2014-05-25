@@ -2,6 +2,7 @@
 "use strict";
 
 var storeProvider = require("./store-provider");
+var model = require("../model/model")
 var modelFactory = require('../model/model-factory');
 var assert = require("chai").assert;
 
@@ -51,17 +52,32 @@ describe("store provider", function(){
                     assert.notOk(err);
                     assert.ok(loadedMatch);
 
-                    //Delete Match test
-                    store.deleteMatch(matchId,function(err){
+                    loadedMatch.state = model.State.FINISHED;
+
+
+                    store.updateMatch(loadedMatch, function(err, updatedMatch){
                         assert.notOk(err);
+                        assert.ok(updatedMatch);
+                        assert.equal(updatedMatch.state, model.State.FINISHED);
+
+                        store.getMatch(matchId, function(err, newLoadedMatch){
+                           assert.equal(newLoadedMatch.state, model.State.FINISHED);
+
+                            //Delete Match test
+                            store.deleteMatch(matchId,function(err){
+                                assert.notOk(err);
 
 
-                        store.getMatch(matchId, function(err, match){
-                            assert.notOk(err);
-                            assert.isNull(match);
-                            done();
+                                store.getMatch(matchId, function(err, match){
+                                    assert.notOk(err);
+                                    assert.isNull(match);
+                                    done();
+                                });
+                            });
+
                         });
                     });
+
                 }catch(e){done(e);}
             });
         });
