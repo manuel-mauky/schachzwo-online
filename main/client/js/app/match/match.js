@@ -3,7 +3,7 @@
 define(['angular'], function (angular) {
 
     angular.module('match', []).
-        controller('matchCtrl', ['$scope', '$routeParams', 'boardProvider', function ($scope, $routeParams, boardProvider) {
+        controller('matchCtrl', ['$scope', '$routeParams', '$http', 'boardProvider', function ($scope, $routeParams, $http, boardProvider) {
 
             $scope.boardSize = 7;
             $scope.ownColor = 'black';
@@ -11,7 +11,6 @@ define(['angular'], function (angular) {
 
             var matchId = $routeParams.matchId;
 
-            console.log(">" + matchId);
             $scope.matchLink = "http://localhost:1337/match/" + matchId;
 
             var initBoard = function () {
@@ -36,14 +35,23 @@ define(['angular'], function (angular) {
 
             };
 
-            $scope.switchBoardSize = function () {
-                $scope.boardSize = $scope.boardSize === 7 ? 9 : 7;
-                initBoard();
-            };
-
-
             initBoard();
+            if (!!window.EventSource) {
+                console.log("create sse event source");
+                // connect to the SSE
+                var source = new EventSource("http://localhost:1337/matches/" + matchId);
 
+                console.log("sse event source created:" + source);
+
+                source.addEventListener("update", function (event) {
+                    console.log("update received");
+                    console.dir(event);
+
+                }, false);
+
+            } else {
+                console.log("Can't use SSE because Browser doesn't support EventSource");
+            }
         }]);
 
 
