@@ -91,7 +91,8 @@ route.get("/:id/self", function (req, res) {
         }
 
         var playerId = restUtils.findPlayerId(req);
-        if (!restUtils.isPlayerParticipating(match, playerId)) {
+        var gameLogic = new GameLogic(match);
+        if (!gameLogic.isPlayerParticipating( playerId)) {
             return matchError401(req, res);
         }
 
@@ -118,8 +119,10 @@ route.get("/:id/opponent", function (req, res) {
             return matchError404(req, res);
         }
 
+        var gameLogic = new GameLogic(match);
+
         var playerId = restUtils.findPlayerId(req);
-        if (!restUtils.isPlayerParticipating(match, playerId)) {
+        if (!gameLogic.isPlayerParticipating(playerId)) {
             return matchError401(req, res);
         }
 
@@ -131,7 +134,7 @@ route.get("/:id/opponent", function (req, res) {
             delete player.playerId;
         } else {
             player = new model.Player(match.playerWhite);
-            player.color = model.Color.WHITE
+            player.color = model.Color.WHITE;
             delete player.playerId;
         }
         return res.json(player);
@@ -228,7 +231,9 @@ route.post("/:id/moves", function (req, res) {
 
 
         var playerId = restUtils.findPlayerId(req);
-        if (!restUtils.isPlayerParticipating(match, playerId)) {
+        var gameLogic = new GameLogic(match);
+
+        if (!gameLogic.isPlayerParticipating(playerId)) {
             return matchError401(req, res);
         }
 
@@ -275,7 +280,7 @@ route.post("/:id/moves", function (req, res) {
 
 route.get("/:id/threats", function (req, res) {
     var store = storeProvider.getStore();
-    var match = store.getMatch(req.params.id, function(err, match){
+    store.getMatch(req.params.id, function(err, match){
         if(err || !match){
             return matchError404(req, res);
         }
@@ -286,7 +291,7 @@ route.get("/:id/threats", function (req, res) {
 
 route.get("/:id/valid-moves", function (req, res) {
     var store = storeProvider.getStore();
-    var match = store.getMatch(req.params.id, function(err, match){
+    store.getMatch(req.params.id, function(err, match){
         if(err || !match){
             return matchError404(req, res);
         }

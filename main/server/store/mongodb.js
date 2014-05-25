@@ -9,7 +9,11 @@ var MongDB = function() {
 
     this.getMatch = function (id,callback) {
         db.collection('matches').findOne({matchId: id}, function(err,item){
-                callback(err,item);
+            if(item){
+                callback(err,new model.Match(item));
+            }else{
+                callback(err, null);
+            }
         });
     };
 
@@ -23,7 +27,9 @@ var MongDB = function() {
         if(!!match){
             match.matchId = uuid.v4();
             db.collection('matches').insert(match,function(err){
-                if(callback) callback(err, match);
+                if(callback) {
+                    callback(err, match);
+                }
             });
         }else{
             if(!!callback){

@@ -30,21 +30,3 @@ module.exports.findPlayerId = function (req) {
     return playerId;
 };
 
-/**
- * Checks whether the player with the given playerId is participating on the given match. In this case this method
- * returns <code>true</code>.
- *
- * When the no playerId is given or there is no player with this Id part of the match, this method returns <code>false</code>.
- *
- *
- * @param match
- * @param playerId
- * @returns {boolean}
- */
-module.exports.isPlayerParticipating = function (match, playerId) {
-    if(playerId){
-        return (playerId == match.playerBlack.playerId || playerId == match.playerWhite.playerId);
-    }else{
-        return false;
-    }
-};

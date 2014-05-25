@@ -6,7 +6,9 @@ var restUtils = require("./rest-utils");
 
 var route = express.Router();
 
-var matchStore = require("../store/inmemory-store.js");
+var GameLogic = require("../logic/gamelogic");
+
+var storeProvider = require("../store/store-provider");
 
 route.get("/:matchId", function (req, res) {
 
@@ -16,27 +18,30 @@ route.get("/:matchId", function (req, res) {
         return res.status(404).send("Match not found");
     }
 
-    var match = matchStore.get(matchId);
+    var store = storeProvider.getStore();
 
-    if(!match){
-        return res.status(404).send("Match not found");
-    }
+    store.getMatch(matchId, function(err, match){
+        if (err || !match) {
+            return res.status(404).send("Match not found");
+        }
+
+        var playerId = restUtils.findPlayerId(req);
+
+        var gameLogic = new GameLogic(match);
+
+        if(gameLogic.isPlayerParticipating(playerId)){
+            return res.redirect("/#/match/" + matchId);
+        }
 
 
-    var playerId = restUtils.findPlayerId(req);
-
-    if(restUtils.isPlayerParticipating(match, playerId)){
-        return res.redirect("/#/match/" + matchId);
-    }
-
-
-    if(match.isMatchFullyOccupied()){
-        console.log("zuschauer");
-        return res.redirect("/#/match/" + matchId);
-    }else{
-        console.log("login");
-        return res.redirect("/#/match/" + matchId + "/login");
-    }
+        if(match.isMatchFullyOccupied()){
+            console.log("zuschauer");
+            return res.redirect("/#/match/" + matchId);
+        }else{
+            console.log("login");
+            return res.redirect("/#/match/" + matchId + "/login");
+        }
+    });
 
 });
 

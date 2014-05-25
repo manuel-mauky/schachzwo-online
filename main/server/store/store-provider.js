@@ -17,7 +17,6 @@ module.exports.activeStoreType = StoreType.INMEMORY;
 
 module.exports.getStore = function(){
     "use strict";
-    console.log("type:" + module.exports.activeStoreType);
     switch (module.exports.activeStoreType){
         case StoreType.INMEMORY:  return inmemoryStore;
         case StoreType.MONGODB: return new MongoDB();
