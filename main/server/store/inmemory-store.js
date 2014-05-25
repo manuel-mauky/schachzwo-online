@@ -18,7 +18,7 @@ module.exports.getMatch = function (id, callback) {
     var result = store[id];
     if(!!callback){
         if(result){
-            callback(null, result);
+            callback(null, new model.Match(result));
         }else{
             callback(null, null);
         }
