@@ -6,6 +6,7 @@ var model = require("./model");
 var modelFactory = require("./model-factory.js");
 
 var FigureType = model.FigureType;
+var Color = model.Color;
 
 
 describe("modelFactory.createMatch", function () {
@@ -61,11 +62,16 @@ describe("modelFactory.createStartSnapshot", function () {
         assert.equal(snapshot.getField(5, 6).figure.type, FigureType.KNIGHT);
         assert.equal(snapshot.getField(6, 6).figure.type, FigureType.MAN);
 
-
-        // check the rocks
+        // check the rocks and colors
         for (var i = 0; i < 7; i++) {
             assert.equal(snapshot.getField(i, 1).figure.type, FigureType.ROCKS);
             assert.equal(snapshot.getField(i, 5).figure.type, FigureType.ROCKS);
+
+            assert.equal(snapshot.getField(i, 0).figure.color, Color.WHITE);
+            assert.equal(snapshot.getField(i, 6).figure.color, Color.BLACK);
+
+            assert.equal(snapshot.getField(i, 0).figure.color, Color.WHITE);
+            assert.equal(snapshot.getField(i, 6).figure.color, Color.BLACK);
         }
 
 
@@ -86,7 +92,7 @@ describe("modelFactory.createStartSnapshot", function () {
         assert.equal(snapshot.getField(1, 0).figure.type, FigureType.KNIGHT);
         assert.equal(snapshot.getField(2, 0).figure.type, FigureType.WOMAN);
         assert.equal(snapshot.getField(3, 0).figure.type, FigureType.FAITH);
-        assert.notOk(snapshot.getField(4, 0).figure);  // at start the zeniths are placed on the origin in the middle of the field
+        assert.equal(snapshot.getField(4, 0).figure.type, FigureType.ZENITH);
         assert.equal(snapshot.getField(5, 0).figure.type, FigureType.KNOWLEDGE)
         assert.equal(snapshot.getField(6, 0).figure.type, FigureType.WOMAN);
         assert.equal(snapshot.getField(7, 0).figure.type, FigureType.KNIGHT);
@@ -96,16 +102,21 @@ describe("modelFactory.createStartSnapshot", function () {
         assert.equal(snapshot.getField(1, 8).figure.type, FigureType.KNIGHT);
         assert.equal(snapshot.getField(2, 8).figure.type, FigureType.WOMAN);
         assert.equal(snapshot.getField(3, 8).figure.type, FigureType.FAITH);
-        assert.notOk(snapshot.getField(4, 8).figure);  // at start the zeniths are placed on the origin in the middle of the field
+        assert.equal(snapshot.getField(4, 8).figure.type, FigureType.ZENITH);
         assert.equal(snapshot.getField(5, 8).figure.type, FigureType.KNOWLEDGE)
         assert.equal(snapshot.getField(6, 8).figure.type, FigureType.WOMAN);
         assert.equal(snapshot.getField(7, 8).figure.type, FigureType.KNIGHT);
         assert.equal(snapshot.getField(8, 8).figure.type, FigureType.MAN);
 
-
         for (var i = 0; i < 9; i++) {
             assert.equal(snapshot.getField(i, 1).figure.type, FigureType.ROCKS);
             assert.equal(snapshot.getField(i, 7).figure.type, FigureType.ROCKS);
+
+            assert.equal(snapshot.getField(i, 0).figure.color, Color.WHITE);
+            assert.equal(snapshot.getField(i, 8).figure.color, Color.BLACK);
+
+            assert.equal(snapshot.getField(i, 0).figure.color, Color.WHITE);
+            assert.equal(snapshot.getField(i, 8).figure.color, Color.BLACK);
         }
 
         // check that the zenith is in the center field
