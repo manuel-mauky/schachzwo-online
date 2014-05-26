@@ -87,6 +87,8 @@ var createSmallStartSnapshot = function () {
 
     helper_fillWithSpecialFigures(start, Color.WHITE, 0, 7);
     helper_fillWithSpecialFigures(start, Color.BLACK, 6, 7);
+    start.getField(3, 0).figure = new model.Figure({color: Color.WHITE, type: FigureType.ZENITH});
+    start.getField(3, 6).figure = new model.Figure({color: Color.BLACK, type: FigureType.ZENITH});
 
     helper_fillWithRocks(start, 7);
 
@@ -100,12 +102,14 @@ var createBigStartSnapshot = function () {
     helper_fillWithEmptyFields(start.board, 9);
 
     helper_fillWithSpecialFigures(start, Color.WHITE, 0, 9);
-    start.getField(3, 0).figure = new model.Figure({color: Color.BLACK, type: FigureType.FAITH});
-    start.getField(5, 0).figure = new model.Figure({color: Color.BLACK, type: FigureType.KNOWLEDGE});
+    start.getField(3, 0).figure = new model.Figure({color: Color.WHITE, type: FigureType.FAITH});
+    start.getField(4, 0).figure = new model.Figure({color: Color.WHITE, type: FigureType.ZENITH});
+    start.getField(5, 0).figure = new model.Figure({color: Color.WHITE, type: FigureType.KNOWLEDGE});
 
 
     helper_fillWithSpecialFigures(start, Color.BLACK, 8, 9);
     start.getField(3, 8).figure = new model.Figure({color: Color.BLACK, type: FigureType.FAITH});
+    start.getField(4, 8).figure = new model.Figure({color: Color.BLACK, type: FigureType.ZENITH});
     start.getField(5, 8).figure = new model.Figure({color: Color.BLACK, type: FigureType.KNOWLEDGE});
 
 
@@ -135,7 +139,7 @@ var helper_fillWithSpecialFigures = function (board, color, row, size) {
     board.getField(0, row).figure = new model.Figure({color: color, type: FigureType.MAN});
     board.getField(1, row).figure = new model.Figure({color: color, type: FigureType.KNIGHT});
     board.getField(2, row).figure = new model.Figure({color: color, type: FigureType.WOMAN});
-    board.getField(3, row).figure = new model.Figure({color: color, type: FigureType.ZENITH});
+
     board.getField(size - 3, row).figure = new model.Figure({color: color, type: FigureType.WOMAN});
     board.getField(size - 2, row).figure = new model.Figure({color: color, type: FigureType.KNIGHT});
     board.getField(size - 1, row).figure = new model.Figure({color: color, type: FigureType.MAN});
