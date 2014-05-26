@@ -8,9 +8,10 @@ define([
         'ngRoute',
         'match',
         'landing',
-        "login",
+        'login',
         'schachzwoBoard',
-        'sse']).
+        'sse',
+        'matchLink']).
         config(['$routeProvider', function ($routeProvider) {
 
             $routeProvider.when("/match/:matchId/login",

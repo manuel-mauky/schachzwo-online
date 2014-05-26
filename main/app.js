@@ -9,6 +9,15 @@ var cookieParser = require("cookie-parser");
 app.use(bodyParser());
 app.use(cookieParser());
 
+
+app.use(function(req, res, next) {
+    res.header('Pragma', 'no-cache');
+    res.header('Cache-Control', 'no-store, no-cache, must-revalidate');
+    res.header('Expires', 'Thu, 01 Jan 1970 00:00:00');
+    next();
+});
+
+
 app.use("/matches", require("./server/routes/matches").route);
 
 app.use("/match", require("./server/routes/incoming-link").route);

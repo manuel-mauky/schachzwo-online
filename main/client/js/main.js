@@ -16,7 +16,6 @@ requirejs.config({
         bootstrap: 'libs/bootstrap.min',
         domReady: 'libs/require/domReady',
         eventsource: 'libs/eventsource'
-
     },
 
     shim: {
@@ -39,11 +38,12 @@ require([
         'app/match/match',
         'app/login/login',
         'app/match/directives/schachzwo-board',
-        'app/match/services/sse'],
+        'app/match/services/sse',
+        'app/match/services/match-link'],
     function (angular) {
         require(['domReady!'], function (document) {
 
-           angular.bootstrap(document, ['schachzwoApp']);
+            angular.bootstrap(document, ['schachzwoApp']);
 
         });
     });

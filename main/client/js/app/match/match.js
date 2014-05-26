@@ -3,15 +3,15 @@
 define(['angular'], function (angular) {
 
     angular.module('match', []).
-        controller('matchCtrl', ['$scope', '$routeParams', '$http', 'endpoint', 'sse',
-            function ($scope, $routeParams, $http, endpoint, sse) {
+        controller('matchCtrl', ['$scope', '$routeParams', '$http','endpoint', 'sse', 'matchLink',
+            function ($scope, $routeParams, $http, endpoint, sse, matchLink) {
 
                 var matchId = $routeParams.matchId;
                 var selectedField = {};
                 var validMoves = [];
                 var itsMyTurn = false;
 
-                $scope.matchLink = "http://localhost:1337/match/" + matchId;
+                $scope.matchLink = matchLink(matchId);
                 $scope.match = {size: 7 };
                 $scope.self = {color: 'black'};
                 $scope.board = [];

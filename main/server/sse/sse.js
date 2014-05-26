@@ -44,8 +44,6 @@ module.exports.initClient = function (req, res, matchId, playerId) {
         'Connection': 'keep-alive'
     });
 
-    res.write('\n');
-
     clients[++clientId] =
     {
         res: res,
