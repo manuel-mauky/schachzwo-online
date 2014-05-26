@@ -124,7 +124,7 @@ describe('Mock REST API test /matches', function () {
                     .get('/matches/' + match.matchId + '/board')
                     .expect(200)
                     .expect(function (res) {
-                        assert.ok(res.body);
+                        assert.isArray(res.body);
 
                         var board = new model.Snapshot(res.body);
                         assert.ok(board);
@@ -584,20 +584,11 @@ describe('Mock REST API test /matches', function () {
 
             matchStore.createMatch(modelFactory.createMatch(model.BoardSize.SMALL), function (err, match) {
 
-
-                var board = match.getCurrentSnapshot();
-                board.getField(3, 6).figure = new model.Figure(
-                    {
-                        type: model.FigureType.ZENITH,
-                        color: model.Color.BLACK
-                    });
-
                 request(app)
                     .get('/matches/' + match.matchId + '/threats')
                     .expect(200)
                     .expect(function (res) {
                         assert.isArray(res.body);
-                        assert.isTrue(res.body.length > 0);
                     })
                     .end(done);
 

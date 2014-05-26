@@ -10,7 +10,7 @@ define([
         'landing',
         "login",
         'schachzwoBoard',
-        'boardProvider']).
+        'sse']).
         config(['$routeProvider', function ($routeProvider) {
 
             $routeProvider.when("/match/:matchId/login",

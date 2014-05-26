@@ -206,7 +206,7 @@ route.get("/:id/board", function (req, res) {
             return matchError404(req, res);
         }
 
-        return  res.json(match.getCurrentSnapshot());
+        return  res.json(match.getCurrentSnapshot().board);
     });
 });
 

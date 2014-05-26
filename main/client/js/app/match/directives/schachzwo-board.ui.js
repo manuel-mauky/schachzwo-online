@@ -288,14 +288,14 @@
             for (var i in this.fields) {
                 var field = this.fields[i];
 
-                this._checkColRow(field.row);
-                this._checkColRow(field.column);
+                this._checkColRow(field.position.row);
+                this._checkColRow(field.position.column);
 
                 if (field.accessible) {
-                    fillFloor(this._transformRow(field.row), this._transformColumn(field.column), boardAccessibleFieldColor);
+                    fillFloor(this._transformRow(field.position.row), this._transformColumn(field.position.column), boardAccessibleFieldColor);
                 }
                 if (field.selected) {
-                    fillFloor(this._transformRow(field.row), this._transformColumn(field.column), boardSelectedFieldColor);
+                    fillFloor(this._transformRow(field.position.row), this._transformColumn(field.position.column), boardSelectedFieldColor);
                 }
             }
 
@@ -304,7 +304,7 @@
                 if (field.figure) {
 
                     this._checkColor(field.figure.color);
-                    drawFigure(this._transformRow(field.row), this._transformColumn(field.column), field.figure);
+                    drawFigure(this._transformRow(field.position.row), this._transformColumn(field.position.column), field.figure);
                 }
             }
 

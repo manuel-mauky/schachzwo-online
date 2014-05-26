@@ -3,56 +3,129 @@
 define(['angular'], function (angular) {
 
     angular.module('match', []).
-        controller('matchCtrl', ['$scope', '$routeParams', '$http', 'boardProvider', function ($scope, $routeParams, $http, boardProvider) {
+        controller('matchCtrl', ['$scope', '$routeParams', '$http', 'endpoint', 'sse',
+            function ($scope, $routeParams, $http, endpoint, sse) {
 
-            $scope.boardSize = 7;
-            $scope.ownColor = 'black';
-            $scope.board = [];
+                var matchId = $routeParams.matchId;
+                var selectedField = {};
+                var validMoves = [];
+                var itsMyTurn = false;
 
-            var matchId = $routeParams.matchId;
+                $scope.matchLink = "http://localhost:1337/match/" + matchId;
+                $scope.match = {size: 7 };
+                $scope.self = {color: 'black'};
+                $scope.board = [];
+                $scope.moves = [];
 
-            $scope.matchLink = "http://localhost:1337/match/" + matchId;
+                var initMatch = function () {
 
-            var initBoard = function () {
-                if ($scope.boardSize === 7) {
-                    $scope.board = boardProvider.SMALL;
-                } else {
-                    $scope.board = boardProvider.BIG;
-                }
+                    $http.get(endpoint + "/" + matchId).success(function (match) {
+                        $scope.match = match;
 
-            };
+                        $http.get(endpoint + "/" + matchId + "/self").success(function (player) {
+                            $scope.self = player;
+                            update();
+                        });
 
-            $scope.onSelect = function (row, column) {
+                    });
+                };
+                initMatch();
 
-                for (var i in  $scope.board) {
-                    if ($scope.board[i].selected) {
-                        $scope.board.splice(i, 1);
-                        break;
+
+                var update = function () {
+                    $http.get(endpoint + "/" + matchId + "/board").success(function (board) {
+                        clearSelections();
+                        $scope.board = [];
+
+                        board.forEach(function (field) {
+                            if (field.figure) {
+                                $scope.board.push(field);
+                            }
+                        });
+
+                        $http.get(endpoint + "/" + matchId + "/moves").success(function (moves) {
+                            $scope.moves = moves;
+                            itsMyTurn = (moves.length + ($scope.self.color == 'white' ? 1 : 0)) % 2 == 0;
+                        });
+
+                        $http.get(endpoint + "/" + matchId + "/valid-moves").success(function (moves) {
+                            validMoves = moves;
+                        });
+
+                    });
+                };
+
+                var clearSelections = function () {
+                    selectedField = {};
+                    $scope.board = $scope.board.filter(function (field) {
+                        return !field.selected && !field.accessible;
+
+                    });
+                };
+
+                var getField = function (row, column) {
+                    for (var i in $scope.board) {
+                        var field = $scope.board[i];
+                        if (field.position.row === row && field.position.column === column) {
+                            return field;
+                        }
                     }
-                }
-                $scope.board.push({row: row, column: column, selected: true});
+                };
+
+                $scope.onSelect = function (row, column) {
+                    if (!itsMyTurn) {
+                        return;
+                    }
+
+                    var field = getField(row, column);
+
+                    if (field && field.figure && field.figure.color == $scope.self.color) {
+                        clearSelections();
+                        selectedField = field;
+                        $scope.board.push({position: {row: row, column: column}, selected: true});
+
+                        getValidMoves(field).forEach(function (pos) {
+                            $scope.board.push({position: {row: pos.row, column: pos.column}, accessible: true});
+                        });
 
 
-            };
+                    } else if (selectedField) {
 
-            initBoard();
-            if (!!window.EventSource) {
-                console.log("create sse event source");
-                // connect to the SSE
-                var source = new EventSource("http://localhost:1337/matches/" + matchId);
+                        getValidMoves(selectedField).forEach(function (pos) {
 
-                console.log("sse event source created:" + source);
+                            if (field && pos.row == field.position.row && pos.column == field.position.column) {
 
-                source.addEventListener("update", function (event) {
-                    console.log("update received");
-                    console.dir(event);
+                                var move = {
+                                    figure: selectedField.figure,
+                                    from: selectedField.position,
+                                    to: field.position
+                                };
 
+                                $http.post(endpoint + "/" + matchId + "/moves", move).success(function () {
+                                    itsMyTurn = false;
+                                });
+                            }
+                        });
+                    }
+                };
+
+                var getValidMoves = function (field) {
+
+                    for (var i in validMoves) {
+                        var entry = validMoves[i];
+                        if (entry.field.position.row == field.position.row && entry.field.position.column == field.position.column) {
+                            return entry.fields;
+                        }
+                    }
+                    return [];
+                };
+
+                sse(matchId).addEventListener("message", function (event) {
+                    console.log("update");
+                    initMatch();
                 }, false);
 
-            } else {
-                console.log("Can't use SSE because Browser doesn't support EventSource");
-            }
-        }]);
+            }]);
 
 
 });

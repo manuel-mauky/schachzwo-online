@@ -91,7 +91,9 @@ module.exports = function BoardAccessor(match) {
                     continue;
                 }
                 var list = applyFunction(i, j);
-                result.push({figure: figure, fields: list});
+                if (list.length > 0) {
+                    result.push({field: field, fields: list});
+                }
             }
         }
         return result;

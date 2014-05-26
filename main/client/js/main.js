@@ -14,7 +14,8 @@ requirejs.config({
 
         //other
         bootstrap: 'libs/bootstrap.min',
-        domReady: 'libs/require/domReady'
+        domReady: 'libs/require/domReady',
+        eventsource: 'libs/eventsource'
 
     },
 
@@ -36,9 +37,9 @@ require([
         'app/app',
         'app/landing/landing',
         'app/match/match',
-        "app/login/login",
+        'app/login/login',
         'app/match/directives/schachzwo-board',
-        'app/match/services/board-provider'],
+        'app/match/services/sse'],
     function (angular) {
         require(['domReady!'], function (document) {
 
