@@ -211,7 +211,7 @@ route.post("/:id/login", function (req, res) {
 
 
                 if (match.isMatchFullyOccupied()) {
-                    sse.sendMessage(message.GAME_STARTED, match.matchId);
+                    sse.sendMessage(message.MATCH_STARTED, match.matchId);
                 }
 
 

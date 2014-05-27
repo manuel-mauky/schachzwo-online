@@ -9,13 +9,14 @@ define(['angular'], function (angular) {
                 var matchId = $routeParams.matchId;
                 var selectedField = {};
                 var validMoves = [];
-                var itsMyTurn = false;
 
                 $scope.matchLink = matchLink(matchId);
-                $scope.match = {size: 7 };
+                $scope.match = {size: 7, state: 'preparing'};
                 $scope.self = {color: 'black'};
                 $scope.board = [];
                 $scope.moves = [];
+                $scope.itsMyTurn = false;
+                $scope.onlooker = false;
 
                 var initMatch = function () {
 
@@ -25,12 +26,20 @@ define(['angular'], function (angular) {
                         $http.get(endpoint + "/" + matchId + "/self").success(function (player) {
                             $scope.self = player;
                             update();
+                        }).error(function() {
+                            $scope.onlooker = true;
+                            update();
                         });
 
-
                         sse(matchId).addEventListener("message", function (event) {
-                            console.log("update");
-                            update();
+                            console.log(event.data);
+
+                            if (event.data == "update") {
+                                update();
+                            }
+                            if (event.data == "match-started") {
+                                initMatch();
+                            }
                         }, false);
 
                     });
@@ -52,7 +61,7 @@ define(['angular'], function (angular) {
 
                         $http.get(endpoint + "/" + matchId + "/moves").success(function (moves) {
                             $scope.moves = moves;
-                            itsMyTurn = (moves.length + ($scope.self.color == 'white' ? 1 : 0)) % 2 == 0;
+                            $scope.itsMyTurn = !$scope.onlooker && (moves.length + ($scope.self.color == 'white' ? 1 : 0)) % 2 == 0;
                         });
 
                         $http.get(endpoint + "/" + matchId + "/valid-moves").success(function (moves) {
@@ -79,8 +88,20 @@ define(['angular'], function (angular) {
                     }
                 };
 
+                var getValidMoves = function (field) {
+
+                    for (var i in validMoves) {
+                        var entry = validMoves[i];
+                        if (entry.field.position.row == field.position.row && entry.field.position.column == field.position.column) {
+                            return entry.fields;
+                        }
+                    }
+                    return [];
+                };
+
+
                 $scope.onSelect = function (row, column) {
-                    if (!itsMyTurn) {
+                    if (!$scope.itsMyTurn || $scope.match.state != 'playing') {
                         return;
                     }
 
@@ -109,22 +130,11 @@ define(['angular'], function (angular) {
                                 };
 
                                 $http.post(endpoint + "/" + matchId + "/moves", move).success(function () {
-                                    itsMyTurn = false;
+                                    $scope.itsMyTurn = false;
                                 });
                             }
                         });
                     }
-                };
-
-                var getValidMoves = function (field) {
-
-                    for (var i in validMoves) {
-                        var entry = validMoves[i];
-                        if (entry.field.position.row == field.position.row && entry.field.position.column == field.position.column) {
-                            return entry.fields;
-                        }
-                    }
-                    return [];
                 };
 
             }]);

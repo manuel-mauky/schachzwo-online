@@ -31,7 +31,7 @@ describe('SSE tests', function () {
 
     });
 
-    it("shoud send GAME_STARTED when second player logs into the game", function(done){
+    it("shoud send MATCH_STARTED when second player logs into the game", function(done){
        matchStore.createMatch({
            size: 7,
            playerBlack: {playerId: 1, name: 'player1'}}, function(err, createdMatch){
@@ -40,7 +40,7 @@ describe('SSE tests', function () {
            var source = new EventSource("http://localhost:8000/matches/" + createdMatch.matchId);
 
            source.addEventListener("message", function (event) {
-               assert.equal(event.data, message.GAME_STARTED);
+               assert.equal(event.data, message.MATCH_STARTED);
                done();
            }, false);
 
