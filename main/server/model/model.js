@@ -257,6 +257,9 @@ var Match = function (json) {
         this.playerBlack = new Player(json.playerBlack);
     }
 
+    this.currentSnapshotCache = undefined;
+    this.currentSnapshotCacheMarker = undefined;
+
     this.matchId = json.matchId;
     this.state = json.state || State.PREPARING;
 
@@ -314,7 +317,14 @@ var Match = function (json) {
      * Returns the current snapshot of this match.
      */
     this.getCurrentSnapshot = function(){
-        return this.generateSnapshot(this.history.length);
+        if(this.currentSnapshotCache && this.currentSnapshotCacheMarker == this.history.length){
+            return this.currentSnapshotCache;
+        }
+        else {
+            this.currentSnapshotCache = this.generateSnapshot(this.history.length);
+            this.currentSnapshotCacheMarker = this.history.length;
+        }
+        return this.currentSnapshotCache;
     };
 
     this.addMove = function(move){
