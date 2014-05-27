@@ -282,7 +282,10 @@
                 }
 
                 drawCenter();
-                drawCaptions();
+
+                if (boardWidth > 400) {
+                    drawCaptions();
+                }
             }();
 
             for (var i in this.fields) {
