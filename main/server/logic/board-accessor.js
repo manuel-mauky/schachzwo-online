@@ -101,14 +101,14 @@ module.exports = function BoardAccessor(match) {
 
     //Pro Feld mit eigner Figur eine Liste von Spielfeldern mit gegnerischen Figuren, die eigene Figur bedrohen
     var getThreats = this.getThreats = function (color) {
-        return applyMethodToEatchFigureOnBoard(color, getThreatenFields);
+        return applyMethodToEatchFigureOnBoard(color, getThreatenPositions);
     };
     //Pro Feld mit eigener Figur eine Liste von gültigen Spielfeldern
     var getValidMoves = this.getValidMoves = function (color) {
         return applyMethodToEatchFigureOnBoard(color, getRangeFor);
     }
 
-    var getThreatenFields = this.getThreatenFields = function (column, row) {
+    var getThreatenPositions = this.getThreatenPositions = function (column, row) {
         var result = [];
         var ownFigure = getFigure(column, row);
         if (!ownFigure) {
@@ -369,7 +369,7 @@ module.exports = function BoardAccessor(match) {
 
         var originCoordinate = match.size == model.BoardSize.BIG ? 4 : 3;
         if (Math.abs(column - originCoordinate) <= 1 && Math.abs(row - originCoordinate) <= 1) {
-            var threatenFields = getThreatenFields(column, row);
+            var threatenFields = getThreatenPositions(column, row);
 
             if (threatenFields.length == 0) {
                 result.push({column: originCoordinate, row: originCoordinate});
@@ -542,7 +542,7 @@ module.exports = function BoardAccessor(match) {
         return result;
     };
 
-    var isOrigin = function (x, y) {
+    var isOrigin = this.isOrigin = function (x, y) {
         var size = match.size;
 
         var isBigOrigin = (size == model.BoardSize.BIG && (x == 4 && y == 4));

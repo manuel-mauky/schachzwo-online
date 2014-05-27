@@ -9,22 +9,99 @@ var FigureType = model.FigureType;
 var Color = model.Color;
 var Figure = model.Figure;
 
-module.exports = function GameLogic(match) {
-    var accessor = new BoardAccessor(match);
+var CheckType = {
+    NONE: 1,
+    CHECK: 2,
+    CHECK_MATE: 3,
+    CHECK_FINISH: 4,
+    CHECK_FINISH_BOTH: 5
+}
 
+module.exports.CheckType = CheckType;
+module.exports.GameLogic = function GameLogic(match) {
+    var accessor = new BoardAccessor(match);
+    var match = match;
     /**
-     * checks if a Player with the given Color is in Check.
+     * returns the Check Type of a Player with the given Color.
      * If color is not set, it takes the Color from the active Player
-     * @type {isCheck}
+     * @type {getCheckType}
      */
-    var isCheck = this.isCheck = function (color) {
+    var getCheckType = this.getCheckType = function(color){
         if (!color) color = match.getColorOfActivePlayer();
         var board = match.getCurrentSnapshot();
         var zenithField = getZenithPosition(color, board);
-        var threadenFields = accessor.getThreatenFields(zenithField.position.column, zenithField.position.row);
-        if (threadenFields.length > 0) return true;
-        else return false;
-    };
+
+        //Schach Ziel
+        if(accessor.isOrigin(zenithField.position.collumn,zenithField.position.row)){
+            var enemyZenithField;
+            if(color == Color.BLACK){
+                enemyZenithField =  getZenithPosition(Color.WHITE, board);
+            }
+            else {
+                enemyZenithField =  getZenithPosition(Color.BLACK, board);
+            }
+            enemyZenithRange = accessor.getRangeFor(enemyZenithField.position.collumn,enemyZenithField.position.row);
+            enemyZenithRange.forEach(function(element){
+                if(accessor.isOrigin(enemyZenithField.position.collumn,enemyZenithField.position.row)){
+                    return CheckType.CHECK_FINISH_BOTH;
+                }
+            });
+            return CheckType.CHECK_FINISH;
+        }
+
+        //Schach / Schachmatt
+        else {
+            var zenithThreadenPositions = accessor.getThreatenPositions(zenithField.position.column, zenithField.position.row);
+            var zenithRange = accessor.getRangeFor(zenithField.position.column, zenithField.position.row);
+            var isCheckMate = true;
+
+            if (zenithThreadenPositions.length == 0) return CheckType.NONE;
+
+            //zenith bewegen
+            zenithRange.forEach(function (element) {
+                if(!isCheckMate) return;
+                match.history.push(new model.Move({figure: board.getFieldFromPosition(zenithField.position).figure, from: zenithField.position, to: element}));
+                var threaten = accessor.getThreatenPositions(element.column, element.row);
+                if (threaten.length == 0) {
+                    isCheckMate = false;
+                }
+                match.history.pop();
+            });
+            if (!isCheckMate) return CheckType.CHECK;
+
+            //figuren schlagen
+            zenithThreadenPositions.forEach(function (enemyField) {
+                var enemyThreatenPositions = accessor.getThreatenPositions(enemyField.column, enemyField.row);
+                enemyThreatenPositions.forEach(function (element) {
+                    if(!isCheckMate) return;
+                    match.history.push(new model.Move({figure: board.getFieldFromPosition(element).figure, from: element, to: enemyField}));
+                    if (accessor.getThreatenPositions(zenithField.column, zenithField.row).length == 0) {
+                        isCheckMate = false;
+                    }
+                    match.history.pop();
+                });
+                if (!isCheckMate) return;
+            });
+            if (!isCheckMate) return CheckType.CHECK;
+
+            //figuren blokieren welche zenith bedrohen
+            zenithThreadenPositions.forEach(function (enemyField) {
+                console.log(enemyField);
+                var enemyRangeList = accessor.getRangeFor(enemyField.column, enemyField.row);
+                enemyRangeList.forEach(function (element) {
+                    if(!isCheckMate) return;
+                    match.history.push(new model.Move({figure: board.getFieldFromPosition(enemyField).figure, from: enemyField, to: element}));
+                    var threaten = accessor.getThreatenPositions(element.column, element.row);
+                    if (threaten > 0 && !isCheck(color)) {
+                        isCheckMate = false;
+                    }
+                    match.history.pop();
+                });
+                if (!isCheckMate) return CheckType.CHECK;
+            });
+            return CheckType.CHECK_MATE;
+        }
+    }
 
     /**
      * Returns the Position of the Zenith of the given Playercolor on the given board
@@ -75,64 +152,6 @@ module.exports = function GameLogic(match) {
         });
         return isValid;
     };
-
-    /**
-     * checks if a Player with the given Color is in CheckMate
-     * If color is not set, it takes the Color from the active Player
-     * @type {isCheckMate}
-     */
-    var isCheckMate = this.isCheckMate = function (color) {
-        if (!color) color = match.getColorOfActivePlayer();
-        var isCheckMate = true;
-        if (!isCheck(color)) return false;
-        var zenithField = getZenithPosition(color, bord);
-        var zenithThreadenFields = accessor.getThreatenFields(zenithField.position.column, zenithField.position.row);
-        var zenithRange = accessor.getRangeFor(zenithField.position.column, zenithField.position.row);
-
-        //zenith bewegen
-        zenithRange.forEach(function (element) {
-            match.history.push(new model.Move({figure: zenithField.figure, from: zenithField.position, to: element.position}));
-            var threaten = accessor.getThreatenFields(element.position.column, element.position.row);
-            if (threaten.length == 0) {
-                isCheckMate = false;
-                return;
-            }
-            match.history.pop();
-        });
-        if (!isCheckMate) return false;
-
-        //figuren schlagen
-        zenithThreadenFields.forEach(function (enemyField) {
-            var enemyThreatenFields = accessor.getThreatenFields(enemyField.position.column, enemyField.position.row);
-            enemyThreatenFields.forEach(function (element) {
-                match.history.push(new model.Move({figure: element.figure, from: element.position, to: enemyField.position}));
-                if (accessor.getThreatenFields(zenithField.position.column, zenithField.position.row).length == 0) {
-                    isCheckMate = false;
-                    return;
-                }
-                match.history.pop();
-            });
-            if (!isCheckMate) return;
-        });
-
-        //figuren blokieren welche zenith bedrohen
-        zenithThreadenFields.forEach(function (enemyField) {
-            var enemyRangeList = accessor.getRangeFor(enemyField.position.column, enemyField.position.row);
-            enemyRangeList.forEach(function (element) {
-                match.history.push(new model.Move({figure: enemyField.figure, from: enemyField.position, to: element.position}));
-                var threaten = accessor.getThreatenFields(element.position.column, element.position.row);
-                if (threaten > 0 && !isCheck(color)) {
-                    isCheckMate = false;
-                    return;
-                }
-                match.history.pop();
-            });
-            if (!isCheckMate) return;
-        });
-        return isCheckMate;
-    }
-
-
 
     /**
      * Checks whether the player with the given playerId is participating on the given match. In this case this method
