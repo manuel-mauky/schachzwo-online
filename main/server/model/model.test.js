@@ -328,6 +328,14 @@ describe("Match", function(){
 
             assert.equal(match.history.length, 0);
         })
+
+        it("should work with addMove2", function(){
+           var result = match.addMove2(2,5,2,4);
+           assert.isTrue(result);
+           assert.equal(match.history.length, 1);
+
+           assert.deepEqual(match.history[0].figure, {color: model.Color.BLACK, type: model.FigureType.ROCKS});
+        });
     });
 
 

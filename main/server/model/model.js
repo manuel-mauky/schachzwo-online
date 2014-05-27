@@ -257,8 +257,8 @@ var Match = function (json) {
         this.playerBlack = new Player(json.playerBlack);
     }
 
-    this.currentSnapshotCache = undefined;
-    this.currentSnapshotCacheMarker = undefined;
+    var currentSnapshotCache = undefined;
+    var currentSnapshotCacheMarker = undefined;
 
     this.matchId = json.matchId;
     this.state = json.state || State.PREPARING;
@@ -317,14 +317,14 @@ var Match = function (json) {
      * Returns the current snapshot of this match.
      */
     this.getCurrentSnapshot = function(){
-        if(this.currentSnapshotCache && this.currentSnapshotCacheMarker == this.history.length){
-            return this.currentSnapshotCache;
+        if(currentSnapshotCache && currentSnapshotCacheMarker == this.history.length){
+            return currentSnapshotCache;
         }
         else {
-            this.currentSnapshotCache = this.generateSnapshot(this.history.length);
-            this.currentSnapshotCacheMarker = this.history.length;
+            currentSnapshotCache = this.generateSnapshot(this.history.length);
+            currentSnapshotCacheMarker = this.history.length;
         }
-        return this.currentSnapshotCache;
+        return currentSnapshotCache;
     };
 
     this.addMove = function(move){
@@ -343,6 +343,18 @@ var Match = function (json) {
         this.history.push(move);
 
         return true;
+    };
+
+    //TODO besserer Name!
+    this.addMove2 = function(fromCol, fromRow, toCol, toRow){
+        var figure = this.getCurrentSnapshot().getField(fromCol, fromRow).figure;
+        var move = new Move({
+            figure: figure,
+            from: {column: fromCol, row: fromRow},
+            to: {column: toCol, row: toRow}
+        });
+        return this.addMove(move);
+
     };
 
     /**

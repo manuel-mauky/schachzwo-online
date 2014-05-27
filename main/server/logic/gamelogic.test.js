@@ -94,4 +94,27 @@ describe("gamelogic", function () {
     describe("getValidMoves",function(){
 
     });
+
+    describe("isCheckMate",function(){
+
+        beforeEach(function(){
+           match = modelFactory.createEmptyMatch(BoardSize.BIG);
+           match.playerBlack = {playerId: 1, name: 'player1'};
+           match.playerWhite=  {playerId: 2, name: 'player2'};
+           logic = new GameLogic(match);
+        });
+
+        it("should blah ", function(){
+            //alle moves die zum gewünschen zustand führen hintereinander ausführen
+           match.addMove2(2,7,2,6);
+
+            //Reihe von Zügen, die zum Ausgangszustand für verschiedene Situationen führen
+            //aufstellen
+            
+
+            //liefert true oder false
+            logic.isCheckMate(Color.BLACK);
+        });
+
+    });
 });
