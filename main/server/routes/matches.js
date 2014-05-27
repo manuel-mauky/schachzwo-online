@@ -10,6 +10,7 @@ var storeProvider = require("../store/store-provider");
 var sse = require("../messaging/sse");
 var message = require('../messaging/message');
 var GameLogic = require("../logic/gamelogic").GameLogic;
+var CheckType = require("../logic/gamelogic").CheckType;
 var BoardAccessor = require('../logic/board-accessor');
 
 var restUtils = require("./rest-utils");
@@ -276,7 +277,6 @@ route.post("/:id/moves", function (req, res) {
             });
         };
 
-
         var move;
 
         try {
@@ -285,18 +285,13 @@ route.post("/:id/moves", function (req, res) {
             return moveFailed(res, 'Move can not be applied because the request is invalid.');
         }
 
-        var gl = new GameLogic(match);
-
-        if (gl.isValidMove(playerId, move)) {
+        if (new GameLogic(match).isValidMove(playerId, move)) {
             match.addMove(move);
             store.updateMatch(match, function (err, match) {
                 if (err || !match) {
                     return moveFailed(res, 'Move can not be applied because the move is invalid.');
                 }
-
-                //TODO send specific message for each client
-                sse.sendMessage(message.UPDATE, match.matchId);
-
+                sendMoveMessages(match);
                 res.statusCode = 201;
                 return res.json(move);
             });
@@ -354,6 +349,42 @@ var matchError401 = function (req, res) {
         });
 
 };
+
+var sendMoveMessages = function(match) {
+
+    var gameLogic = new GameLogic(match);
+
+    var sendMessages = function(color) {
+
+        var checkType = gameLogic.getCheckType(color);
+        var self = color == model.Color.WHITE ? match.playerWhite : match.playerBlack;
+        var opponent = color == model.Color.WHITE ? match.playerBlack : match.playerWhite;
+
+        if (checkType == CheckType.CHECK) {
+            sse.sendMessage(message.IS_IN_CHECK, match.matchId, self.playerId);
+        }
+
+        if (checkType == CheckType.CHECK_MATE) {
+            sse.sendMessage(message.HAS_WON_BY_CHECK_MATE, match.matchId, self.playerId);
+            sse.sendMessage(message.HAS_LOST_BY_CHECK_MATE, match.matchId, opponent.playerId);
+        }
+
+        if (checkType == CheckType.CHECK_FINISH) {
+            sse.sendMessage(message.HAS_WON_BY_CHECK_TARGET, match.matchId, self.playerId);
+            sse.sendMessage(message.HAS_LOST_BY_CHECK_TARGET, match.matchId, opponent.playerId);
+        }
+
+        if (checkType == CheckType.CHECK_FINISH_BOTH) {
+            sse.sendMessage(message.HAS_WON_BY_CHECK_TARGET, match.matchId, self.playerId);
+            sse.sendMessage(message.HAS_LOST_BY_CHECK_TARGET, match.matchId, opponent.playerId);
+        }
+    };
+
+    sse.sendMessage(message.UPDATE, match.matchId);
+    sendMessages('white');
+    sendMessages('black');
+};
+
 
 //Export route
 module.exports.route = route;
