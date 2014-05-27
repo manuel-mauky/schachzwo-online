@@ -38,6 +38,13 @@
                 <a class="btn btn-danger" role="button" href="#">Aufgeben</a>
             </div>
 
+            <div>
+
+                <span ng-show="onlooker">Du bist ein Zaungast</span>
+                <span ng-show="match.state != 'preparing' && itsMyTurn">Du bist am Zug</span>
+                <span ng-show="match.state == 'preparing'">Auf Gegner warten ...</span>
+            </div>
+
         </form>
 
     </div>

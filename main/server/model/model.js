@@ -385,6 +385,8 @@ var Match = function (json) {
      * Any player that is added after that (meaning that black and white are already set) won't be added
      * to the game. This method will return <code>false</code> in this case.
      *
+     * If all players are added, then the match state changes from <code>State.PREPARING</code> to <code>State.PLAYING</code>.
+     *
      * @param player the player that should be added, either as Player instance or JSON
      * @returns {boolean} <code>true</code> when a player was successfully added, otherwise <code>false</code>
      */
@@ -399,6 +401,10 @@ var Match = function (json) {
             return true;
         }else if(!this.playerWhite){
             this.playerWhite = player;
+
+            if (State.PREPARING == this.state) {
+                this.state = State.PLAYING;
+            }
             return true;
         }
 
