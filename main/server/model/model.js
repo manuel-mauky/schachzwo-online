@@ -347,7 +347,8 @@ var Match = function (json) {
 
     //TODO besserer Name!
     this.addMove2 = function(fromCol, fromRow, toCol, toRow){
-        var figure = this.getCurrentSnapshot().getField(fromCol, fromRow).figure;
+        var field = this.getCurrentSnapshot().getField(fromCol, fromRow);
+        var figure = field.figure;
         var move = new Move({
             figure: figure,
             from: {column: fromCol, row: fromRow},
