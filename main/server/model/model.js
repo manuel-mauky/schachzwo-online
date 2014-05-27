@@ -336,18 +336,29 @@ var Match = function (json) {
                 return false;
             }
         }
-
-        //todo error handling
-        //figur auf schachbrett vorhanden
-        //zielfeld gültig -> validator
+        var fieldFrom = this.getCurrentSnapshot().getFieldFromPosition(move.from);
+        var fieldTo = this.getCurrentSnapshot().getFieldFromPosition(move.to);
+        if(JSON.stringify(fieldFrom.figure) != JSON.stringify(move.figure)){
+            throw new Error("This Move from" + JSON.stringify(move.from) + " to " + JSON.stringify(move.to) + " with figure " + JSON.stringify(move.figure) + " is invalid!");
+        }
+        var BoardAcessor = require("../logic/board-accessor");
+        var acessor = new BoardAcessor(this);
+        var fields = acessor.getRangeFor(move.from.column,move.from.row);
+        var valid = false;
+        fields.forEach(function(element){
+            if(element.column == move.to.column && element.row == move.to.row) valid = true;
+        });
+        if(!valid){
+            throw new Error("The Figure" + JSON.stringify(move.figure) + " cannot move from " + JSON.stringify(move.from) + " to " + JSON.stringify(move.to));
+        }
         this.history.push(move);
-
         return true;
     };
 
     //TODO besserer Name!
     this.addMove2 = function(fromCol, fromRow, toCol, toRow){
-        var figure = this.getCurrentSnapshot().getField(fromCol, fromRow).figure;
+        var field = this.getCurrentSnapshot().getField(fromCol, fromRow);
+        var figure = field.figure;
         var move = new Move({
             figure: figure,
             from: {column: fromCol, row: fromRow},

@@ -218,8 +218,8 @@ describe("Match", function(){
         });
 
         it("should throw a error of the Move can not be performed form the current Snapshot",function(){
-            match.addMove(new Move({figure: {color: Color.WHITE,type: FigureType.ROCKS},from: {column: 5,row:4},to: {column: 1,row: 2}}));
             assert.throws(function(){
+                match.addMove(new Move({figure: {color: Color.WHITE,type: FigureType.ROCKS},from: {column: 5,row:4},to: {column: 4,row: 4}}));
                 match.generateSnapshot(1);
             });
         });
