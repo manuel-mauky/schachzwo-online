@@ -7,7 +7,7 @@ define(['angular', 'eventsource'], function (angular) {
 
             return function(matchId) {
 
-                return new EventSource(endpoint + "/" + matchId);
+                return new EventSource(endpoint + "/" + matchId + "/event-stream");
             };
         }]);
 });

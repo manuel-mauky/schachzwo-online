@@ -49,6 +49,19 @@ route.get("/:id", function (req, res) {
 });
 
 
+route.get("/:id/event-stream", function (req, res) {
+    var store = storeProvider.getStore();
+
+    store.getMatch(req.params.id, function (err, match) {
+        if (err || !match) {
+            return matchError404(req, res);
+        }
+        var playerId = restUtils.findPlayerId(req);
+        return sse.initClient(req, res, match.matchId, playerId);
+    });
+});
+
+
 route.post("/", function (req, res) {
 
     if (!req.body || !req.body.size) {
@@ -93,7 +106,7 @@ route.get("/:id/self", function (req, res) {
 
         var playerId = restUtils.findPlayerId(req);
         var gameLogic = new GameLogic(match);
-        if (!gameLogic.isPlayerParticipating( playerId)) {
+        if (!gameLogic.isPlayerParticipating(playerId)) {
             return matchError401(req, res);
         }
 
@@ -150,7 +163,7 @@ route.post("/:id/login", function (req, res) {
             return matchError404(req, res);
         }
 
-        if(match.isMatchFullyOccupied()){
+        if (match.isMatchFullyOccupied()) {
             res.statusCode = 409;
             return res.json(
                 {
@@ -175,7 +188,6 @@ route.post("/:id/login", function (req, res) {
         }
 
 
-
         var player = new model.Player({playerId: uuid.v4(), name: name});
         var successfullyAdded = match.addPlayer(player);
 
@@ -198,7 +210,7 @@ route.post("/:id/login", function (req, res) {
                 res.cookie(PLAYER_COOKIE_NAME, player.playerId);
 
 
-                if(match.isMatchFullyOccupied()){
+                if (match.isMatchFullyOccupied()) {
                     sse.sendMessage(message.GAME_STARTED, match.matchId);
                 }
 
@@ -299,8 +311,8 @@ route.post("/:id/moves", function (req, res) {
 
 route.get("/:id/threats", function (req, res) {
     var store = storeProvider.getStore();
-    store.getMatch(req.params.id, function(err, match){
-        if(err || !match){
+    store.getMatch(req.params.id, function (err, match) {
+        if (err || !match) {
             return matchError404(req, res);
         }
 
@@ -310,8 +322,8 @@ route.get("/:id/threats", function (req, res) {
 
 route.get("/:id/valid-moves", function (req, res) {
     var store = storeProvider.getStore();
-    store.getMatch(req.params.id, function(err, match){
-        if(err || !match){
+    store.getMatch(req.params.id, function (err, match) {
+        if (err || !match) {
             return matchError404(req, res);
         }
 

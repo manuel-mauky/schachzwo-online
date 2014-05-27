@@ -18,6 +18,7 @@ define(['angular'], function(angular) {
 
                     console.log("redirect to: " + path);
 
+
                     $location.path(path);
 
                 });

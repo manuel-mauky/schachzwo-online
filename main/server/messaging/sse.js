@@ -20,10 +20,13 @@ module.exports.initClient = function (req, res, matchId, playerId) {
     res.writeHead(200, {
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache',
-        'Connection': 'keep-alive'
+        'Access-Control-Allow-Origin': '*'
     });
 
     var clientId = Object.keys(clients).length;
+
+    res.write(":" + Array(2049).join(" ") + "\n"); //for IE
+    res.write("retry: 2000\n");
 
     clients[clientId] =
     {
