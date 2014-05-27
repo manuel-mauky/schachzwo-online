@@ -26,23 +26,23 @@ module.exports.GameLogic = function GameLogic(match) {
      * If color is not set, it takes the Color from the active Player
      * @type {getCheckType}
      */
-    var getCheckType = this.getCheckType = function(color){
+    var getCheckType = this.getCheckType = function (color) {
         if (!color) color = match.getColorOfActivePlayer();
         var board = match.getCurrentSnapshot();
         var zenithField = getZenithPosition(color, board);
 
         //Schach Ziel
-        if(accessor.isOrigin(zenithField.position.collumn,zenithField.position.row)){
+        if (accessor.isOrigin(zenithField.position.collumn, zenithField.position.row)) {
             var enemyZenithField;
-            if(color == Color.BLACK){
-                enemyZenithField =  getZenithPosition(Color.WHITE, board);
+            if (color == Color.BLACK) {
+                enemyZenithField = getZenithPosition(Color.WHITE, board);
             }
             else {
-                enemyZenithField =  getZenithPosition(Color.BLACK, board);
+                enemyZenithField = getZenithPosition(Color.BLACK, board);
             }
-            enemyZenithRange = accessor.getRangeFor(enemyZenithField.position.collumn,enemyZenithField.position.row);
-            enemyZenithRange.forEach(function(element){
-                if(accessor.isOrigin(enemyZenithField.position.collumn,enemyZenithField.position.row)){
+            enemyZenithRange = accessor.getRangeFor(enemyZenithField.position.collumn, enemyZenithField.position.row);
+            enemyZenithRange.forEach(function (element) {
+                if (accessor.isOrigin(enemyZenithField.position.collumn, enemyZenithField.position.row)) {
                     return CheckType.CHECK_FINISH_BOTH;
                 }
             });
@@ -59,7 +59,7 @@ module.exports.GameLogic = function GameLogic(match) {
 
             //zenith bewegen
             zenithRange.forEach(function (element) {
-                if(!isCheckMate) return;
+                if (!isCheckMate) return;
                 match.history.push(new model.Move({figure: board.getFieldFromPosition(zenithField.position).figure, from: zenithField.position, to: element}));
                 var threaten = accessor.getThreatenPositions(element.column, element.row);
                 if (threaten.length == 0) {
@@ -73,7 +73,7 @@ module.exports.GameLogic = function GameLogic(match) {
             zenithThreadenPositions.forEach(function (enemyField) {
                 var enemyThreatenPositions = accessor.getThreatenPositions(enemyField.column, enemyField.row);
                 enemyThreatenPositions.forEach(function (element) {
-                    if(!isCheckMate) return;
+                    if (!isCheckMate) return;
                     match.history.push(new model.Move({figure: board.getFieldFromPosition(element).figure, from: element, to: enemyField}));
                     if (accessor.getThreatenPositions(zenithField.column, zenithField.row).length == 0) {
                         isCheckMate = false;
@@ -89,7 +89,7 @@ module.exports.GameLogic = function GameLogic(match) {
                 console.log(enemyField);
                 var enemyRangeList = accessor.getRangeFor(enemyField.column, enemyField.row);
                 enemyRangeList.forEach(function (element) {
-                    if(!isCheckMate) return;
+                    if (!isCheckMate) return;
                     match.history.push(new model.Move({figure: board.getFieldFromPosition(enemyField).figure, from: enemyField, to: element}));
                     var threaten = accessor.getThreatenPositions(element.column, element.row);
                     if (threaten > 0 && !isCheck(color)) {
@@ -164,9 +164,10 @@ module.exports.GameLogic = function GameLogic(match) {
      * @returns {boolean}
      */
     this.isPlayerParticipating = function (playerId) {
-        if(playerId){
-            return (playerId == match.playerBlack.playerId || playerId == match.playerWhite.playerId);
-        }else{
+        if (playerId) {
+            return ((match.playerBlack && playerId == match.playerBlack.playerId) ||
+                (match.playerWhite && playerId == match.playerWhite.playerId));
+        } else {
             return false;
         }
     };

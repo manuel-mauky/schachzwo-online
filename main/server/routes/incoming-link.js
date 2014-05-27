@@ -6,7 +6,7 @@ var restUtils = require("./rest-utils");
 
 var route = express.Router();
 
-var GameLogic = require("../logic/gamelogic");
+var GameLogic = require("../logic/gamelogic").GameLogic;
 
 var storeProvider = require("../store/store-provider");
 
