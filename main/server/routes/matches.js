@@ -8,7 +8,7 @@ var model = require("../model/model");
 
 var storeProvider = require("../store/store-provider");
 var sse = require("../sse/sse");
-var GameLogic = require("../logic/gamelogic");
+var GameLogic = require("../logic/gamelogic").GameLogic;
 var BoardAccessor = require('../logic/board-accessor');
 
 var restUtils = require("./rest-utils");

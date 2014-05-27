@@ -841,8 +841,8 @@ describe("isThreatenFrom",function(){
             return board;
         };
 
-        assert.equal(accessor.getThreatenFields(3,3).length,0);
-        assert.equal(accessor.getThreatenFields(1,2).length,0);
+        assert.equal(accessor.getThreatenPositions(3,3).length,0);
+        assert.equal(accessor.getThreatenPositions(1,2).length,0);
     });
 
 
@@ -850,7 +850,7 @@ describe("isThreatenFrom",function(){
     it("should return two Rocks and a Knight",function(){
         board.getField(2,2).figure = new Figure({type: FigureType.ROCKS, color: Color.BLACK});
 
-        var list = accessor.getThreatenFields(2,2);
+        var list = accessor.getThreatenPositions(2,2);
 
         assert.equal(list.length,3);
         assert.include(list,{column: 1, row: 1});
@@ -860,7 +860,7 @@ describe("isThreatenFrom",function(){
 
     it("should return empty list on figure with same color",function(){
         board.getField(2,2).figure = new Figure({type: FigureType.ROCKS, color: Color.WHITE});
-        assert.equal(accessor.getThreatenFields(2,2).length,0);
+        assert.equal(accessor.getThreatenPositions(2,2).length,0);
     });
 
     it("should include an enemy zenith", function(){
@@ -868,7 +868,7 @@ describe("isThreatenFrom",function(){
         board.getField(2,2).figure = new Figure({type: FigureType.ROCKS, color: Color.WHITE}); // myself
         board.getField(1, 3).figure = new Figure({type: FigureType.ZENITH, color: Color.BLACK});
 
-        var list = accessor.getThreatenFields(2,2);
+        var list = accessor.getThreatenPositions(2,2);
 
         assert.equal(list.length, 1);
         assert.include(list, {column: 1, row: 3});
@@ -884,7 +884,7 @@ describe("isThreatenFrom",function(){
         board.getField(3,6).figure = new Figure({type: FigureType.ROCKS, color: Color.BLACK});
         board.getField(5,6).figure = new Figure({type: FigureType.ROCKS, color: Color.WHITE});
 
-        var list = accessor.getThreatenFields(4,5);
+        var list = accessor.getThreatenPositions(4,5);
 
         assert.equal(list.length,2);
         assert.include(list,{column: 5, row: 3});

@@ -7,12 +7,15 @@ var assert = require("chai").assert;
 
 var accessor = require("./board-accessor");
 var model = require("./../model/model");
-var GameLogic = require("./gamelogic");
+var gameLogic = require("./gamelogic");
 
 var Color = model.Color;
 var FigureType = model.FigureType;
+var Position = model.Position;
 var Figure = model.Figure;
 var BoardSize = model.BoardSize;
+var CheckType = gameLogic.CheckType;
+var GameLogic = gameLogic.GameLogic;
 
 var modelFactory = require("./../model/model-factory.js");
 
@@ -25,10 +28,6 @@ describe("gamelogic", function () {
     beforeEach(function () {
         match = modelFactory.createMatch(model.BoardSize.SMALL);
         board = match.getCurrentSnapshot();
-        // mocking the getCurrentSnapshot
-        match.getCurrentSnapshot = function(){
-            return board;
-        };
         logic = new GameLogic(match);
     });
 
@@ -43,26 +42,26 @@ describe("gamelogic", function () {
         });
     });
 
-    describe("isCheck",function() {
-        it("should return false on empty Bord", function () {
-            assert.equal(logic.isCheck(Color.BLACK), false);
-            assert.equal(logic.isCheck(Color.WHITE), false);
+    describe("getCheckType",function() {
+        it("should return CheckType.NONE on empty Bord", function () {
+            assert.equal(logic.getCheckType(Color.BLACK), CheckType.NONE);
+            assert.equal(logic.getCheckType(Color.WHITE), CheckType.NONE);
         });
-        it("should return false if Zenit is not threaden", function () {
-            board.getField(3, 0).figure = undefined;
-            board.getField(3, 6).figure = undefined;
-            board.getField(2, 3).figure = new Figure({type: FigureType.ZENITH, color: Color.WHITE});
-            board.getField(4, 3).figure = new Figure({type: FigureType.ZENITH, color: Color.BLACK});
-            assert.equal(logic.isCheck(Color.BLACK), false);
-            assert.equal(logic.isCheck(Color.WHITE), false);
+        it("should return CheckType.NONE if Zenit is not threaden", function () {
+            match.history.push(new model.Move({figure: board.getField(3,0).figure, from: new Position({column: 3, row: 0}), to: new Position({column: 2, row: 3})}));
+            match.history.push(new model.Move({figure: board.getField(3,6).figure, from: new Position({column: 3, row: 6}), to: new Position({column: 4, row: 3})}));
+            assert.equal(logic.getCheckType(Color.BLACK), CheckType.NONE);
+            assert.equal(logic.getCheckType(Color.WHITE), CheckType.NONE);
+            match.history.pop();
+            match.history.pop();
         });
-        it("should return true if Zenit is threaden from Rocks and Knight", function () {
-            board.getField(3, 0).figure = undefined;
-            board.getField(3, 6).figure = undefined;
-            board.getField(2, 4).figure = new Figure({type: FigureType.ZENITH, color: Color.WHITE});
-            board.getField(2, 2).figure = new Figure({type: FigureType.ZENITH, color: Color.BLACK});
-            assert.equal(logic.isCheck(Color.BLACK), true);
-            assert.equal(logic.isCheck(Color.WHITE), true);
+        it("should return CheckType.CHECK if Zenit is threaden from Rocks and Knight", function () {
+            match.history.push(new model.Move({figure: board.getField(3,0).figure, from: new Position({column: 3, row: 0}), to: new Position({column: 2, row: 4})}));
+            match.history.push(new model.Move({figure: board.getField(3,6).figure, from: new Position({column: 3, row: 6}), to: new Position({column: 2, row: 2})}));
+            assert.equal(logic.getCheckType(Color.BLACK), CheckType.CHECK);
+            assert.equal(logic.getCheckType(Color.WHITE), CheckType.CHECK);
+            match.history.pop();
+            match.history.pop();
         });
     });
 
