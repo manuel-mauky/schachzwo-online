@@ -103,16 +103,145 @@ describe("gamelogic", function () {
            logic = new GameLogic(match);
         });
 
-        it("should blah ", function(){
-            //alle moves die zum gewünschen zustand führen hintereinander ausführen
-           match.addMove2(2,7,2,6);
 
-            //Reihe von Zügen, die zum Ausgangszustand für verschiedene Situationen führen
-            //aufstellen
-            
+        it("should not be checkMate : protect Zenith by moving figure", function(){
+           match.addMove2(3,7,3,5);
+           match.addMove2(2,1,2,3);
+           match.addMove2(8,2,6,4);
+           match.addMove2(5,1,5,3);
+           match.addMove2(6,4,7,3);
 
-            //liefert true oder false
-            logic.isCheckMate(Color.BLACK);
+           // white Zenith is in check, but not checkmate because there are moves available to
+           // protect the Zenith without moving the Zenith
+
+            assert.equal(logic.getCheckType(Color.WHITE), CheckType.CHECK);
+            assert.notEqual(logic.getCheckType(Color.WHITE), CheckType.CHECK_MATE);
+        });
+
+        it("should not be checkMate : protect Zenith by taking threatening figure", function(){
+            match.addMove2(3,7,3,5);
+            match.addMove2(2,1,2,3);
+            match.addMove2(8,2,6,4);
+            match.addMove2(5,1,5,3);
+            match.addMove2(6,4,7,3);
+
+            // white Zenith is in check, but not checkmate because there are moves available to
+            // protect the Zenith without moving the Zenith
+
+            match.addMove2(7,0,6,2);
+            match.addMove2(7,8,6,6);
+            match.addMove2(0,1,0,2);
+            match.addMove2(6,6,4,5);
+            match.addMove2(0,2,0,3);
+            match.addMove2(4,5,3,3);
+            match.addMove2(7,1,7,2);
+            match.addMove2(6,7,6,5);
+            match.addMove2(4,1,4,2);
+            match.addMove2(7,3,6,2);
+
+            //The White Zenith is now in check and can't move
+            //The man can take the threatening woman of player black to protect the Zenith
+
+            assert.equal(logic.getCheckType(Color.WHITE), checkType.CHECK);
+            assert.notEqual(logic.getCheckType(Color.WHITE), checkType.CHECK_MATE);
+
+        });
+
+        it("should not be checkMate : protect Zenith with moving Belief", function(){
+
+            match.addMove2(3,7,3,5);
+            match.addMove2(2,1,2,3);
+            match.addMove2(8,2,6,4);
+            match.addMove2(5,1,5,3);
+            match.addMove2(6,4,7,3);
+
+            // white Zenith is in check, but not checkmate because there are moves available to
+            // protect the Zenith without moving the Zenith
+
+            match.addMove2(7,0,6,2);
+            match.addMove2(7,8,6,6);
+            match.addMove2(0,1,0,2);
+            match.addMove2(6,6,4,5);
+            match.addMove2(0,2,0,3);
+            match.addMove2(4,5,3,3);
+            match.addMove2(7,1,7,2);
+            match.addMove2(6,7,6,5);
+            match.addMove2(4,1,4,2);
+            match.addMove2(7,3,6,2);
+
+            //The White Zenith is now in check and can't move
+            //The man can take the threatening woman of player black to protect the Zenith
+
+            match.addMove2(8,0,6,2);
+            match.addMove2(3,8,3,7);
+            match.addMove2(4,2,4,3);
+            match.addMove2(6,8,6,7);
+            match.addMove2(3,0,8,5);
+            match.addMove2(6,7,8,5);
+            match.addMove2(5,3,5,4);
+            match.addMove2(6,5,5,4);
+            match.addMove2(6,2,7,3);
+            match.addMove2(3,7,7,3);
+
+            //Zenith is now in check and can't move
+            //Other figure e.g. Belief has to be moved to protect Zenith
+
+            assert.equal(logic.getCheckType(Color.WHITE), checkType.CHECK);
+            assert.notEqual(logic.getCheckType(Color.WHITE), checkType.CHECK_MATE);
+
+        });
+
+        it("should be checkMate", function(){
+            match.addMove2(3,7,3,5);
+            match.addMove2(2,1,2,3);
+            match.addMove2(8,2,6,4);
+            match.addMove2(5,1,5,3);
+            match.addMove2(6,4,7,3);
+
+            // white Zenith is in check, but not checkmate because there are moves available to
+            // protect the Zenith without moving the Zenith
+
+            match.addMove2(7,0,6,2);
+            match.addMove2(7,8,6,6);
+            match.addMove2(0,1,0,2);
+            match.addMove2(6,6,4,5);
+            match.addMove2(0,2,0,3);
+            match.addMove2(4,5,3,3);
+            match.addMove2(7,1,7,2);
+            match.addMove2(6,7,6,5);
+            match.addMove2(4,1,4,2);
+            match.addMove2(7,3,6,2);
+
+            //The White Zenith is now in check and can't move
+            //The man can take the threatening woman of player black to protect the Zenith
+
+            match.addMove2(8,0,6,2);
+            match.addMove2(3,8,3,7);
+            match.addMove2(4,2,4,3);
+            match.addMove2(6,8,6,7);
+            match.addMove2(3,0,8,5);
+            match.addMove2(6,7,8,5);
+            match.addMove2(5,3,5,4);
+            match.addMove2(6,5,5,4);
+            match.addMove2(6,2,7,3);
+            match.addMove2(3,7,7,3);
+
+            //White Zenith is now in check and can't move
+            //Other figure e.g. Belief has to be moved to protect white Zenith
+
+            match.addMove2(5,0,6,2);
+            match.addMove2(8,8,6,7);
+            match.addMove2(0,6,0,7);
+            match.addMove2(6,7,5,6);
+            match.addMove2(8,1,8,3);
+            match.addMove2(5,4,4,3);
+            match.addMove2(0,0,0,1);
+            match.addMove2(7,3,6,2);
+
+            //Player white's Zenith can't move and is player White is checkmate
+
+            assert.equal(logic.getCheckType(Color.WHITE), checkType.CHECK);
+            assert.equal(logic.getCheckType(Color.WHITE), checkType.CHECK_MATE);
         });
 
     });
