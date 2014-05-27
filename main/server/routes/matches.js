@@ -7,15 +7,14 @@ var modelFactory = require("../model/model-factory.js");
 var model = require("../model/model");
 
 var storeProvider = require("../store/store-provider");
-var sse = require("../sse/sse");
+var sse = require("../messaging/sse");
+var message = require('../messaging/message');
 var GameLogic = require("../logic/gamelogic").GameLogic;
 var BoardAccessor = require('../logic/board-accessor');
 
 var restUtils = require("./rest-utils");
 
 var uuid = require("node-uuid");
-
-var sse = require("../sse/sse");
 
 var route = express.Router();
 
@@ -200,7 +199,7 @@ route.post("/:id/login", function (req, res) {
 
 
                 if(match.isMatchFullyOccupied()){
-                    sse.sendMessage(sse.SSEMessage.GAME_STARTED, match.matchId);
+                    sse.sendMessage(message.GAME_STARTED, match.matchId);
                 }
 
 
@@ -284,7 +283,7 @@ route.post("/:id/moves", function (req, res) {
                 }
 
                 //TODO send specific message for each client
-                sse.sendMessage(sse.SSEMessage.UPDATE, match.matchId);
+                sse.sendMessage(message.UPDATE, match.matchId);
 
                 res.statusCode = 201;
                 return res.json(move);

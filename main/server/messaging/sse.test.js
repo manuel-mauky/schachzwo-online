@@ -7,6 +7,7 @@ var request = require("request");
 
 var app = require('../../app').app;
 var sse = require('./sse');
+var message = require('./message');
 var matches = require('../routes/matches');
 var matchStore = require("../store/inmemory-store");
 
@@ -39,7 +40,7 @@ describe('SSE tests', function () {
            var source = new EventSource("http://localhost:8000/matches/" + createdMatch.matchId);
 
            source.addEventListener("message", function (event) {
-               assert.equal(event.data, sse.SSEMessage.GAME_STARTED);
+               assert.equal(event.data, message.GAME_STARTED);
                done();
            }, false);
 
@@ -57,22 +58,22 @@ describe('SSE tests', function () {
 
     });
 
-    it("should send messages to all clients of the game", function (done) {
+    it("should send messaging to all clients of the game", function (done) {
 
         var source = new EventSource("http://localhost:8000/matches/" + match.matchId);
 
         source.addEventListener("message", function (event) {
-            assert.equal(event.data, sse.SSEMessage.UPDATE);
+            assert.equal(event.data, message.UPDATE);
             done();
         }, false);
 
         setTimeout(function () {
-            sse.sendMessage(sse.SSEMessage.UPDATE, match.matchId);
+            sse.sendMessage(message.UPDATE, match.matchId);
         }, 10);
     });
 
 
-    it("should not send messages to clients of other games", function (done) {
+    it("should not send messaging to clients of other games", function (done) {
 
         matchStore.createMatch({
             size: 9,
@@ -88,7 +89,7 @@ describe('SSE tests', function () {
             }, false);
 
             setTimeout(function () {
-                sse.sendMessage(sse.SSEMessage.UPDATE, match.matchId);
+                sse.sendMessage(message.UPDATE, match.matchId);
             }, 10);
 
             setTimeout(function () {
@@ -98,7 +99,7 @@ describe('SSE tests', function () {
         });
     });
 
-    it("should send private messages only to specific clients", function (done) {
+    it("should send private messaging only to specific clients", function (done) {
 
         var clientPlayer1 = new EventSource("http://localhost:8000/matches/" + match.matchId, {
             headers: {
@@ -107,18 +108,18 @@ describe('SSE tests', function () {
         });
 
         clientPlayer1.addEventListener("message", function (event) {
-            assert.equal(event.data, sse.SSEMessage.HAS_WON_BY_CHECK_MATE);
+            assert.equal(event.data, message.HAS_WON_BY_CHECK_MATE);
             done();
         }, false);
 
         setTimeout(function () {
-            sse.sendMessage(sse.SSEMessage.HAS_WON_BY_CHECK_MATE, match.matchId, '1');
+            sse.sendMessage(message.HAS_WON_BY_CHECK_MATE, match.matchId, '1');
         }, 10);
 
 
     });
 
-    it("should not send private messages to the opponent or spectator", function (done) {
+    it("should not send private messaging to the opponent or spectator", function (done) {
 
         var listener = function (event) {
             assert.fail(undefined, undefined, "The message should not have been received.");
@@ -139,7 +140,7 @@ describe('SSE tests', function () {
 
 
         setTimeout(function () {
-            sse.sendMessage(sse.SSEMessage.HAS_LOST_BY_CHECK_MATE, match.matchId, '2');
+            sse.sendMessage(message.HAS_LOST_BY_CHECK_MATE, match.matchId, '2');
 
         }, 10);
 
