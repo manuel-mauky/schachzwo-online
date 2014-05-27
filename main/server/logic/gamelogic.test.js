@@ -257,8 +257,36 @@ describe("gamelogic", function () {
             logic = new GameLogic(match);
         });
 
-        it("should ...", function(){
+        it("should result in Check Finish Both", function(){
 
+            match.addMove2(4,7,4,5);
+            match.addMove2(3,1,3,3);
+            match.addMove2(4,8,4,7);
+            match.addMove2(4,0,3,1);
+            match.addMove2(4,7,5,6);
+            match.addMove2(3,1,4,2);
+            match.addMove2(5,6,5,5);
+            match.addMove2(4,2,4,3);
+            match.addMove2(5,5,4,4);
+            match.addMove2(4,3,4,4);
+
+            assert.equal(logic.getCheckType(Color.BLACK), CheckType.CHECK_FINISH_BOTH);
+            assert.equal(logic.getCheckType(Color.WHITE), CheckType.CHECK_FINISH_BOTH);
+        });
+
+        it("should result in Check Finish for player black", function(){
+
+            match.addMove2(4,7,4,5);
+            match.addMove2(3,1,3,3);
+            match.addMove2(4,8,4,7);
+            match.addMove2(2,1,2,3);
+            match.addMove2(4,7,5,6);
+            match.addMove2(4,1,4,2);
+            match.addMove2(5,6,5,5);
+            match.addMove2(2,3,2,4);
+            match.addMove2(5,5,4,4);
+
+            assert.equal(logic.getCheckType(Color.BLACK), CheckType.CHECK_FINISH);
         });
     });
 });

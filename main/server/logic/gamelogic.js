@@ -32,7 +32,7 @@ module.exports.GameLogic = function GameLogic(match) {
         var zenithField = getZenithPosition(color, board);
 
         //Schach Ziel
-        if (accessor.isOrigin(zenithField.position.collumn, zenithField.position.row)) {
+        if (accessor.isOrigin(zenithField.position.column, zenithField.position.row)) {
             var enemyZenithField;
             if (color == Color.BLACK) {
                 enemyZenithField = getZenithPosition(Color.WHITE, board);
@@ -40,9 +40,9 @@ module.exports.GameLogic = function GameLogic(match) {
             else {
                 enemyZenithField = getZenithPosition(Color.BLACK, board);
             }
-            enemyZenithRange = accessor.getRangeFor(enemyZenithField.position.collumn, enemyZenithField.position.row);
+            enemyZenithRange = accessor.getRangeFor(enemyZenithField.position.column, enemyZenithField.position.row);
             enemyZenithRange.forEach(function (element) {
-                if (accessor.isOrigin(enemyZenithField.position.collumn, enemyZenithField.position.row)) {
+                if (accessor.isOrigin(enemyZenithField.position.column, enemyZenithField.position.row)) {
                     return CheckType.CHECK_FINISH_BOTH;
                 }
             });
@@ -51,11 +51,11 @@ module.exports.GameLogic = function GameLogic(match) {
 
         //Schach / Schachmatt
         else {
-            var zenithThreadenPositions = accessor.getThreatenPositions(zenithField.position.column, zenithField.position.row);
+            var zenithThreatenPositions = accessor.getThreatenPositions(zenithField.position.column, zenithField.position.row);
             var zenithRange = accessor.getRangeFor(zenithField.position.column, zenithField.position.row);
             var isCheckMate = true;
 
-            if (zenithThreadenPositions.length == 0) return CheckType.NONE;
+            if (zenithThreatenPositions.length == 0) return CheckType.NONE;
 
             //zenith bewegen
             zenithRange.forEach(function (element) {
@@ -70,7 +70,7 @@ module.exports.GameLogic = function GameLogic(match) {
             if (!isCheckMate) return CheckType.CHECK;
 
             //figuren schlagen
-            zenithThreadenPositions.forEach(function (enemyField) {
+            zenithThreatenPositions.forEach(function (enemyField) {
                 var enemyThreatenPositions = accessor.getThreatenPositions(enemyField.column, enemyField.row);
                 enemyThreatenPositions.forEach(function (element) {
                     if (!isCheckMate) return;
@@ -84,8 +84,8 @@ module.exports.GameLogic = function GameLogic(match) {
             });
             if (!isCheckMate) return CheckType.CHECK;
 
-            //figuren blokieren welche zenith bedrohen
-            zenithThreadenPositions.forEach(function (enemyField) {
+            //figuren blockieren welche zenith bedrohen
+            zenithThreatenPositions.forEach(function (enemyField) {
                 console.log(enemyField);
                 var enemyRangeList = accessor.getRangeFor(enemyField.column, enemyField.row);
                 enemyRangeList.forEach(function (element) {
@@ -107,12 +107,13 @@ module.exports.GameLogic = function GameLogic(match) {
      * Returns the Position of the Zenith of the given Playercolor on the given board
      * @type {getZenithPosition}
      */
-    var getZenithPosition = this.getZenithPosition = function (color, bord) {
+    this.getZenithPosition = getZenithPosition;
+    function getZenithPosition(color, board) {
         for (var i = 0; i < match.size; i++) {
             for (var j = 0; j < match.size; j++) {
-                var field = bord.getField(i, j);
+                var field = board.getField(i, j);
                 if (field.figure && field.figure.type == FigureType.ZENITH && field.figure.color == color) {
-                    return bord.getField(i, j);
+                    return board.getField(i, j);
                 }
             }
         }
