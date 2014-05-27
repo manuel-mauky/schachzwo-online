@@ -359,13 +359,17 @@ var Match = function (json) {
     this.addMove2 = function(fromCol, fromRow, toCol, toRow){
         var field = this.getCurrentSnapshot().getField(fromCol, fromRow);
         var figure = field.figure;
-        var move = new Move({
-            figure: figure,
-            from: {column: fromCol, row: fromRow},
-            to: {column: toCol, row: toRow}
-        });
-        return this.addMove(move);
 
+        if(figure){
+            var move = new Move({
+                figure: figure,
+                from: {column: fromCol, row: fromRow},
+                to: {column: toCol, row: toRow}
+            });
+            return this.addMove(move);
+        }else{
+            return false;
+        }
     };
 
     /**

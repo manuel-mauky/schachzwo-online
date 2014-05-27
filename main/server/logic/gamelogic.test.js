@@ -108,7 +108,7 @@ describe("gamelogic", function () {
 
             match.addMove2(3,7,3,5);
             match.addMove2(2,1,2,3);
-            match.addMove2(8,2,6,4);
+            match.addMove2(2,8,6,4);
             match.addMove2(5,1,5,3);
             match.addMove2(6,4,7,3);
 
@@ -123,7 +123,7 @@ describe("gamelogic", function () {
         it("should not be checkMate : protect Zenith by taking threatening figure", function(){
             match.addMove2(3,7,3,5);
             match.addMove2(2,1,2,3);
-            match.addMove2(8,2,6,4);
+            match.addMove2(2,8,6,4);
             match.addMove2(5,1,5,3);
             match.addMove2(6,4,7,3);
 
@@ -144,8 +144,8 @@ describe("gamelogic", function () {
             //The White Zenith is now in check and can't move
             //The man can take the threatening woman of player black to protect the Zenith
 
-            assert.equal(logic.getCheckType(Color.WHITE), checkType.CHECK);
-            assert.notEqual(logic.getCheckType(Color.WHITE), checkType.CHECK_MATE);
+            assert.equal(logic.getCheckType(Color.WHITE), CheckType.CHECK);
+            assert.notEqual(logic.getCheckType(Color.WHITE), CheckType.CHECK_MATE);
 
         });
 
@@ -153,7 +153,7 @@ describe("gamelogic", function () {
 
             match.addMove2(3,7,3,5);
             match.addMove2(2,1,2,3);
-            match.addMove2(8,2,6,4);
+            match.addMove2(2,8,6,4);
             match.addMove2(5,1,5,3);
             match.addMove2(6,4,7,3);
 
@@ -188,15 +188,15 @@ describe("gamelogic", function () {
             //Zenith is now in check and can't move
             //Other figure e.g. Belief has to be moved to protect Zenith
 
-            assert.equal(logic.getCheckType(Color.WHITE), checkType.CHECK);
-            assert.notEqual(logic.getCheckType(Color.WHITE), checkType.CHECK_MATE);
+            assert.equal(logic.getCheckType(Color.WHITE), CheckType.CHECK);
+            assert.notEqual(logic.getCheckType(Color.WHITE), CheckType.CHECK_MATE);
 
         });
 
         it("should be checkMate", function(){
             match.addMove2(3,7,3,5);
             match.addMove2(2,1,2,3);
-            match.addMove2(8,2,6,4);
+            match.addMove2(2,8,6,4);
             match.addMove2(5,1,5,3);
             match.addMove2(6,4,7,3);
 
@@ -242,9 +242,23 @@ describe("gamelogic", function () {
 
             //Player white's Zenith can't move and is player White is checkmate
 
-            assert.equal(logic.getCheckType(Color.WHITE), checkType.CHECK);
-            assert.equal(logic.getCheckType(Color.WHITE), checkType.CHECK_MATE);
+            assert.equal(logic.getCheckType(Color.WHITE), CheckType.CHECK);
+            assert.equal(logic.getCheckType(Color.WHITE), CheckType.CHECK_MATE);
         });
 
+    });
+
+    describe.skip("isCheckFinish",function() {
+
+        beforeEach(function () {
+            match = modelFactory.createEmptyMatch(BoardSize.BIG);
+            match.playerBlack = {playerId: 1, name: 'player1'};
+            match.playerWhite = {playerId: 2, name: 'player2'};
+            logic = new GameLogic(match);
+        });
+
+        it("should ...", function(){
+
+        });
     });
 });
