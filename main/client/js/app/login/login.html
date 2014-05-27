@@ -1,9 +1,13 @@
 <div class="jumbotron">
     <h1>Willkommen</h1>
 
-    <p>Spielernamen eingeben: <input type="text" ng-model="playerName"/></p>
+    <form id="login-form" ng-submit="login()">
 
-    <p>
-        <a class="btn btn-primary btn-lg" role="button" ng-click="login()">Zum Schachbrett</a>
-    </p>
+        <p>Spielernamen eingeben: <input type="text" ng-model="playerName"/></p>
+
+        <p>
+            <button type="submit" class="btn btn-primary btn-lg">Zum Schachbrett</button>
+        </p>
+
+    </form>
 </div>
