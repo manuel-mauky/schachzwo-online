@@ -27,7 +27,14 @@ define(['angular'], function (angular) {
                             update();
                         });
 
+
+                        sse(matchId).addEventListener("message", function (event) {
+                            console.log("update");
+                            update();
+                        }, false);
+
                     });
+
                 };
                 initMatch();
 
@@ -119,11 +126,6 @@ define(['angular'], function (angular) {
                     }
                     return [];
                 };
-
-                sse(matchId).addEventListener("message", function (event) {
-                    console.log("update");
-                    initMatch();
-                }, false);
 
             }]);
 

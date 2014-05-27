@@ -7,15 +7,14 @@ var modelFactory = require("../model/model-factory.js");
 var model = require("../model/model");
 
 var storeProvider = require("../store/store-provider");
-var sse = require("../sse/sse");
+var sse = require("../messaging/sse");
+var message = require('../messaging/message');
 var GameLogic = require("../logic/gamelogic").GameLogic;
 var BoardAccessor = require('../logic/board-accessor');
 
 var restUtils = require("./rest-utils");
 
 var uuid = require("node-uuid");
-
-var sse = require("../sse/sse");
 
 var route = express.Router();
 
@@ -46,6 +45,19 @@ route.get("/:id", function (req, res) {
             delete match.history;
             return res.json(match);
         }
+    });
+});
+
+
+route.get("/:id/event-stream", function (req, res) {
+    var store = storeProvider.getStore();
+
+    store.getMatch(req.params.id, function (err, match) {
+        if (err || !match) {
+            return matchError404(req, res);
+        }
+        var playerId = restUtils.findPlayerId(req);
+        return sse.initClient(req, res, match.matchId, playerId);
     });
 });
 
@@ -94,7 +106,7 @@ route.get("/:id/self", function (req, res) {
 
         var playerId = restUtils.findPlayerId(req);
         var gameLogic = new GameLogic(match);
-        if (!gameLogic.isPlayerParticipating( playerId)) {
+        if (!gameLogic.isPlayerParticipating(playerId)) {
             return matchError401(req, res);
         }
 
@@ -151,7 +163,7 @@ route.post("/:id/login", function (req, res) {
             return matchError404(req, res);
         }
 
-        if(match.isMatchFullyOccupied()){
+        if (match.isMatchFullyOccupied()) {
             res.statusCode = 409;
             return res.json(
                 {
@@ -176,7 +188,6 @@ route.post("/:id/login", function (req, res) {
         }
 
 
-
         var player = new model.Player({playerId: uuid.v4(), name: name});
         var successfullyAdded = match.addPlayer(player);
 
@@ -199,8 +210,8 @@ route.post("/:id/login", function (req, res) {
                 res.cookie(PLAYER_COOKIE_NAME, player.playerId);
 
 
-                if(match.isMatchFullyOccupied()){
-                    sse.sendMessage(sse.SSEMessage.GAME_STARTED, match.matchId);
+                if (match.isMatchFullyOccupied()) {
+                    sse.sendMessage(message.GAME_STARTED, match.matchId);
                 }
 
 
@@ -284,7 +295,7 @@ route.post("/:id/moves", function (req, res) {
                 }
 
                 //TODO send specific message for each client
-                sse.sendMessage(sse.SSEMessage.UPDATE, match.matchId);
+                sse.sendMessage(message.UPDATE, match.matchId);
 
                 res.statusCode = 201;
                 return res.json(move);
@@ -300,8 +311,8 @@ route.post("/:id/moves", function (req, res) {
 
 route.get("/:id/threats", function (req, res) {
     var store = storeProvider.getStore();
-    store.getMatch(req.params.id, function(err, match){
-        if(err || !match){
+    store.getMatch(req.params.id, function (err, match) {
+        if (err || !match) {
             return matchError404(req, res);
         }
 
@@ -311,8 +322,8 @@ route.get("/:id/threats", function (req, res) {
 
 route.get("/:id/valid-moves", function (req, res) {
     var store = storeProvider.getStore();
-    store.getMatch(req.params.id, function(err, match){
-        if(err || !match){
+    store.getMatch(req.params.id, function (err, match) {
+        if (err || !match) {
             return matchError404(req, res);
         }
 
