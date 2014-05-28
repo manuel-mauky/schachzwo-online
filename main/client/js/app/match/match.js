@@ -3,7 +3,7 @@
 define(['angular'], function (angular) {
 
     angular.module('match', []).
-        controller('matchCtrl', ['$scope', '$routeParams', '$http','endpoint', 'sse', 'matchLink',
+        controller('matchCtrl', ['$scope', '$routeParams', '$http', 'endpoint', 'sse', 'matchLink',
             function ($scope, $routeParams, $http, endpoint, sse, matchLink) {
 
                 var matchId = $routeParams.matchId;
@@ -18,6 +18,19 @@ define(['angular'], function (angular) {
                 $scope.itsMyTurn = false;
                 $scope.onlooker = false;
 
+
+                sse(matchId).addEventListener("message", function (event) {
+                    console.log(event.data);
+
+                    if (event.data == "update") {
+                        update();
+                    }
+                    if (event.data == "match-started") {
+                        initMatch();
+                    }
+                }, false);
+
+
                 var initMatch = function () {
 
                     $http.get(endpoint + "/" + matchId).success(function (match) {
@@ -26,22 +39,10 @@ define(['angular'], function (angular) {
                         $http.get(endpoint + "/" + matchId + "/self").success(function (player) {
                             $scope.self = player;
                             update();
-                        }).error(function() {
+                        }).error(function () {
                             $scope.onlooker = true;
                             update();
                         });
-
-                        sse(matchId).addEventListener("message", function (event) {
-                            console.log(event.data);
-
-                            if (event.data == "update") {
-                                update();
-                            }
-                            if (event.data == "match-started") {
-                                initMatch();
-                            }
-                        }, false);
-
                     });
 
                 };
@@ -131,6 +132,7 @@ define(['angular'], function (angular) {
 
                                 $http.post(endpoint + "/" + matchId + "/moves", move).success(function () {
                                     $scope.itsMyTurn = false;
+                                    update();
                                 });
                             }
                         });
