@@ -91,9 +91,9 @@ describe("modelFactory.createStartSnapshot", function () {
         assert.equal(snapshot.getField(0, 0).figure.type, FigureType.MAN);
         assert.equal(snapshot.getField(1, 0).figure.type, FigureType.KNIGHT);
         assert.equal(snapshot.getField(2, 0).figure.type, FigureType.WOMAN);
-        assert.equal(snapshot.getField(3, 0).figure.type, FigureType.FAITH);
+        assert.equal(snapshot.getField(3, 0).figure.type, FigureType.KNOWLEDGE)
         assert.equal(snapshot.getField(4, 0).figure.type, FigureType.ZENITH);
-        assert.equal(snapshot.getField(5, 0).figure.type, FigureType.KNOWLEDGE)
+        assert.equal(snapshot.getField(5, 0).figure.type, FigureType.FAITH);
         assert.equal(snapshot.getField(6, 0).figure.type, FigureType.WOMAN);
         assert.equal(snapshot.getField(7, 0).figure.type, FigureType.KNIGHT);
         assert.equal(snapshot.getField(8, 0).figure.type, FigureType.MAN);
@@ -101,9 +101,9 @@ describe("modelFactory.createStartSnapshot", function () {
         assert.equal(snapshot.getField(0, 8).figure.type, FigureType.MAN);
         assert.equal(snapshot.getField(1, 8).figure.type, FigureType.KNIGHT);
         assert.equal(snapshot.getField(2, 8).figure.type, FigureType.WOMAN);
-        assert.equal(snapshot.getField(3, 8).figure.type, FigureType.FAITH);
+        assert.equal(snapshot.getField(3, 8).figure.type, FigureType.KNOWLEDGE)
         assert.equal(snapshot.getField(4, 8).figure.type, FigureType.ZENITH);
-        assert.equal(snapshot.getField(5, 8).figure.type, FigureType.KNOWLEDGE)
+        assert.equal(snapshot.getField(5, 8).figure.type, FigureType.FAITH);
         assert.equal(snapshot.getField(6, 8).figure.type, FigureType.WOMAN);
         assert.equal(snapshot.getField(7, 8).figure.type, FigureType.KNIGHT);
         assert.equal(snapshot.getField(8, 8).figure.type, FigureType.MAN);

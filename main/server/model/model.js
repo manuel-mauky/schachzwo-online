@@ -258,12 +258,13 @@ var Match = function (json) {
     }
 
     var currentSnapshotCache = undefined;
-    var currentSnapshotCacheMarker = undefined;
+    var updateCurrentSnapshotCache = true;
 
     this.matchId = json.matchId;
     this.state = json.state || State.PREPARING;
 
     this.history = [];
+
     // for every json-entry create a move instance.
     if (Array.isArray(json.history)) {
         json.history.forEach(function (entry) {
@@ -311,18 +312,25 @@ var Match = function (json) {
             fieldFrom.figure = undefined;
         }
         return snapshot;
-    }
+    };
+
+    this.historyPop = function(){
+        updateCurrentSnapshotCache = true;
+        this.history.pop();
+    };
+
+    this.historyPush = function(element){
+        updateCurrentSnapshotCache = true;
+        this.history.push(element);
+    };
 
     /**
      * Returns the current snapshot of this match.
      */
     this.getCurrentSnapshot = function(){
-        if(currentSnapshotCache && currentSnapshotCacheMarker == this.history.length){
-            return currentSnapshotCache;
-        }
-        else {
+        if(updateCurrentSnapshotCache){
             currentSnapshotCache = this.generateSnapshot(this.history.length);
-            currentSnapshotCacheMarker = this.history.length;
+            updateCurrentSnapshotCache = false;
         }
         return currentSnapshotCache;
     };
@@ -352,6 +360,7 @@ var Match = function (json) {
             throw new Error("The Figure" + JSON.stringify(move.figure) + " cannot move from " + JSON.stringify(move.from) + " to " + JSON.stringify(move.to));
         }
         this.history.push(move);
+        updateCurrentSnapshotCache = true;
         return true;
     };
 

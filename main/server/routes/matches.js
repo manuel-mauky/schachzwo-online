@@ -369,12 +369,12 @@ var sendMoveMessages = function(match) {
             sse.sendMessage(message.HAS_LOST_BY_CHECK_MATE, match.matchId, opponent.playerId);
         }
 
-        if (checkType == CheckType.CHECK_FINISH) {
+        if (checkType == CheckType.CHECK_TARGET) {
             sse.sendMessage(message.HAS_WON_BY_CHECK_TARGET, match.matchId, self.playerId);
             sse.sendMessage(message.HAS_LOST_BY_CHECK_TARGET, match.matchId, opponent.playerId);
         }
 
-        if (checkType == CheckType.CHECK_FINISH_BOTH) {
+        if (checkType == CheckType.CHECK_TARGET_BOTH) {
             sse.sendMessage(message.HAS_WON_BY_CHECK_TARGET, match.matchId, self.playerId);
             sse.sendMessage(message.HAS_LOST_BY_CHECK_TARGET, match.matchId, opponent.playerId);
         }

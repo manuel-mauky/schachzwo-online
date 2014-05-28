@@ -102,15 +102,15 @@ var createBigStartSnapshot = function () {
     helper_fillWithEmptyFields(start.board, 9);
 
     helper_fillWithSpecialFigures(start, Color.WHITE, 0, 9);
-    start.getField(3, 0).figure = new model.Figure({color: Color.WHITE, type: FigureType.FAITH});
+    start.getField(3, 0).figure = new model.Figure({color: Color.WHITE, type: FigureType.KNOWLEDGE});
     start.getField(4, 0).figure = new model.Figure({color: Color.WHITE, type: FigureType.ZENITH});
-    start.getField(5, 0).figure = new model.Figure({color: Color.WHITE, type: FigureType.KNOWLEDGE});
+    start.getField(5, 0).figure = new model.Figure({color: Color.WHITE, type: FigureType.FAITH});
 
 
     helper_fillWithSpecialFigures(start, Color.BLACK, 8, 9);
-    start.getField(3, 8).figure = new model.Figure({color: Color.BLACK, type: FigureType.FAITH});
+    start.getField(3, 8).figure = new model.Figure({color: Color.BLACK, type: FigureType.KNOWLEDGE});
     start.getField(4, 8).figure = new model.Figure({color: Color.BLACK, type: FigureType.ZENITH});
-    start.getField(5, 8).figure = new model.Figure({color: Color.BLACK, type: FigureType.KNOWLEDGE});
+    start.getField(5, 8).figure = new model.Figure({color: Color.BLACK, type: FigureType.FAITH});
 
 
     helper_fillWithRocks(start, 9);
