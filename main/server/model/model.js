@@ -556,6 +556,24 @@ var Match = function (json) {
         return this.getColorOfActivePlayer() == colorOfPlayer;
     };
 
+
+    /**
+     * returns the playerId of the opponent relative to the given playerId.
+     * @param playerId
+     * @returns {*}
+     */
+    this.getOpponentPlayerId = function(playerId){
+        if(this.playerBlack && this.playerWhite){
+            if(this.playerBlack.playerId == playerId){
+                return this.playerWhite.playerId;
+            } else{
+                return this.playerBlack.playerId;
+            }
+        }else{
+            return undefined;
+        }
+    };
+
     return this;
 }
 

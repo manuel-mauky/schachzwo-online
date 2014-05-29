@@ -2,11 +2,14 @@
 
 var request = require('supertest');
 var assert = require("chai").assert;
-
+var sinon = require("sinon");
 
 var app = require('../../app').app;
 var model = require('../model/model');
 var modelFactory = require('../model/model-factory');
+
+var sse = require("../messaging/sse");
+var messages = require("../messaging/message");
 
 var storeProvider = require("../store/store-provider");
 storeProvider.activeStoreType = storeProvider.StoreType.INMEMORY;
@@ -602,9 +605,12 @@ describe('Mock REST API test /matches', function () {
 
     });
 
-    describe("PUT /matches/:matchId/draw",function(){
+    describe("PUT /matches/:matchId/draw", function () {
         var url;
         var match;
+        var sseSpy = sinon.spy();
+        sse.sendMessage = sseSpy;
+
         beforeEach(function (done) {
             matchStore.createMatch({
                     size: 7,
@@ -617,52 +623,65 @@ describe('Mock REST API test /matches', function () {
                 });
         });
 
-        it("should add a draw", function(done){
+        it("should add a draw", function (done) {
+
+
+
+
             request(app)
                 .put(url)
-                .send({"draw" : "offered"})
+                .send({"draw": "offered"})
                 .set('Authorization', matches.HTTP_AUTHORIZATION_METHOD + ' 1')
                 .expect(201)
-                .end(function(err){
-                    if(err) throw err;
+                .end(function (err) {
+                    if (err) throw err;
 
-                    matchStore.getMatch(match.matchId, function(err, match){
-                       if(err) throw err;
+                    assert.equal(sseSpy.lastCall.args[0], messages.DRAW_OFFERED);
+                    assert.equal(sseSpy.lastCall.args[1], match.matchId);
+                    assert.equal(sseSpy.lastCall.args[2], 2);
 
-                        assert.equal(match.history.length,1);
-                        var last = match.history[match.history.length -1];
+                    matchStore.getMatch(match.matchId, function (err, match) {
+                        if (err) throw err;
+
+                        assert.equal(match.history.length, 1);
+                        var last = match.history[match.history.length - 1];
 
                         assert.equal(last.color, model.Color.BLACK);
                         assert.equal(last.type, model.Draw.Types.Offered);
 
                         done();
                     });
+
+
                 });
         });
 
-        it("should accept a draw", function(done){
+        it("should accept a draw", function (done) {
             request(app)
                 .put(url)
                 .send({"draw": "offered"})
                 .set('Authorization', matches.HTTP_AUTHORIZATION_METHOD + ' 1')
                 .expect(201)
-                .end(function(err){
-                    if(err) throw err;
+                .end(function (err) {
+                    if (err) throw err;
 
                     request(app)
                         .put(url)
-                        .send({"draw":"accepted"})
+                        .send({"draw": "accepted"})
                         .set('Authorization', matches.HTTP_AUTHORIZATION_METHOD + ' 2')
                         .expect(201)
-                        .end(function(err){
-                            if(err) throw err;
+                        .end(function (err) {
+                            if (err) throw err;
 
+                            assert.equal(sseSpy.lastCall.args[0], messages.DRAW_ACCEPTED);
+                            assert.equal(sseSpy.lastCall.args[1], match.matchId);
+                            assert.equal(sseSpy.lastCall.args[2], 1);
 
-                            matchStore.getMatch(match.matchId, function(err, match){
-                                if(err) throw err;
+                            matchStore.getMatch(match.matchId, function (err, match) {
+                                if (err) throw err;
 
-                                assert.equal(match.history.length,2);
-                                var last = match.history[match.history.length -1];
+                                assert.equal(match.history.length, 2);
+                                var last = match.history[match.history.length - 1];
 
                                 assert.equal(last.color, model.Color.WHITE);
                                 assert.equal(last.type, model.Draw.Types.Accepted);
@@ -673,29 +692,33 @@ describe('Mock REST API test /matches', function () {
                 });
         });
 
-        it("should reject a draw", function(done){
+        it("should reject a draw", function (done) {
             request(app)
                 .put(url)
                 .send({"draw": "offered"})
                 .set('Authorization', matches.HTTP_AUTHORIZATION_METHOD + ' 1')
                 .expect(201)
-                .end(function(err){
-                    if(err) throw err;
+                .end(function (err) {
+                    if (err) throw err;
 
                     request(app)
                         .put(url)
-                        .send({"draw":"rejected"})
+                        .send({"draw": "rejected"})
                         .set('Authorization', matches.HTTP_AUTHORIZATION_METHOD + ' 2')
                         .expect(201)
-                        .end(function(err){
-                            if(err) throw err;
+                        .end(function (err) {
+                            if (err) throw err;
+
+                            assert.equal(sseSpy.lastCall.args[0], messages.DRAW_REJECTED);
+                            assert.equal(sseSpy.lastCall.args[1], match.matchId);
+                            assert.equal(sseSpy.lastCall.args[2], 1);
 
 
-                            matchStore.getMatch(match.matchId, function(err, match){
-                                if(err) throw err;
+                            matchStore.getMatch(match.matchId, function (err, match) {
+                                if (err) throw err;
 
-                                assert.equal(match.history.length,2);
-                                var last = match.history[match.history.length -1];
+                                assert.equal(match.history.length, 2);
+                                var last = match.history[match.history.length - 1];
 
                                 assert.equal(last.color, model.Color.WHITE);
                                 assert.equal(last.type, model.Draw.Types.Rejected);
@@ -706,7 +729,7 @@ describe('Mock REST API test /matches', function () {
                 });
         });
 
-        it("should fail when the request is bad", function(done){
+        it("should fail when the request is bad", function (done) {
 
             request(app)
                 .put(url)
@@ -715,22 +738,22 @@ describe('Mock REST API test /matches', function () {
                 .expect(400, done);
         });
 
-        it("should not add a draw when already a draw exists", function(done){
+        it("should not add a draw when already a draw exists", function (done) {
             match.offerDraw();
 
-            matchStore.updateMatch(match, function(err, match){
+            matchStore.updateMatch(match, function (err, match) {
                 request(app)
                     .put(url)
-                    .send({"draw":"offered"})
+                    .send({"draw": "offered"})
                     .set('Authorization', matches.HTTP_AUTHORIZATION_METHOD + ' 2')
                     .expect(403, done);
             });
         });
 
-        it("should not add a draw when it's not the users turn", function(done){
+        it("should not add a draw when it's not the users turn", function (done) {
             request(app)
                 .put(url)
-                .send({"draw" : "offered"})
+                .send({"draw": "offered"})
                 .set('Authorization', matches.HTTP_AUTHORIZATION_METHOD + ' 2')
                 .expect(401, done);
         });
@@ -738,7 +761,7 @@ describe('Mock REST API test /matches', function () {
         it("should return 404 when there is no match with this id", function (done) {
             request(app)
                 .post('/matches/someId/draw')
-                .send({"draw" : "offered"})
+                .send({"draw": "offered"})
                 .expect(404, done);
         });
 

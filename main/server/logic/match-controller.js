@@ -257,16 +257,20 @@ module.exports.createDraw = function (matchId, playerId, drawRequest, callbacks)
         }
 
         var createdDraw;
+        var sseMessage;
 
         switch (drawRequest.draw) {
             case "offered":
                 createdDraw = match.offerDraw();
+                sseMessage = message.DRAW_OFFERED;
                 break;
             case "accepted":
                 createdDraw = match.acceptDraw();
+                sseMessage = message.DRAW_ACCEPTED;
                 break;
             case "rejected":
                 createdDraw = match.rejectDraw();
+                sseMessage = message.DRAW_REJECTED;
                 break;
             default:
                 callWhenDefined(callbacks.onError);
@@ -274,17 +278,17 @@ module.exports.createDraw = function (matchId, playerId, drawRequest, callbacks)
         }
 
         if (createdDraw) {
-            store.updateMatch(match, function(err, match){
-               if(err){
-                   callWhenDefined(callbacks.onError);
-               }else{
+            store.updateMatch(match, function (err, match) {
+                if (err) {
+                    callWhenDefined(callbacks.onError);
+                } else {
+                    sse.sendMessage(sseMessage, match.matchId, match.getOpponentPlayerId(playerId));
                     callWhenDefined(callbacks.onSuccess, createdDraw);
-               }
+                }
             });
         } else {
             callWhenDefined(callbacks.onDrawInvalid);
         }
-
     });
 
 };
