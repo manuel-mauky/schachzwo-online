@@ -157,7 +157,8 @@ module.exports.GameLogic = function GameLogic(match) {
             return false;
         }
 
-
+        //Doppelte Validierung ausschalten
+/*
         var board = match.getCurrentSnapshot();
         var field = board.getField(move.from.column, move.from.row);
         if (JSON.stringify(field.figure) != JSON.stringify(move.figure)) return false;
@@ -167,6 +168,8 @@ module.exports.GameLogic = function GameLogic(match) {
             if (element.column == move.to.column && element.row == move.to.row) isValid = true;
         });
         return isValid;
+        */
+        return true;
     };
 
     /**
