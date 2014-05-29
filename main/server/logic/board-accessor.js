@@ -256,10 +256,17 @@ module.exports = function BoardAccessor(match) {
         var straightResult = findTargetsInDirections(currentFigure.color, column, row, straightDirections);
         result = result.concat(straightResult);
 
-        if (!match.historyContainsMoveToPositionWithFigureType(row, column,FigureType.MAN)) {
-            var tmp = result.concat(findTargetsInRange(column, row, 2));
-            tmp.forEach(function(element){
-               if(result.indexOf(element) < 0) result.push(element);
+        if (!match.historyContainsMoveToPositionWithFigureType(column,row,FigureType.MAN)) {
+            var tmp = findTargetsInRange(column, row, 2);
+            tmp.forEach(function(e){
+                var contains = false;
+                for(var i=0; i < result.length; i++){
+                    if(result[i].column == e.column && result[i].row == e.row){
+                        contains = true;
+                        break;
+                    }
+                }
+                if(!contains) result.push(e);
             });
         }
 
