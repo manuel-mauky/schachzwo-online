@@ -172,7 +172,7 @@ describe("getRangeFor", function () {
 
     });
 
-    describe("Man", function (){
+    describe.skip("Man", function (){
 
         beforeEach(function () {
             match = modelFactory.createEmptyMatch(model.BoardSize.SMALL);
@@ -202,6 +202,7 @@ describe("getRangeFor", function () {
             var range = accessor.getRangeFor(1,4);
 
             assert.isArray(range);
+            assert.equal(range.length, 16);
 
             // include the column without the current field (1,4)
             assert.include(range, {column: 1, row: 0});
@@ -228,6 +229,8 @@ describe("getRangeFor", function () {
             board.getField(1, 2).figure = new Figure({type:FigureType.ROCKS, color: Color.WHITE}); // enemy figure on the same column
 
             var range = accessor.getRangeFor(1,4);
+
+            assert.equal(range.length, 11);
 
             assert.notInclude(range, {column:4, row: 4});
             assert.notInclude(range, {column:5, row: 4});
@@ -287,6 +290,8 @@ describe("getRangeFor", function () {
 
             var range = accessor.getRangeFor(0, 8);
 
+            assert.equal(range.length, 20);
+
             assert.include(range, {column: 1, row: 6});
             assert.include(range, {column: 2, row: 6});
             assert.include(range, {column: 2, row: 7});
@@ -312,6 +317,9 @@ describe("getRangeFor", function () {
             board.getField(1,7).figure = new Figure({type:FigureType.ROCKS, color: Color.BLACK});
 
             var range = accessor.getRangeFor(0, 8);
+
+            assert.equal(range.length, 18);
+
 
             assert.include(range, {column: 1, row: 6});
             assert.notInclude(range, {column: 2, row: 6}); // this field isn't reachable
@@ -354,6 +362,8 @@ describe("getRangeFor", function () {
             board.getField(1,4).figure = new Figure({type:FigureType.WOMAN, color: Color.BLACK});
 
             var range = accessor.getRangeFor(1,4);
+
+            assert.equal(range.length, 12);
 
             assert.include(range, {column: 0, row: 3});
             assert.include(range, {column: 2, row: 5});
