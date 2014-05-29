@@ -193,6 +193,10 @@ module.exports = function BoardAccessor(match) {
             rowTmp--;
         }
 
+        if (isOutOfBoard(column, rowTmp)) {
+            return [];
+        }
+
         if (isOrigin(column, rowTmp)) {
             var left = board.getField(column - 1, rowTmp).figure;
             var right = board.getField(column + 1, rowTmp).figure;

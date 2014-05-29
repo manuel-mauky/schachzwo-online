@@ -121,6 +121,18 @@ describe("getRangeFor", function () {
             assert.include(range, {column: 4, row: 3});
         });
 
+
+        it("should be empty when rocks is on top of board", function () {
+
+            board.getField(3, 0).figure = new Figure({type: FigureType.ROCKS, color: Color.BLACK});
+
+            var range = accessor.getRangeFor(3, 0);
+
+            assert.isArray(range);
+            assert.equal(range.length, 0);
+        });
+
+
         it("should be empty when there is a figure in front of the rocks", function () {
 
             board.getField(3, 2).figure = new Figure({type: FigureType.ROCKS, color: Color.WHITE});
