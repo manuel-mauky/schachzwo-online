@@ -23,82 +23,17 @@ define(['angular'], function (angular) {
                     console.log(event.data);
 
                     if (event.data == "update") {
+                        clearSelections();
                         update();
                     }
                     if (event.data == "match-started") {
                         initMatch();
                     }
+
+                    if (event.data == "check" || event.data == "lost-check-mate") {
+                        markThreateningFields();
+                    }
                 }, false);
-
-
-                var initMatch = function () {
-
-                    $http.get(endpoint + "/" + matchId).success(function (match) {
-                        $scope.match = match;
-
-                        $http.get(endpoint + "/" + matchId + "/self").success(function (player) {
-                            $scope.self = player;
-                            update();
-                        }).error(function () {
-                            $scope.onlooker = true;
-                            update();
-                        });
-                    });
-
-                };
-                initMatch();
-
-
-                var update = function () {
-                    $http.get(endpoint + "/" + matchId + "/board").success(function (board) {
-                        clearSelections();
-                        $scope.board = [];
-
-                        board.forEach(function (field) {
-                            if (field.figure) {
-                                $scope.board.push(field);
-                            }
-                        });
-
-                        $http.get(endpoint + "/" + matchId + "/moves").success(function (moves) {
-                            $scope.moves = moves;
-                            $scope.itsMyTurn = !$scope.onlooker && (moves.length + ($scope.self.color == 'white' ? 1 : 0)) % 2 == 0;
-                        });
-
-                        $http.get(endpoint + "/" + matchId + "/valid-moves").success(function (moves) {
-                            validMoves = moves;
-                        });
-
-                    });
-                };
-
-                var clearSelections = function () {
-                    selectedField = {};
-                    $scope.board = $scope.board.filter(function (field) {
-                        return !field.selected && !field.accessible;
-
-                    });
-                };
-
-                var getField = function (row, column) {
-                    for (var i in $scope.board) {
-                        var field = $scope.board[i];
-                        if (field.position.row === row && field.position.column === column) {
-                            return field;
-                        }
-                    }
-                };
-
-                var getValidMoves = function (field) {
-
-                    for (var i in validMoves) {
-                        var entry = validMoves[i];
-                        if (entry.field.position.row == field.position.row && entry.field.position.column == field.position.column) {
-                            return entry.fields;
-                        }
-                    }
-                    return [];
-                };
 
 
                 $scope.onSelect = function (row, column) {
@@ -109,7 +44,7 @@ define(['angular'], function (angular) {
                     var field = getField(row, column);
 
                     if (field && field.figure && field.figure.color == $scope.self.color) {
-                        clearSelections();
+                        clearSelections(true);
                         selectedField = field;
                         $scope.board.push({position: {row: row, column: column}, selected: true});
 
@@ -138,6 +73,111 @@ define(['angular'], function (angular) {
                         });
                     }
                 };
+
+                $scope.draw = function(action) {
+                    $http.put(endpoint + "/" + matchId + "/draw", {draw: action });
+                };
+
+                var initMatch = function () {
+
+                    $http.get(endpoint + "/" + matchId).success(function (match) {
+                        $scope.match = match;
+
+                        $http.get(endpoint + "/" + matchId + "/self").success(function (player) {
+                            $scope.self = player;
+                            update();
+                        }).error(function () {
+                            $scope.onlooker = true;
+                            update();
+                        });
+                    });
+
+                };
+
+
+                var update = function () {
+                    $http.get(endpoint + "/" + matchId + "/board").success(function (board) {
+
+                        $scope.board = [];
+
+                        board.forEach(function (field) {
+                            if (field.figure) {
+                                $scope.board.push(field);
+                            }
+                        });
+
+                        $http.get(endpoint + "/" + matchId + "/moves").success(function (moves) {
+                            $scope.moves = moves;
+                            $scope.itsMyTurn = !$scope.onlooker && (moves.length + ($scope.self.color == 'white' ? 1 : 0)) % 2 == 0;
+                        });
+
+                        $http.get(endpoint + "/" + matchId + "/valid-moves").success(function (moves) {
+                            validMoves = moves;
+                        });
+
+                    });
+                };
+
+                var clearSelections = function (onlyOwnSelections) {
+                    selectedField = {};
+                    $scope.board = $scope.board.filter(function (field) {
+                        return !field.selected && !field.accessible && (onlyOwnSelections || !field.threatening);
+
+                    });
+                };
+
+                var getField = function (row, column) {
+                    for (var i in $scope.board) {
+                        var field = $scope.board[i];
+                        if (field.position.row === row && field.position.column === column) {
+                            return field;
+                        }
+                    }
+                };
+
+                var getOwnZenith = function () {
+                    for (var i in $scope.board) {
+                        var field = $scope.board[i];
+                        if (field.figure.color == $scope.self.color && field.figure.type == "zenith") {
+                            return field;
+                        }
+                    }
+                };
+
+                var getValidMoves = function (field) {
+
+                    for (var i in validMoves) {
+                        var entry = validMoves[i];
+                        if (entry.field.position.row == field.position.row && entry.field.position.column == field.position.column) {
+                            return entry.fields;
+                        }
+                    }
+                    return [];
+                };
+
+
+                var markThreateningFields = function () {
+
+                    var ownZenith = getOwnZenith();
+                    if (ownZenith) {
+                        $http.get(endpoint + "/" + matchId + "/threats").success(function (threats) {
+
+                            for (var i in threats) {
+                                var entry = threats[i];
+
+                                if (entry.field.position.row == ownZenith.position.row && entry.field.position.column == ownZenith.position.column) {
+                                    entry.fields.forEach(function (pos) {
+                                        $scope.board.push({position: {row: pos.row, column: pos.column}, threatening: true});
+
+                                    });
+                                    return;
+                                }
+                            }
+                        });
+                    }
+                };
+
+                initMatch();
 
             }]);
 

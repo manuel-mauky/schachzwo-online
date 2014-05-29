@@ -1,6 +1,7 @@
 /**
  * Created by Erik Jähne on 09.05.2014.
  */
+"use strict";
 
 var model = require("./../model/model");
 var BoardAccessor = require("./board-accessor");
@@ -15,7 +16,7 @@ var CheckType = {
     CHECK_MATE: "check_mate",
     CHECK_TARGET: "check_target",
     CHECK_TARGET_BOTH: "check:target_both"
-}
+};
 
 module.exports.CheckType = CheckType;
 module.exports.GameLogic = function GameLogic(match) {
@@ -41,7 +42,7 @@ module.exports.GameLogic = function GameLogic(match) {
             else {
                 enemyZenithField = getZenithPosition(Color.BLACK, board);
             }
-            enemyZenithRange = accessor.getRangeFor(enemyZenithField.position.column, enemyZenithField.position.row);
+            var enemyZenithRange = accessor.getRangeFor(enemyZenithField.position.column, enemyZenithField.position.row);
             enemyZenithRange.forEach(function (element) {
                 if (accessor.isOrigin(element.column, element.row)) {
                     checkType = CheckType.CHECK_TARGET_BOTH;
@@ -148,17 +149,14 @@ module.exports.GameLogic = function GameLogic(match) {
             return false;
         }
 
-        if (match.getColorOfActivePlayer() == model.Color.BLACK) {
-            // blacks turn
-            if (match.playerBlack.playerId != playerId || move.figure.color == model.Color.WHITE) {
-                return false;
-            }
-        } else {
-            // whites turn
-            if (match.playerWhite.playerId != playerId || move.figure.color == model.Color.BLACK) {
-                return false;
-            }
+        if(!match.isPlayersTurn(playerId)){
+            return false;
         }
+
+        if(match.getColorOfActivePlayer() != move.figure.color){
+            return false;
+        }
+
 
         var board = match.getCurrentSnapshot();
         var field = board.getField(move.from.column, move.from.row);

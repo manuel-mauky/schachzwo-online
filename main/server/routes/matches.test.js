@@ -374,7 +374,6 @@ describe('Mock REST API test /matches', function () {
                     playerWhite: {playerId: 2, name: 'player2'}},
                 function (err, createdMatch) {
                     match = createdMatch;
-                    console.log("")
                     done();
                 });
         });
@@ -602,5 +601,179 @@ describe('Mock REST API test /matches', function () {
         });
 
     });
+
+    describe("PUT /matches/:matchId/draw",function(){
+        var url;
+        var match;
+        beforeEach(function (done) {
+            matchStore.createMatch({
+                    size: 7,
+                    playerBlack: {playerId: 1, name: 'player1'},
+                    playerWhite: {playerId: 2, name: 'player2'}},
+                function (err, createdMatch) {
+                    match = createdMatch;
+                    url = '/matches/' + createdMatch.matchId + "/draw";
+                    done();
+                });
+        });
+
+        it("should add a draw", function(done){
+            request(app)
+                .put(url)
+                .send({"draw" : "offered"})
+                .set('Authorization', matches.HTTP_AUTHORIZATION_METHOD + ' 1')
+                .expect(201)
+                .end(function(err){
+                    if(err) throw err;
+
+                    matchStore.getMatch(match.matchId, function(err, match){
+                       if(err) throw err;
+
+                        assert.equal(match.history.length,1);
+                        var last = match.history[match.history.length -1];
+
+                        assert.equal(last.color, model.Color.BLACK);
+                        assert.equal(last.type, model.Draw.Types.Offered);
+
+                        done();
+                    });
+                });
+        });
+
+        it("should accept a draw", function(done){
+            request(app)
+                .put(url)
+                .send({"draw": "offered"})
+                .set('Authorization', matches.HTTP_AUTHORIZATION_METHOD + ' 1')
+                .expect(201)
+                .end(function(err){
+                    if(err) throw err;
+
+                    request(app)
+                        .put(url)
+                        .send({"draw":"accepted"})
+                        .set('Authorization', matches.HTTP_AUTHORIZATION_METHOD + ' 2')
+                        .expect(201)
+                        .end(function(err){
+                            if(err) throw err;
+
+
+                            matchStore.getMatch(match.matchId, function(err, match){
+                                if(err) throw err;
+
+                                assert.equal(match.history.length,2);
+                                var last = match.history[match.history.length -1];
+
+                                assert.equal(last.color, model.Color.WHITE);
+                                assert.equal(last.type, model.Draw.Types.Accepted);
+
+                                done();
+                            });
+                        });
+                });
+        });
+
+        it("should reject a draw", function(done){
+            request(app)
+                .put(url)
+                .send({"draw": "offered"})
+                .set('Authorization', matches.HTTP_AUTHORIZATION_METHOD + ' 1')
+                .expect(201)
+                .end(function(err){
+                    if(err) throw err;
+
+                    request(app)
+                        .put(url)
+                        .send({"draw":"rejected"})
+                        .set('Authorization', matches.HTTP_AUTHORIZATION_METHOD + ' 2')
+                        .expect(201)
+                        .end(function(err){
+                            if(err) throw err;
+
+
+                            matchStore.getMatch(match.matchId, function(err, match){
+                                if(err) throw err;
+
+                                assert.equal(match.history.length,2);
+                                var last = match.history[match.history.length -1];
+
+                                assert.equal(last.color, model.Color.WHITE);
+                                assert.equal(last.type, model.Draw.Types.Rejected);
+
+                                done();
+                            });
+                        });
+                });
+        });
+
+        it("should fail when the request is bad", function(done){
+
+            request(app)
+                .put(url)
+                .send({"draw": "somethingelse"})
+                .set('Authorization', matches.HTTP_AUTHORIZATION_METHOD + ' 1')
+                .expect(400, done);
+        });
+
+        it("should not add a draw when already a draw exists", function(done){
+            match.offerDraw();
+
+            matchStore.updateMatch(match, function(err, match){
+                request(app)
+                    .put(url)
+                    .send({"draw":"offered"})
+                    .set('Authorization', matches.HTTP_AUTHORIZATION_METHOD + ' 2')
+                    .expect(403, done);
+            });
+        });
+
+        it("should not add a draw when it's not the users turn", function(done){
+            request(app)
+                .put(url)
+                .send({"draw" : "offered"})
+                .set('Authorization', matches.HTTP_AUTHORIZATION_METHOD + ' 2')
+                .expect(401, done);
+        });
+
+        it("should return 404 when there is no match with this id", function (done) {
+            request(app)
+                .post('/matches/someId/draw')
+                .send({"draw" : "offered"})
+                .expect(404, done);
+        });
+
+    });
+
+    describe('GET /matches/:matchId/captured-pieces', function () {
+
+        it("should return all captured pieces", function (done) {
+
+            var match = {
+                size: 7,
+                playerBlack: {playerId: 1, name: 'player1'},
+                playerWhite: {playerId: 2, name: 'player2'}};
+
+            matchStore.createMatch(match, function (err, match) {
+
+                request(app)
+                    .get('/matches/' + match.matchId + '/captured-pieces')
+                    .expect(200)
+                    .expect(function (res) {
+
+                        assert.isArray(res.body);
+                    })
+                    .end(done);
+
+            });
+        });
+
+        it("should return 404 when there is no match with this id", function (done) {
+            request(app)
+                .post('/matches/someId/captured-pieces')
+                .expect(404, done);
+        });
+
+    });
+
 
 });

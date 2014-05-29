@@ -18,6 +18,7 @@
             boardWhiteFieldColor: "#F8D48A",
             boardSelectedFieldColor: "rgba(61,158,255,0.6)",
             boardAccessibleFieldColor: "rgba(61,255,60,0.4)",
+            boardThreateningFieldColor: "rgba(255,60,60,0.6)",
             figureBlackColor: "#000000",
             figureWhiteColor: "#FFFFFF",
             figureBlackBorderColor: "gray",
@@ -108,6 +109,7 @@
             var boardWhiteFieldColor = this.options.boardWhiteFieldColor;
             var boardSelectedFieldColor = this.options.boardSelectedFieldColor;
             var boardAccessibleFieldColor = this.options.boardAccessibleFieldColor;
+            var boardThreateningFieldColor = this.options.boardThreateningFieldColor;
             var figureBlackColor = this.options.figureBlackColor;
             var figureWhiteColor = this.options.figureWhiteColor;
             var figureBlackBorderColor = this.options.figureBlackBorderColor;
@@ -297,6 +299,11 @@
                 if (field.accessible) {
                     fillFloor(this._transformRow(field.position.row), this._transformColumn(field.position.column), boardAccessibleFieldColor);
                 }
+
+                if (field.threatening) {
+                    fillFloor(this._transformRow(field.position.row), this._transformColumn(field.position.column), boardThreateningFieldColor);
+                }
+
                 if (field.selected) {
                     fillFloor(this._transformRow(field.position.row), this._transformColumn(field.position.column), boardSelectedFieldColor);
                 }

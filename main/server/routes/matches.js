@@ -2,20 +2,13 @@
 
 var express = require("express");
 
-
-var modelFactory = require("../model/model-factory.js");
-var model = require("../model/model");
+var matchController = require("../logic/match-controller");
 
 var storeProvider = require("../store/store-provider");
 var sse = require("../messaging/sse");
 var message = require('../messaging/message');
-var GameLogic = require("../logic/gamelogic").GameLogic;
-var CheckType = require("../logic/gamelogic").CheckType;
-var BoardAccessor = require('../logic/board-accessor');
 
 var restUtils = require("./rest-utils");
-
-var uuid = require("node-uuid");
 
 var route = express.Router();
 
@@ -23,34 +16,29 @@ var PLAYER_COOKIE_NAME = 'player_id';
 var HTTP_AUTHORIZATION_METHOD = "PLAYER_ID";
 
 route.get("/:id", function (req, res) {
-    var store = storeProvider.getStore();
 
-    store.getMatch(req.params.id, function (err, match) {
-        if (err || !match) {
-            return matchError404(req, res);
-        }
+    if (req.headers.accept == 'text/event-stream') {
+        registerSSE(req, res);
+        return;
+    }
 
-        if (req.headers.accept == 'text/event-stream') {
-            var playerId = restUtils.findPlayerId(req);
-            return sse.initClient(req, res, match.matchId, playerId);
-        } else {
-
-
-            if (match.playerBlack) {
-                delete match.playerBlack.playerId;
-            }
-            if (match.playerWhite) {
-                delete match.playerWhite.playerId;
-            }
-
-            delete match.history;
+    matchController.getMatchById(req.params.id, {
+        onSuccess: function (match) {
             return res.json(match);
+        },
+
+        onMatchNotFound: function () {
+            matchError404(req, res);
         }
     });
 });
 
 
 route.get("/:id/event-stream", function (req, res) {
+    registerSSE(req, res);
+});
+
+var registerSSE = function (req, res) {
     var store = storeProvider.getStore();
 
     store.getMatch(req.params.id, function (err, match) {
@@ -60,7 +48,7 @@ route.get("/:id/event-stream", function (req, res) {
         var playerId = restUtils.findPlayerId(req);
         return sse.initClient(req, res, match.matchId, playerId);
     });
-});
+}
 
 
 route.post("/", function (req, res) {
@@ -74,260 +62,223 @@ route.post("/", function (req, res) {
             });
     }
 
-    var store = storeProvider.getStore();
-
-    try {
-
-        store.createMatch(modelFactory.createMatch(req.body.size), function (err, match) {
-            if (err) {
-                res.statusCode = 400;
-                return res.json(err);
-            }
-
+    matchController.createMatch(req.body.size, {
+        onSuccess: function (match) {
             res.statusCode = 201;
-            res.header('Location', req.url + match.matchId);
-            delete match.history;
+            res.header("Location", req.url + match.matchId);
             return res.json(match);
-        });
-
-    } catch (err) {
-        res.statusCode = 400;
-        return res.json(err);
-    }
-
-});
-
-route.get("/:id/self", function (req, res) {
-    var store = storeProvider.getStore();
-
-    store.getMatch(req.params.id, function (err, match) {
-        if (err || !match) {
-            return matchError404(req, res);
+        },
+        onError: function (err) {
+            res.statusCode = 400;
+            return res.json(err);
         }
-
-        var playerId = restUtils.findPlayerId(req);
-        var gameLogic = new GameLogic(match);
-        if (!gameLogic.isPlayerParticipating(playerId)) {
-            return matchError401(req, res);
-        }
-
-        var player;
-
-        if (playerId == match.playerBlack.playerId) {
-            player = new model.Player(match.playerBlack);
-            player.color = model.Color.BLACK;
-        } else {
-            player = new model.Player(match.playerWhite);
-            player.color = model.Color.WHITE
-        }
-        return res.json(player);
     });
 
 });
 
+route.get("/:id/self", function (req, res) {
+
+    var playerId = restUtils.findPlayerId(req);
+
+    matchController.getPlayer(req.params.id, playerId, false, {
+        onSuccess: function (player) {
+            res.json(player);
+        },
+
+        onMatchNotFound: function () {
+            matchError404(req, res);
+        },
+
+        onPlayerNotFound: function () {
+            matchError401(req, res);
+        }
+    });
+});
+
 route.get("/:id/opponent", function (req, res) {
-    var store = storeProvider.getStore();
+    var playerId = restUtils.findPlayerId(req);
 
-    store.getMatch(req.params.id, function (err, match) {
+    matchController.getPlayer(req.params.id, playerId, true, {
+        onSuccess: function (player) {
+            res.json(player);
+        },
 
-        if (err || !match) {
-            return matchError404(req, res);
+        onMatchNotFound: function () {
+            matchError404(req, res);
+        },
+
+        onPlayerNotFound: function () {
+            matchError401(req, res);
         }
-
-        var gameLogic = new GameLogic(match);
-
-        var playerId = restUtils.findPlayerId(req);
-        if (!gameLogic.isPlayerParticipating(playerId)) {
-            return matchError401(req, res);
-        }
-
-        var player;
-
-        if (playerId == match.playerWhite.playerId) {
-            player = new model.Player(match.playerBlack);
-            player.color = model.Color.BLACK;
-            delete player.playerId;
-        } else {
-            player = new model.Player(match.playerWhite);
-            player.color = model.Color.WHITE;
-            delete player.playerId;
-        }
-        return res.json(player);
     });
 });
 
 
 route.post("/:id/login", function (req, res) {
-    var store = storeProvider.getStore();
-    store.getMatch(req.params.id, function (err, match) {
-        if (err || !match) {
-            return matchError404(req, res);
-        }
 
-        if (match.isMatchFullyOccupied()) {
-            res.statusCode = 409;
-            return res.json(
-                {
-                    name: 'Login failed',
-                    message: 'No more free places.'
-                });
-        }
-
-        var name;
-        if (req.body) {
-            if (req.body.name) {
-                name = req.body.name;
-            } else {
-                res.statusCode = 400;
-                return res.json(
-                    {
-                        name: "Bad login request",
-                        message: "No 'name' attribute in body found"
-                    }
-                );
+    var name;
+    if (req.body && req.body.name) {
+        name = req.body.name;
+    } else {
+        res.statusCode = 400;
+        return res.json(
+            {
+                name: "Bad login request",
+                message: "No 'name' attribute in body found"
             }
-        }
+        );
+    }
 
-
-        var player = new model.Player({playerId: uuid.v4(), name: name});
-        var successfullyAdded = match.addPlayer(player);
-
-        if (successfullyAdded) {
-
-            store.updateMatch(match, function (err, updatedMatch) {
-                if (err || !updatedMatch) {
-                    res.statusCode = 500;
-                    return res.json(
-                        {
-                            name: 'Login failed',
-                            message: 'Internal Server Error'
-                        });
-                }
-
-                player.color = (player.playerId == match.playerBlack.playerId
-                    ? model.Color.BLACK :
-                    model.Color.WHITE);
-
+    matchController.login(req.params.id, name,
+        {
+            onSuccess: function (player) {
                 res.cookie(PLAYER_COOKIE_NAME, player.playerId);
 
+                res.json(player);
+            },
 
-                if (match.isMatchFullyOccupied()) {
-                    sse.sendMessage(message.MATCH_STARTED, match.matchId);
-                }
+            onLoginFailed: function (message) {
+                res.statusCode = 409;
+                res.json(
+                    {
+                        name: 'Login failed',
+                        message: message
+                    });
+            },
 
+            onMatchNotFound: function () {
+                matchError404(req, res);
+            },
 
-                return res.json(player);
-            });
-
-        } else {
-            res.statusCode = 409;
-            return res.json(
-                {
-                    name: 'Login failed',
-                    message: 'No more free places.'
-                });
-        }
-
-    });
+            onError: function () {
+                res.statusCode = 500;
+                res.json(
+                    {
+                        name: 'Login failed',
+                        message: 'Internal Server Error'
+                    });
+            }
+        });
 });
 
 route.get("/:id/board", function (req, res) {
-    var store = storeProvider.getStore();
-    store.getMatch(req.params.id, function (err, match) {
-        if (err || !match) {
-            return matchError404(req, res);
+    matchController.getBoard(req.params.id, {
+        onSuccess: function (board) {
+            return res.json(board);
+        },
+        onMatchNotFound: function () {
+            matchError404(req, res);
         }
-
-        return  res.json(match.getCurrentSnapshot().board);
     });
 });
 
 route.get("/:id/moves", function (req, res) {
-    var store = storeProvider.getStore();
-    store.getMatch(req.params.id, function (err, match) {
-        if (err || !match) {
-            return matchError404(req, res);
+    matchController.getMoves(req.params.id, {
+        onSuccess: function (history) {
+            return res.json(history);
+        },
+        onMatchNotFound: function () {
+            matchError404(req, res);
         }
-
-        return  res.json(match.history);
     });
 });
 
 route.post("/:id/moves", function (req, res) {
-    var store = storeProvider.getStore();
-    store.getMatch(req.params.id, function (err, match) {
 
-        if (err || !match) {
-            return matchError404(req, res);
-        }
+    var playerId = restUtils.findPlayerId(req);
+    matchController.addMove(req.params.id, playerId, req.body, {
+        onSuccess: function (move) {
+            res.statusCode = 201;
+            return res.json(move);
+        },
 
+        onMatchNotFound: function () {
+            matchError404(req, res);
+        },
 
-        var playerId = restUtils.findPlayerId(req);
-        var gameLogic = new GameLogic(match);
+        onPlayerNotFound: function () {
+            matchError401(req, res);
+        },
 
-        if (!gameLogic.isPlayerParticipating(playerId)) {
-            return matchError401(req, res);
-        }
-
-        var moveFailed = function (res, message) {
+        onMoveFailed: function (message) {
             res.statusCode = 400;
             return res.json({
                 name: "Move failed",
                 message: message
             });
-        };
-
-        var move;
-
-        try {
-            move = new model.Move(req.body);
-        } catch (error) {
-            return moveFailed(res, 'Move can not be applied because the request is invalid.');
-        }
-
-        if (new GameLogic(match).isValidMove(playerId, move)) {
-            match.addMove(move);
-            store.updateMatch(match, function (err, match) {
-                if (err || !match) {
-                    return moveFailed(res, 'Move can not be applied because the move is invalid.');
-                }
-                sendMoveMessages(match);
-                res.statusCode = 201;
-                return res.json(move);
-            });
-
-        } else {
-            return moveFailed(res, 'Move can not be applied because the move is invalid.');
         }
 
     });
-
 });
 
 route.get("/:id/threats", function (req, res) {
-    var store = storeProvider.getStore();
-    store.getMatch(req.params.id, function (err, match) {
-        if (err || !match) {
-            return matchError404(req, res);
-        }
+    matchController.getThreats(req.params.id, {
+        onSuccess: function (threats) {
+            res.json(threats);
+        },
 
-        return res.json(new BoardAccessor(match).getThreats());
+        onMatchNotFound: function () {
+            matchError404(req, res);
+        }
     });
 });
 
 route.get("/:id/valid-moves", function (req, res) {
-    var store = storeProvider.getStore();
-    store.getMatch(req.params.id, function (err, match) {
-        if (err || !match) {
-            return matchError404(req, res);
-        }
+    matchController.getValidMoves(req.params.id, {
+        onSuccess: function (validMoves) {
+            res.json(validMoves);
+        },
 
-        return res.json(new BoardAccessor(match).getValidMoves());
+        onMatchNotFound: function () {
+            matchError404(req, res);
+        }
     });
 });
 
-//TODO GET /matches/:matchId/draw
-//TODO PUT /matches/:matchId/draw
+route.get("/:id/captured-pieces", function(req, res) {
+
+    matchController.getCapturedPieces(req.params.id, {
+        onSuccess: function (capturedPieces) {
+            res.json(capturedPieces);
+        },
+
+        onMatchNotFound: function () {
+            matchError404(req, res);
+        }
+    });
+
+});
+
+
+route.put("/:id/draw", function (req, res) {
+
+
+    var playerId = restUtils.findPlayerId(req);
+    matchController.createDraw(req.params.id, playerId, req.body, {
+        onSuccess: function (draw) {
+            res.statusCode = 201;
+            res.json(draw);
+        },
+
+        onNotAuthorized: function () {
+            matchError401(req, res);
+        },
+
+        onMatchNotFound: function () {
+            matchError404(req, res);
+        },
+
+        onError: function () {
+            res.statusCode = 400;
+            return res.json("Bad Request");
+        },
+
+        onDrawInvalid: function () {
+            res.statusCode = 403;
+            res.json("The draw request was invalid");
+        }
+    });
+});
 
 
 var matchError404 = function (req, res) {
@@ -349,42 +300,6 @@ var matchError401 = function (req, res) {
         });
 
 };
-
-var sendMoveMessages = function(match) {
-
-    var gameLogic = new GameLogic(match);
-
-    var sendMessages = function(color) {
-
-        var checkType = gameLogic.getCheckType(color);
-        var self = color == model.Color.WHITE ? match.playerWhite : match.playerBlack;
-        var opponent = color == model.Color.WHITE ? match.playerBlack : match.playerWhite;
-
-        if (checkType == CheckType.CHECK) {
-            sse.sendMessage(message.IS_IN_CHECK, match.matchId, self.playerId);
-        }
-
-        if (checkType == CheckType.CHECK_MATE) {
-            sse.sendMessage(message.HAS_WON_BY_CHECK_MATE, match.matchId, self.playerId);
-            sse.sendMessage(message.HAS_LOST_BY_CHECK_MATE, match.matchId, opponent.playerId);
-        }
-
-        if (checkType == CheckType.CHECK_TARGET) {
-            sse.sendMessage(message.HAS_WON_BY_CHECK_TARGET, match.matchId, self.playerId);
-            sse.sendMessage(message.HAS_LOST_BY_CHECK_TARGET, match.matchId, opponent.playerId);
-        }
-
-        if (checkType == CheckType.CHECK_TARGET_BOTH) {
-            sse.sendMessage(message.HAS_WON_BY_CHECK_TARGET, match.matchId, self.playerId);
-            sse.sendMessage(message.HAS_LOST_BY_CHECK_TARGET, match.matchId, opponent.playerId);
-        }
-    };
-
-    sse.sendMessage(message.UPDATE, match.matchId);
-    sendMessages('white');
-    sendMessages('black');
-};
-
 
 //Export route
 module.exports.route = route;

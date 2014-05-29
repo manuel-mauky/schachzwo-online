@@ -80,7 +80,7 @@ module.exports = function BoardAccessor(match) {
 
     };
 
-    var applyMethodToEatchFigureOnBoard = function (color, applyFunction) {
+    var applyMethodToEachFigureOnBoard = function (color, applyFunction) {
         if (!color) color = match.getColorOfActivePlayer();
         var result = new Array();
         for (var i = 0; i < match.size; i++) {
@@ -97,16 +97,30 @@ module.exports = function BoardAccessor(match) {
             }
         }
         return result;
-    }
-
-    //Pro Feld mit eigner Figur eine Liste von Spielfeldern mit gegnerischen Figuren, die eigene Figur bedrohen
-    var getThreats = this.getThreats = function (color) {
-        return applyMethodToEatchFigureOnBoard(color, getThreatenPositions);
     };
-    //Pro Feld mit eigener Figur eine Liste von gültigen Spielfeldern
+
+
+    var getThreats = this.getThreats = function (color) {
+        return applyMethodToEachFigureOnBoard(color, getThreatenPositions);
+    };
+
     var getValidMoves = this.getValidMoves = function (color) {
-        return applyMethodToEatchFigureOnBoard(color, getRangeFor);
-    }
+        return applyMethodToEachFigureOnBoard(color, getRangeFor);
+    };
+
+    var getCapturedPieces = this.getCapturedPieces = function () {
+        //TODO Erik
+        return [
+            {
+                number: 2,
+                piece: new model.Figure({color: model.Color.BLACK, type: model.FigureType.ROCKS})
+            },
+            {
+                number: 1,
+                piece: new model.Figure({color: model.Color.WHITE, type: model.FigureType.ROCKS})
+            }
+        ];
+    };
 
     var getThreatenPositions = this.getThreatenPositions = function (column, row) {
         var result = [];
