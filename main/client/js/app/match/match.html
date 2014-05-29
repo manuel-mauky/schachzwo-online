@@ -16,7 +16,7 @@
 
             <div class="form-group">
                 <!-- Button trigger modal -->
-                <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+                <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#link-modal">
                     Mitspieler einladen
                 </button>
 
@@ -49,13 +49,13 @@
 
     </div>
 
-    <!-- Modal -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <!-- Link Modal -->
+    <div class="modal fade" id="link-modal" tabindex="-1" role="dialog" aria-labelledby="link-modal-label" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="myModalLabel">Mitspieler einladen</h4>
+                    <h4 class="modal-title" id="link-modal-label">Mitspieler einladen</h4>
                 </div>
                 <div class="modal-body">
                     <p>
@@ -72,5 +72,28 @@
             </div>
         </div>
     </div>
+
+
+    <!-- Piece Exchange Modal -->
+    <div class="modal fade" id="exchange-modal" tabindex="-1" role="dialog" aria-labelledby="exchange-modal-label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="exchange-modal-label">Figur wechseln</h4>
+                </div>
+                <div class="modal-body">
+
+                    <p ng-repeat="piece in availablePieces">
+                        <a class="btn btn-primary" ng-click="exchangePiece(piece)" href="">{{piece.type}}</a>
+                    </p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
 
 </div>
