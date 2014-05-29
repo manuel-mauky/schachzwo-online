@@ -155,7 +155,12 @@ module.exports.getBoard = function(matchId, callbacks){
             return;
         }
 
-        callWhenDefined(callbacks.onSuccess,match.getCurrentSnapshot().board);
+        var board = match.getCurrentSnapshot().board.filter(
+            function(field) {
+                return !!field.figure;
+            });
+
+        callWhenDefined(callbacks.onSuccess, board);
     });
 };
 

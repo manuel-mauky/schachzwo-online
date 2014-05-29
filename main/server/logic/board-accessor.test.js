@@ -14,6 +14,7 @@ var model = require("./../model/model");
 var Color = model.Color;
 var FigureType = model.FigureType;
 var Figure = model.Figure;
+var Position = model.Position;
 
 var modelFactory = require("./../model/model-factory.js");
 
@@ -172,7 +173,7 @@ describe("getRangeFor", function () {
 
     });
 
-    describe.skip("Man", function (){
+    describe("Man", function (){
 
         beforeEach(function () {
             match = modelFactory.createEmptyMatch(model.BoardSize.SMALL);
@@ -197,7 +198,10 @@ describe("getRangeFor", function () {
         });
 
         it("should include the row and column", function(){
-            board.getField(1, 4).figure = new Figure({type:FigureType.MAN, color: Color.BLACK});
+            var figure = new Figure({type:FigureType.MAN, color: Color.BLACK});
+            board.getField(1, 4).figure = figure;
+            //fake a Move to simulate Movement of the Men to prevent special Movement of the Men form his start position
+            match.historyPush(new model.Move({figure: figure, from: new Position({column: 1, row: 3}), to: new Position({column: 1, row: 4})}));
 
             var range = accessor.getRangeFor(1,4);
 
@@ -223,14 +227,18 @@ describe("getRangeFor", function () {
 
 
         it("should not include fields behind an own or enemy figure in the way", function(){
-            board.getField(1, 4).figure = new Figure({type:FigureType.MAN, color: Color.BLACK});
+            var figure = new Figure({type:FigureType.MAN, color: Color.BLACK});
+            board.getField(1, 4).figure = figure;
 
-            board.getField(3, 4).figure = new Figure({type:FigureType.ROCKS, color: Color.BLACK}); // my own figure on the same row
+             board.getField(3, 4).figure = new Figure({type:FigureType.ROCKS, color: Color.BLACK}); // my own figure on the same row
             board.getField(1, 2).figure = new Figure({type:FigureType.ROCKS, color: Color.WHITE}); // enemy figure on the same column
+
+            //fake a Move to simulate Movement of the Men to prevent special Movement of the Men form his start position
+            match.historyPush(new model.Move({figure: figure, from: new Position({column: 1, row: 3}), to: new Position({column: 1, row: 4})}));
 
             var range = accessor.getRangeFor(1,4);
 
-            assert.equal(range.length, 11);
+            assert.equal(range.length, 10);
 
             assert.notInclude(range, {column:4, row: 4});
             assert.notInclude(range, {column:5, row: 4});
@@ -276,25 +284,16 @@ describe("getRangeFor", function () {
             assert.notInclude(range, {column: 3, row: 3});
         });
 
-        it("should include two fields diagonal from the start position when it wasn't moved yet for big boards", function(){
-            // we create a big board for this test.
-            match = modelFactory.createEmptyMatch(model.BoardSize.BIG);
-            board = modelFactory.createEmptySnapshot(model.BoardSize.BIG);
-            // mocking the getCurrentSnapshot
-            match.getCurrentSnapshot = function(){
-                return board;
-            };
-            accessor = new BoardAccessor(match);
+        it("should include two fields diagonal from the start position when it wasn't moved yet", function(){
 
-            board.getField(0,8).figure = new Figure({type:FigureType.MAN, color: Color.BLACK});
+            board.getField(0,6).figure = new Figure({type:FigureType.MAN, color: Color.BLACK});
 
-            var range = accessor.getRangeFor(0, 8);
+            var range = accessor.getRangeFor(0, 6);
 
-            assert.equal(range.length, 20);
+            assert.equal(range.length, 16);
 
-            assert.include(range, {column: 1, row: 6});
-            assert.include(range, {column: 2, row: 6});
-            assert.include(range, {column: 2, row: 7});
+            assert.include(range, {column: 1, row: 5});
+            assert.include(range, {column: 2, row: 4});
 
         });
 
