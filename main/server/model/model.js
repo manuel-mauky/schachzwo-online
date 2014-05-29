@@ -420,10 +420,10 @@ var Match = function (json) {
         return false;
     };
 
-    this.historyContainsMoveFrom = function(row, column){
+    this.historyContainsMoveToPositionWithFigureType = function(column,row,figureType){
         var contains = false;
         this.history.forEach(function(move){
-            if(move.from.column == column && move.from.row == row){
+            if(move.to.column == column && move.to.row == row && move.figure.type == figureType){
                 contains = true;
                 return;
             }

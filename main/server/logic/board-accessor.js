@@ -242,8 +242,11 @@ module.exports = function BoardAccessor(match) {
         var straightResult = findTargetsInDirections(currentFigure.color, column, row, straightDirections);
         result = result.concat(straightResult);
 
-        if (!match.historyContainsMoveFrom(row, column)) {
-            result = result.concat(findTargetsInRange(column, row, 2));
+        if (!match.historyContainsMoveToPositionWithFigureType(row, column,FigureType.MAN)) {
+            var tmp = result.concat(findTargetsInRange(column, row, 2));
+            tmp.forEach(function(element){
+               if(result.indexOf(element) < 0) result.push(element);
+            });
         }
 
         return result;
@@ -364,9 +367,6 @@ module.exports = function BoardAccessor(match) {
         ];
         var tmpResult = findTargets(ownFigure, column, row, possiblePositions);
 
-        result = result.concat(tmpResult);
-
-
         var originCoordinate = match.size == model.BoardSize.BIG ? 4 : 3;
         if (Math.abs(column - originCoordinate) <= 1 && Math.abs(row - originCoordinate) <= 1) {
             var threatenFields = getThreatenPositions(column, row);
@@ -376,7 +376,7 @@ module.exports = function BoardAccessor(match) {
             }
         }
 
-        return result;
+        return result.concat(tmpResult);
     };
 
     /**
