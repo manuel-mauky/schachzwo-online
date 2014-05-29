@@ -239,10 +239,10 @@ module.exports = function BoardAccessor(match) {
         if (match.size == model.BoardSize.BIG) {
             if (current.color == Color.WHITE && row == 1) {
                 rowTmp = row + 2;
-            }
-
-            if (current.color == Color.BLACK && row == (match.size - 2)) {
+            } else if (current.color == Color.BLACK && row == (match.size - 2)) {
                 rowTmp = row - 2;
+            } else {
+                return result;
             }
 
             var figure = board.getField(column, rowTmp).figure;
