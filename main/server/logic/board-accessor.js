@@ -108,18 +108,38 @@ module.exports = function BoardAccessor(match) {
         return applyMethodToEachFigureOnBoard(color, getRangeFor);
     };
 
+
+    /**
+     * Giebt die geschlagenen Figuren zurück
+     * @type {getCapturedPieces}
+     */
     var getCapturedPieces = this.getCapturedPieces = function () {
-        //TODO Erik
-        return [
-            {
-                number: 2,
-                piece: new model.Figure({color: model.Color.BLACK, type: model.FigureType.ROCKS})
-            },
-            {
-                number: 1,
-                piece: new model.Figure({color: model.Color.WHITE, type: model.FigureType.ROCKS})
+        var result = [];
+        var modelFactory = require("../model/model-factory.js"); // required here to prevent recursive import as model.factory has a dependency to this model.js
+        var snapshot = modelFactory.createStartSnapshot(match.size);
+        for(var i = 0; i < match.history.length; i++){
+            var move = match.history[i];
+            if(move.from && move.to){
+                var fieldFrom = snapshot.getFieldFromPosition(move.from);
+                var fieldTo = snapshot.getFieldFromPosition(move.to);
+                if(fieldTo.figure){
+                    var found = false;
+                    for(var j = 0; j < result.length; j++){
+                        if(JSON.stringify(result[j].piece) == JSON.stringify(fieldTo.figure)){
+                            result[j].number++;
+                            found = true;
+                            break;
+                        }
+                    }
+                    if(!found){
+                        result.push({number: 1,piece: fieldTo.figure});
+                    }
+                }
+                fieldTo.figure = fieldFrom.figure;
+                fieldFrom.figure = undefined;
             }
-        ];
+        }
+        return result;
     };
 
     var getThreatenPositions = this.getThreatenPositions = function (column, row) {
