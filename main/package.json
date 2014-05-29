@@ -1,26 +1,28 @@
 {
-  "name": "schachzwo",
-  "description": "SchachZWO Webapplikation",
-  "version": "0.0.1",
-  "scripts": {
-    "start": "node app.js",
-    "test" : "mocha --recursive --reporter list ./server"
+    "name": "schachzwo",
+    "description": "SchachZWO Webapplikation",
+    "version": "0.0.1",
+    "scripts": {
+        "start": "node app.js",
+        "test": "mocha --recursive --reporter list ./server"
 
-  },
-  "dependencies": {
-    "express": "4.x",
-    "request": "latest",
-    "body-parser": "latest",
-    "cookie-parser": "latest",
-    "node-uuid" : "latest",
-    "mongoskin" : "latest"
-  },
-  "devDependencies": {
-    "request": "latest",
-    "supertest": "latest",
-    "requirejs": "^2.1.11",
-    "mocha": "latest",
-    "chai": "latest",
-    "eventsource": "latest"
-  }
+    },
+    "dependencies": {
+        "express": "4.x",
+        "request": "latest",
+        "body-parser": "latest",
+        "cookie-parser": "latest",
+        "node-uuid": "latest",
+        "mongoskin": "latest"
+    },
+    "devDependencies": {
+        "request": "latest",
+        "supertest": "latest",
+        "requirejs": "^2.1.11",
+        "mocha": "latest",
+        "chai": "latest",
+        "eventsource": "latest",
+        "sinon": "latest"
+
+    }
 }
