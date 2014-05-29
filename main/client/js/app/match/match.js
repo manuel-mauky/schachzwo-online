@@ -32,9 +32,6 @@ define(['angular', 'jquery'], function (angular, $) {
                         initMatch();
                     }
 
-                    if (event.data == "check" || event.data == "lost-check-mate") {
-                        markThreateningFields();
-                    }
                 }, false);
 
 
@@ -67,8 +64,8 @@ define(['angular', 'jquery'], function (angular, $) {
                                     to: field.position
                                 };
 
-                                if (isExchangePossible(move)) {
-                                    $('#exchange-modal').modal('show');
+                                if (isPromotionPossible(move)) {
+                                    $('#promotion-modal').modal('show');
                                 } else {
                                    postMove();
                                 }
@@ -79,11 +76,11 @@ define(['angular', 'jquery'], function (angular, $) {
                 };
 
 
-                $scope.exchangePiece = function(piece) {
+                $scope.promoteRocks = function(piece) {
                     if (move) {
                         move.figure = piece;
                         postMove();
-                        $('#exchange-modal').modal('hide');
+                        $('#promotion-modal').modal('hide');
                     }
                 };
 
@@ -116,10 +113,10 @@ define(['angular', 'jquery'], function (angular, $) {
 
                         $scope.board = board;
 
-
                         $http.get(endpoint + "/" + matchId + "/moves").success(function (moves) {
                             $scope.moves = moves;
                             $scope.itsMyTurn = !$scope.onlooker && (moves.length + ($scope.self.color == 'white' ? 1 : 0)) % 2 == 0;
+                            markThreateningFields();
                         });
 
                         $http.get(endpoint + "/" + matchId + "/valid-moves").success(function (moves) {
@@ -187,11 +184,12 @@ define(['angular', 'jquery'], function (angular, $) {
 
 
                 var markThreateningFields = function () {
-                    if (!$scope.onlooker) {
+                    if (!$scope.itsMyTurn) {
                         return;
                     }
                     var ownZenith = getOwnZenith();
                     if (ownZenith) {
+
                         $http.get(endpoint + "/" + matchId + "/threats").success(function (threats) {
 
                             for (var i in threats) {
@@ -199,6 +197,7 @@ define(['angular', 'jquery'], function (angular, $) {
 
                                 if (entry.field.position.row == ownZenith.position.row && entry.field.position.column == ownZenith.position.column) {
                                     entry.fields.forEach(function (pos) {
+
                                         $scope.board.push({position: {row: pos.row, column: pos.column}, threatening: true});
 
                                     });
@@ -209,7 +208,7 @@ define(['angular', 'jquery'], function (angular, $) {
                     }
                 };
 
-                var isExchangePossible = function (move) {
+                var isPromotionPossible = function (move) {
                     if (move.figure.type != "rocks") {
                         return false;
                     }

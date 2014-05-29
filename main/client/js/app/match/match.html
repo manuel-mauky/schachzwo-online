@@ -34,8 +34,8 @@
             </div>
 
             <div class="form-group">
-                <a class="btn btn-warning" role="button" href="#">Remis anbieten</a>
-                <a class="btn btn-danger" role="button" href="#">Aufgeben</a>
+                <a class="btn btn-warning" role="button" href="#" ng-show="itsMyTurn">Remis anbieten</a>
+                <a class="btn btn-danger" role="button" href="#" ng-show="itsMyTurn">Aufgeben</a>
             </div>
 
             <div>
@@ -75,7 +75,7 @@
 
 
     <!-- Piece Exchange Modal -->
-    <div class="modal fade" id="exchange-modal" tabindex="-1" role="dialog" aria-labelledby="exchange-modal-label" aria-hidden="true">
+    <div class="modal fade" id="promotion-modal" tabindex="-1" role="dialog" aria-labelledby="exchange-modal-label" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -85,7 +85,7 @@
                 <div class="modal-body">
 
                     <p ng-repeat="piece in availablePieces">
-                        <a class="btn btn-primary" ng-click="exchangePiece(piece)" href="">{{piece.type}}</a>
+                        <a class="btn btn-primary" ng-click="promoteRocks(piece)" href="">{{piece.type}}</a>
                     </p>
 
                 </div>
