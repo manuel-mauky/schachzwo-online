@@ -125,6 +125,7 @@ var Move = function(json){
     this.from = new Position(json.from);
     this.to = new Position(json.to);
 
+
     return this;
 }
 
@@ -300,14 +301,12 @@ var Match = function (json) {
         }
         var modelFactory = require("./model-factory.js"); // required here to prevent recursive import as model.factory has a dependency to this model.js
 
-        //for performace reasons maybe as static json -> evaluation
         var snapshot = modelFactory.createStartSnapshot(this.size);
 
         for(var i = 0; i < number; i++){
             var move = this.history[i];
             var fieldFrom = snapshot.getFieldFromPosition(move.from);
             var fieldTo = snapshot.getFieldFromPosition(move.to);
-            if(JSON.stringify(fieldFrom.figure) != JSON.stringify(move.figure)) throw new Error("This Move from" + JSON.stringify(move.from) + " to " + JSON.stringify(move.to) + " with figure " + JSON.stringify(move.figure) + " was invalid!");//todo testen
             fieldTo.figure = fieldFrom.figure;
             fieldFrom.figure = undefined;
         }

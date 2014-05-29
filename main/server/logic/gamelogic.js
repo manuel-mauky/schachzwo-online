@@ -148,6 +148,7 @@ module.exports.GameLogic = function GameLogic(match) {
             return false;
         }
 
+
         if (match.getColorOfActivePlayer() == model.Color.BLACK) {
             // blacks turn
             if (match.playerBlack.playerId != playerId || move.figure.color == model.Color.WHITE) {
@@ -159,6 +160,7 @@ module.exports.GameLogic = function GameLogic(match) {
                 return false;
             }
         }
+
 
         var board = match.getCurrentSnapshot();
         var field = board.getField(move.from.column, move.from.row);
