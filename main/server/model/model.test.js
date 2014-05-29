@@ -331,7 +331,7 @@ describe("Match", function(){
             assert.isFalse(result);
 
             assert.equal(match.history.length, 0);
-        })
+        });
 
         it("should work with addMove2", function(){
            var result = match.addMove2(2,5,2,4);
