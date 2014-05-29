@@ -1,6 +1,6 @@
 'use strict';
 
-define(['angular'], function (angular) {
+define(['angular', 'jquery'], function (angular, $) {
 
     angular.module('match', []).
         controller('matchCtrl', ['$scope', '$routeParams', '$http', 'endpoint', 'sse', 'matchLink',
@@ -9,6 +9,7 @@ define(['angular'], function (angular) {
                 var matchId = $routeParams.matchId;
                 var selectedField = {};
                 var validMoves = [];
+                var move;
 
                 $scope.matchLink = matchLink(matchId);
                 $scope.match = {size: 7, state: 'preparing'};
@@ -17,6 +18,7 @@ define(['angular'], function (angular) {
                 $scope.moves = [];
                 $scope.itsMyTurn = false;
                 $scope.onlooker = false;
+                $scope.availablePieces = [];
 
 
                 sse(matchId).addEventListener("message", function (event) {
@@ -59,22 +61,33 @@ define(['angular'], function (angular) {
 
                             if (field && pos.row == field.position.row && pos.column == field.position.column) {
 
-                                var move = {
+                                move = {
                                     figure: selectedField.figure,
                                     from: selectedField.position,
                                     to: field.position
                                 };
 
-                                $http.post(endpoint + "/" + matchId + "/moves", move).success(function () {
-                                    $scope.itsMyTurn = false;
-                                    update();
-                                });
+                                if (isExchangePossible(move)) {
+                                    $('#exchange-modal').modal('show');
+                                } else {
+                                   postMove();
+                                }
+                                return;
                             }
                         });
                     }
                 };
 
-                $scope.draw = function(action) {
+
+                $scope.exchangePiece = function(piece) {
+                    if (move) {
+                        move.figure = piece;
+                        postMove();
+                        $('#exchange-modal').modal('hide');
+                    }
+                };
+
+                $scope.draw = function (action) {
                     $http.put(endpoint + "/" + matchId + "/draw", {draw: action });
                 };
 
@@ -96,9 +109,13 @@ define(['angular'], function (angular) {
 
 
                 var update = function () {
+
+                    move = null;
+
                     $http.get(endpoint + "/" + matchId + "/board").success(function (board) {
 
                         $scope.board = board;
+
 
                         $http.get(endpoint + "/" + matchId + "/moves").success(function (moves) {
                             $scope.moves = moves;
@@ -109,7 +126,26 @@ define(['angular'], function (angular) {
                             validMoves = moves;
                         });
 
+                        $http.get(endpoint + "/" + matchId + "/captured-pieces").success(function (pieces) {
+
+                            $scope.availablePieces = pieces.filter(function (entry) {
+                                return entry.number > 0 && entry.piece && entry.piece.color == $scope.self.color;
+                            }).map(function (entry) {
+                                return entry.piece;
+                            });
+
+                        });
+
                     });
+                };
+
+                var postMove = function() {
+                    if (move) {
+                        $http.post(endpoint + "/" + matchId + "/moves", move).success(function () {
+                            $scope.itsMyTurn = false;
+                            update();
+                        });
+                    }
                 };
 
                 var clearSelections = function (onlyOwnSelections) {
@@ -141,7 +177,7 @@ define(['angular'], function (angular) {
                 var getValidMoves = function (field) {
 
                     for (var i in validMoves) {
-                        var entry = validMoves[i];
+                        var entry = validMoves[i]
                         if (entry.field.position.row == field.position.row && entry.field.position.column == field.position.column) {
                             return entry.fields;
                         }
@@ -151,7 +187,9 @@ define(['angular'], function (angular) {
 
 
                 var markThreateningFields = function () {
-
+                    if (!$scope.onlooker) {
+                        return;
+                    }
                     var ownZenith = getOwnZenith();
                     if (ownZenith) {
                         $http.get(endpoint + "/" + matchId + "/threats").success(function (threats) {
@@ -169,6 +207,16 @@ define(['angular'], function (angular) {
                             }
                         });
                     }
+                };
+
+                var isExchangePossible = function (move) {
+                    if (move.figure.type != "rocks") {
+                        return false;
+                    }
+                    var lastRow = $scope.self.color == 'white' ? $scope.match.size - 1 : 0;
+                    var lastButOneRow = $scope.self.color == 'white' ? $scope.match.size - 2 : 1;
+
+                    return move.from.row == lastButOneRow && move.to.row == lastRow;
                 };
 
                 initMatch();

@@ -15,15 +15,12 @@ define(['angular'], function (angular) {
                     var matchId = $routeParams.matchId;
 
                     console.log("login : " + matchId);
-
                     $http.post(endpoint + "/" + matchId + "/login", {name: $scope.playerName})
                         .success(function (player) {
                             console.log("success:");
-                            console.dir(player);
 
                             var path = "match/" + matchId;
                             console.log("redirect to: " + path);
-
                             $location.path(path);
 
                         })
