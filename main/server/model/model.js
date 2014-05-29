@@ -12,7 +12,7 @@ var assert = require("assert");
 var BoardSize = {
     SMALL: 7,
     BIG: 9
-}
+};
 
 /**
  * The possible color of a figure.
@@ -22,7 +22,7 @@ var BoardSize = {
 var Color = {
     BLACK: "black",
     WHITE: "white"
-}
+};
 
 /**
  * The types of figures that are possible.
@@ -37,7 +37,7 @@ var FigureType = {
     KNOWLEDGE: "knowledge",
     FAITH: "faith",
     ZENITH: "zenith"
-}
+};
 
 /**
  * The states that the match can have.
@@ -49,7 +49,7 @@ var State = {
     PAUSE: "pause",
     FINISHED: "finished",
     PLAYING: "playing"
-}
+};
 
 /**
  * The Figure constructor. This the figures of the game.
@@ -69,7 +69,7 @@ var Figure = function (json) {
     this.type = json.type;
 
     return this;
-}
+};
 
 /**
  * The Field constructor. This represents a single field of the chess board.
@@ -91,7 +91,7 @@ var Field = function (json) {
     this.position = new Position(json.position);
 
     return this;
-}
+};
 
 /**
  * The Position Constructor. This represents a Position on the Board
@@ -99,7 +99,7 @@ var Field = function (json) {
  * @return {Position}
  * @constructor
  */
-var Position = function(json){
+var Position = function (json) {
     assert.ok(json);
     assert.equal(typeof json.column, "number");
     assert.equal(typeof json.row, "number");
@@ -107,7 +107,7 @@ var Position = function(json){
     this.column = json.column;
     this.row = json.row;
     return this;
-}
+};
 
 /**
  * The Move constructor. This represents a Move on the Board in the History
@@ -115,7 +115,7 @@ var Position = function(json){
  * @return {Move}
  * @constructor
  */
-var Move = function(json){
+var Move = function (json) {
     assert.ok(json);
     assert.ok(json.figure);
     assert.ok(json.from);
@@ -126,8 +126,23 @@ var Move = function(json){
     this.to = new Position(json.to);
 
     return this;
-}
+};
 
+var Draw = function (json) {
+    assert.ok(json);
+    assert.ok(json.color);
+    assert.ok(json.type);
+
+    this.color = json.color;
+    this.type = json.type;
+
+    return this;
+};
+Draw.Types = {
+    Offered: 1,
+    Accepted: 2,
+    Rejected: 3
+};
 
 /**
  * The Snapshot constructor. This represents a single point in time of the match.
@@ -163,8 +178,8 @@ var Snapshot = function (json) {
         return undefined;
     };
 
-    this.getFieldFromPosition = function(position){
-        return this.getField(position.column,position.row);
+    this.getFieldFromPosition = function (position) {
+        return this.getField(position.column, position.row);
     };
 
     /**
@@ -219,7 +234,7 @@ var Snapshot = function (json) {
     };
 
     return this;
-}
+};
 
 /**
  * The player constructor.
@@ -237,7 +252,7 @@ var Player = function (json) {
     this.name = json.name;
 
     return this;
-}
+};
 
 /**
  * The match constructor. A match represents the whole game with
@@ -250,10 +265,10 @@ var Player = function (json) {
 var Match = function (json) {
     var json = json || {};
 
-    if(json.playerWhite){
+    if (json.playerWhite) {
         this.playerWhite = new Player(json.playerWhite);
     }
-    if(json.playerBlack){
+    if (json.playerBlack) {
         this.playerBlack = new Player(json.playerBlack);
     }
 
@@ -268,13 +283,17 @@ var Match = function (json) {
     // for every json-entry create a move instance.
     if (Array.isArray(json.history)) {
         json.history.forEach(function (entry) {
-            this.history.push(new Move(entry));
+            if (entry.type && entry.color) {
+                this.history.push(new Draw(entry));
+            } else if (entry.figure && entry.from && entry.to) {
+                this.history.push(new Move(entry));
+            }
         }, this);
     }
 
-    if(json.size == BoardSize.BIG){
+    if (json.size == BoardSize.BIG) {
         this.size = BoardSize.BIG;
-    }else{
+    } else {
         this.size = BoardSize.SMALL;
     }
 
@@ -282,20 +301,20 @@ var Match = function (json) {
      * return the Color of the active Player who is on turn
      * @returns the Color of the active Player
      */
-    this.getColorOfActivePlayer = function(){
-        if(this.history.length % 2 == 0){
+    this.getColorOfActivePlayer = function () {
+        if (this.history.length % 2 == 0) {
             return Color.BLACK;
         }
         else return Color.WHITE;
-    }
+    };
 
     /**
      * Generate a Snapshot up to the given History entry
      * @param number
      * @returns {*}
      */
-    this.generateSnapshot = function(number){
-        if(!this.history || this.history.length < number ){
+    this.generateSnapshot = function (number) {
+        if (!this.history || this.history.length < number) {
             throw new Error("There is no move in the history for this number.");
         }
         var modelFactory = require("./model-factory.js"); // required here to prevent recursive import as model.factory has a dependency to this model.js
@@ -303,23 +322,25 @@ var Match = function (json) {
         //for performace reasons maybe as static json -> evaluation
         var snapshot = modelFactory.createStartSnapshot(this.size);
 
-        for(var i = 0; i < number; i++){
+        for (var i = 0; i < number; i++) {
             var move = this.history[i];
-            var fieldFrom = snapshot.getFieldFromPosition(move.from);
-            var fieldTo = snapshot.getFieldFromPosition(move.to);
-            if(JSON.stringify(fieldFrom.figure) != JSON.stringify(move.figure)) throw new Error("This Move from" + JSON.stringify(move.from) + " to " + JSON.stringify(move.to) + " with figure " + JSON.stringify(move.figure) + " was invalid!");//todo testen
-            fieldTo.figure = fieldFrom.figure;
-            fieldFrom.figure = undefined;
+            if (move.from && move.to) {
+                var fieldFrom = snapshot.getFieldFromPosition(move.from);
+                var fieldTo = snapshot.getFieldFromPosition(move.to);
+                if (JSON.stringify(fieldFrom.figure) != JSON.stringify(move.figure)) throw new Error("This Move from" + JSON.stringify(move.from) + " to " + JSON.stringify(move.to) + " with figure " + JSON.stringify(move.figure) + " was invalid!");//todo testen
+                fieldTo.figure = fieldFrom.figure;
+                fieldFrom.figure = undefined;
+            }
         }
         return snapshot;
     };
 
-    this.historyPop = function(){
+    this.historyPop = function () {
         updateCurrentSnapshotCache = true;
         this.history.pop();
     };
 
-    this.historyPush = function(element){
+    this.historyPush = function (element) {
         updateCurrentSnapshotCache = true;
         this.history.push(element);
     };
@@ -327,36 +348,36 @@ var Match = function (json) {
     /**
      * Returns the current snapshot of this match.
      */
-    this.getCurrentSnapshot = function(){
-        if(updateCurrentSnapshotCache){
+    this.getCurrentSnapshot = function () {
+        if (updateCurrentSnapshotCache) {
             currentSnapshotCache = this.generateSnapshot(this.history.length);
             updateCurrentSnapshotCache = false;
         }
         return currentSnapshotCache;
     };
 
-    this.addMove = function(move){
+    this.addMove = function (move) {
 
-        if(! (move instanceof Move)){
-            try{
+        if (!(move instanceof Move)) {
+            try {
                 move = new Move(move);
-            } catch(err){
+            } catch (err) {
                 return false;
             }
         }
         var fieldFrom = this.getCurrentSnapshot().getFieldFromPosition(move.from);
         var fieldTo = this.getCurrentSnapshot().getFieldFromPosition(move.to);
-        if(JSON.stringify(fieldFrom.figure) != JSON.stringify(move.figure)){
+        if (JSON.stringify(fieldFrom.figure) != JSON.stringify(move.figure)) {
             throw new Error("This Move from" + JSON.stringify(move.from) + " to " + JSON.stringify(move.to) + " with figure " + JSON.stringify(move.figure) + " is invalid!");
         }
         var BoardAcessor = require("../logic/board-accessor");
         var acessor = new BoardAcessor(this);
-        var fields = acessor.getRangeFor(move.from.column,move.from.row);
+        var fields = acessor.getRangeFor(move.from.column, move.from.row);
         var valid = false;
-        fields.forEach(function(element){
-            if(element.column == move.to.column && element.row == move.to.row) valid = true;
+        fields.forEach(function (element) {
+            if (element.column == move.to.column && element.row == move.to.row) valid = true;
         });
-        if(!valid){
+        if (!valid) {
             throw new Error("The Figure" + JSON.stringify(move.figure) + " cannot move from " + JSON.stringify(move.from) + " to " + JSON.stringify(move.to));
         }
         this.history.push(move);
@@ -365,20 +386,98 @@ var Match = function (json) {
     };
 
     //TODO besserer Name!
-    this.addMove2 = function(fromCol, fromRow, toCol, toRow){
+    this.addMove2 = function (fromCol, fromRow, toCol, toRow) {
         var field = this.getCurrentSnapshot().getField(fromCol, fromRow);
         var figure = field.figure;
 
-        if(figure){
+        if (figure) {
             var move = new Move({
                 figure: figure,
                 from: {column: fromCol, row: fromRow},
                 to: {column: toCol, row: toRow}
             });
             return this.addMove(move);
-        }else{
+        } else {
             return false;
         }
+    };
+
+
+    /**
+     * This method is used to offer a draw. The draw is offered by the active player.
+     *
+     * A {@link Draw} instance will be created and added to the history of this match.
+     * A draw can only be offered when there is no offered draw in the last turn.
+     *
+     * This method returns the draw instance when the draw was successfully added.
+     * Otherwise <code>undefined</code> will be returned.
+     */
+    this.offerDraw = function () {
+        if (this.history.length > 0) {
+            var lastHistoryEntry = this.history[this.history.length - 1];
+
+            if (lastHistoryEntry.type == Draw.Types.Offered) {
+                return undefined;
+            }
+        }
+
+
+        var draw = new Draw({
+            color: this.getColorOfActivePlayer(),
+            type: Draw.Types.Offered});
+
+        this.historyPush(draw);
+        return draw;
+    };
+
+    /**
+     * This method is used to reject an offered draw. The rejection is done by the active player.
+     *
+     * You can only reject a draw when there was a draw offered in the previous turn.
+     * When the draw was successfully rejected this method returns the draw instance.
+     * When the draw couldn't be rejected (f.e. when there was no draw offered before) this method
+     * returns <code>undefined</code>
+     */
+    this.rejectDraw = function () {
+        if (this.history.length > 0) {
+            var lastHistoryEntry = this.history[this.history.length - 1];
+
+            if (lastHistoryEntry.type == Draw.Types.Offered) {
+                var draw = new Draw({
+                    color: this.getColorOfActivePlayer(),
+                    type: Draw.Types.Rejected});
+
+                this.historyPush(draw);
+                return draw;
+            }
+        }
+
+        return undefined;
+    };
+
+    /**
+     * This method is used to accept an offered draw. The acception is done by the active player.
+     *
+     * You can only accept a draw when there was a draw offered in the previous turn.
+     * When the draw was successfully accepted this method returns the draw instance.
+     * When the draw couldn't be accepted (f.e. when there was no draw offered before) this method
+     * returns <code>undefined</code>
+     */
+    this.acceptDraw = function () {
+        if (this.history.length > 0) {
+            var lastHistoryEntry = this.history[this.history.length - 1];
+
+            if (lastHistoryEntry.type == Draw.Types.Offered) {
+                var draw = new Draw({
+                    color: this.getColorOfActivePlayer(),
+                    type: Draw.Types.Accepted});
+
+                this.historyPush(draw);
+                return draw;
+            }
+        }
+
+        return undefined;
     };
 
     /**
@@ -399,16 +498,16 @@ var Match = function (json) {
      * @param player the player that should be added, either as Player instance or JSON
      * @returns {boolean} <code>true</code> when a player was successfully added, otherwise <code>false</code>
      */
-    this.addPlayer = function(player){
+    this.addPlayer = function (player) {
 
-        if(! (player instanceof Player)){
+        if (!(player instanceof Player)) {
             player = new Player(player);
         }
 
-        if(!this.playerBlack){
+        if (!this.playerBlack) {
             this.playerBlack = player;
             return true;
-        }else if(!this.playerWhite){
+        } else if (!this.playerWhite) {
             this.playerWhite = player;
 
             if (State.PREPARING == this.state) {
@@ -420,10 +519,10 @@ var Match = function (json) {
         return false;
     };
 
-    this.historyContainsMoveFrom = function(row, column){
+    this.historyContainsMoveFrom = function (row, column) {
         var contains = false;
-        this.history.forEach(function(move){
-            if(move.from.column == column && move.from.row == row){
+        this.history.forEach(function (move) {
+            if (move.from && move.from.column == column && move.from.row == row) {
                 contains = true;
                 return;
             }
@@ -435,12 +534,30 @@ var Match = function (json) {
      * returns <code>true</code> when both player are set in the game.
      * otherwise <code>false</code>
      */
-    this.isMatchFullyOccupied = function(){
-      return (this.playerBlack && this.playerWhite);
+    this.isMatchFullyOccupied = function () {
+        return (this.playerBlack && this.playerWhite);
+    };
+
+    /**
+     * returns <code>true</code> when the player with the given id is the active player,
+     * otherwise <code>false</code>
+     *
+     * @param playerId
+     * @returns {boolean}
+     */
+    this.isPlayersTurn = function(playerId){
+        var colorOfPlayer;
+        if(this.playerBlack && this.playerBlack.playerId == playerId){
+            colorOfPlayer = Color.BLACK;
+        } else if(this.playerWhite && this.playerWhite.playerId == playerId) {
+            colorOfPlayer = Color.WHITE;
+        }
+
+        return this.getColorOfActivePlayer() == colorOfPlayer;
     };
 
     return this;
-}
+};
 
 
 module.exports.BoardSize = BoardSize;
@@ -454,3 +571,4 @@ module.exports.Player = Player;
 module.exports.Match = Match;
 module.exports.Position = Position;
 module.exports.Move = Move;
+module.exports.Draw = Draw;

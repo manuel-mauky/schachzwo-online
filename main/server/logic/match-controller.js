@@ -23,20 +23,20 @@ var model = require("../model/model");
 var uuid = require("node-uuid");
 
 
-module.exports.getMatchById = function(id,  callbacks){
+module.exports.getMatchById = function (id, callbacks) {
     var store = storeProvider.getStore();
 
-    store.getMatch(id, function(err, match){
-        if(err || !match){
+    store.getMatch(id, function (err, match) {
+        if (err || !match) {
             callWhenDefined(callbacks.onMatchNotFound);
             return;
         }
 
-        if(match.playerBlack){
+        if (match.playerBlack) {
             delete match.playerBlack.playerId;
         }
 
-        if(match.playerWhite){
+        if (match.playerWhite) {
             delete match.playerWhite.playerId;
         }
 
@@ -47,11 +47,11 @@ module.exports.getMatchById = function(id,  callbacks){
 
 };
 
-module.exports.createMatch = function(size, callbacks){
+module.exports.createMatch = function (size, callbacks) {
     var store = storeProvider.getStore();
-    try{
-        store.createMatch(modelFactory.createMatch(size), function(err, match){
-            if(err){
+    try {
+        store.createMatch(modelFactory.createMatch(size), function (err, match) {
+            if (err) {
                 callWhenDefined(callbacks.onError, err);
             }
 
@@ -59,32 +59,32 @@ module.exports.createMatch = function(size, callbacks){
 
             callWhenDefined(callbacks.onSuccess, match);
         });
-    } catch(err){
+    } catch (err) {
         callWhenDefined(callbacks.onError, err);
     }
 };
 
-module.exports.getPlayer = function(matchId, playerId, isOpponent, callbacks){
+module.exports.getPlayer = function (matchId, playerId, isOpponent, callbacks) {
     var store = storeProvider.getStore();
 
-    store.getMatch(matchId, function(err, match){
-       if(err || !match){
-           callWhenDefined(callbacks.onMatchNotFound);
-           return;
-       }
+    store.getMatch(matchId, function (err, match) {
+        if (err || !match) {
+            callWhenDefined(callbacks.onMatchNotFound);
+            return;
+        }
 
         var gameLogic = new GameLogic(match);
 
-        if(!gameLogic.isPlayerParticipating(playerId)){
+        if (!gameLogic.isPlayerParticipating(playerId)) {
             callWhenDefined(callbacks.onPlayerNotFound);
             return;
         }
 
         var player;
 
-        if(isOpponent){
+        if (isOpponent) {
 
-            if(playerId == match.playerWhite.playerId){
+            if (playerId == match.playerWhite.playerId) {
                 player = new model.Player(match.playerBlack);
                 player.color = model.Color.BLACK;
             } else {
@@ -92,8 +92,8 @@ module.exports.getPlayer = function(matchId, playerId, isOpponent, callbacks){
                 player.color = model.Color.WHITE;
             }
             delete player.playerId;
-        }else{
-            if(playerId == match.playerBlack.playerId){
+        } else {
+            if (playerId == match.playerBlack.playerId) {
                 player = new model.Player(match.playerBlack);
                 player.color = model.Color.BLACK;
             } else {
@@ -106,17 +106,17 @@ module.exports.getPlayer = function(matchId, playerId, isOpponent, callbacks){
     });
 };
 
-module.exports.login = function(id, name, callbacks){
+module.exports.login = function (id, name, callbacks) {
 
     var store = storeProvider.getStore();
-    store.getMatch(id, function(err, match){
-        if(err || !match){
+    store.getMatch(id, function (err, match) {
+        if (err || !match) {
             callWhenDefined(callbacks.onMatchNotFound);
             return;
         }
 
 
-        if(match.isMatchFullyOccupied()){
+        if (match.isMatchFullyOccupied()) {
             callWhenDefined(callbacks.onLoginFailed, "No more free places.");
             return;
         }
@@ -126,7 +126,7 @@ module.exports.login = function(id, name, callbacks){
 
         if (successfullyAdded) {
             store.updateMatch(match, function (err, updatedMatch) {
-                if(err || !updatedMatch){
+                if (err || !updatedMatch) {
                     callWhenDefined(callbacks.onError);
                     return;
                 }
@@ -141,26 +141,13 @@ module.exports.login = function(id, name, callbacks){
 
                 callWhenDefined(callbacks.onSuccess, player);
             });
-        }else{
+        } else {
             callWhenDefined(callbacks.onLoginFailed, "No more free places.");
         }
     });
 };
 
-module.exports.getBoard = function(matchId, callbacks){
-    var store = storeProvider.getStore();
-    store.getMatch(matchId, function (err, match) {
-        if(err || !match){
-            callWhenDefined(callbacks.onMatchNotFound);
-            return;
-        }
-
-        callWhenDefined(callbacks.onSuccess,match.getCurrentSnapshot().board);
-    });
-};
-
-
-module.exports.getMoves = function(matchId, callbacks){
+module.exports.getBoard = function (matchId, callbacks) {
     var store = storeProvider.getStore();
     store.getMatch(matchId, function (err, match) {
         if (err || !match) {
@@ -168,11 +155,24 @@ module.exports.getMoves = function(matchId, callbacks){
             return;
         }
 
-        callWhenDefined(callbacks.onSuccess,match.history);
+        callWhenDefined(callbacks.onSuccess, match.getCurrentSnapshot().board);
     });
 };
 
-module.exports.addMove = function(matchId, playerId, moveJson, callbacks){
+
+module.exports.getMoves = function (matchId, callbacks) {
+    var store = storeProvider.getStore();
+    store.getMatch(matchId, function (err, match) {
+        if (err || !match) {
+            callWhenDefined(callbacks.onMatchNotFound);
+            return;
+        }
+
+        callWhenDefined(callbacks.onSuccess, match.history);
+    });
+};
+
+module.exports.addMove = function (matchId, playerId, moveJson, callbacks) {
     var store = storeProvider.getStore();
     store.getMatch(matchId, function (err, match) {
         if (err || !match) {
@@ -182,24 +182,24 @@ module.exports.addMove = function(matchId, playerId, moveJson, callbacks){
 
         var gameLogic = new GameLogic(match);
 
-        if(!gameLogic.isPlayerParticipating(playerId)){
+        if (!gameLogic.isPlayerParticipating(playerId)) {
             callWhenDefined(callbacks.onPlayerNotFound);
         }
 
         var move;
 
-        try{
+        try {
             move = new model.Move(moveJson);
-        }catch(error){
-            callWhenDefined(callbacks.onMoveFailed,'Move can not be applied because the request is invalid.');
+        } catch (error) {
+            callWhenDefined(callbacks.onMoveFailed, 'Move can not be applied because the request is invalid.');
         }
 
-        if(new GameLogic(match).isValidMove(playerId, move)){
+        if (new GameLogic(match).isValidMove(playerId, move)) {
             match.addMove(move);
 
-            store.updateMatch(match, function(err, match){
-                if(err || !match){
-                    callWhenDefined(callbacks.onMoveFailed,'Move can not be applied because the move is invalid.');
+            store.updateMatch(match, function (err, match) {
+                if (err || !match) {
+                    callWhenDefined(callbacks.onMoveFailed, 'Move can not be applied because the move is invalid.');
                     return;
                 }
 
@@ -207,26 +207,14 @@ module.exports.addMove = function(matchId, playerId, moveJson, callbacks){
 
                 callWhenDefined(callbacks.onSuccess, match.history);
             });
-        }else{
-            callWhenDefined(callbacks.onMoveFailed,'Move can not be applied because the move is invalid.');
+        } else {
+            callWhenDefined(callbacks.onMoveFailed, 'Move can not be applied because the move is invalid.');
         }
     });
 };
 
 
-module.exports.getThreats = function(matchId, callbacks){
-    var store = storeProvider.getStore();
-    store.getMatch(matchId, function (err, match) {
-        if(err || !match){
-            callWhenDefined(callbacks.onMatchNotFound);
-            return;
-        }
-
-        callWhenDefined(callbacks.onSuccess,new BoardAccessor(match).getThreats());
-    });
-};
-
-module.exports.getValidMoves = function(matchId, callbacks){
+module.exports.getThreats = function (matchId, callbacks) {
     var store = storeProvider.getStore();
     store.getMatch(matchId, function (err, match) {
         if (err || !match) {
@@ -234,25 +222,87 @@ module.exports.getValidMoves = function(matchId, callbacks){
             return;
         }
 
-        callWhenDefined(callbacks.onSuccess,new BoardAccessor(match).getValidMoves());
+        callWhenDefined(callbacks.onSuccess, new BoardAccessor(match).getThreats());
     });
 };
 
+module.exports.getValidMoves = function (matchId, callbacks) {
+    var store = storeProvider.getStore();
+    store.getMatch(matchId, function (err, match) {
+        if (err || !match) {
+            callWhenDefined(callbacks.onMatchNotFound);
+            return;
+        }
 
-var callWhenDefined = function(callback){
-    var args = Array.prototype.slice.call(arguments,1);
-    if(callback){
+        callWhenDefined(callbacks.onSuccess, new BoardAccessor(match).getValidMoves());
+    });
+};
+
+module.exports.createDraw = function (matchId, playerId, drawRequest, callbacks) {
+    if (!drawRequest || !drawRequest.draw) {
+        callWhenDefined(callbacks.onError);
+        return;
+    }
+
+    var store = storeProvider.getStore();
+    store.getMatch(matchId, function (err, match) {
+        if (err || !match) {
+            callWhenDefined(callbacks.onMatchNotFound);
+            return;
+        }
+
+        if(!match.isPlayersTurn(playerId)){
+            callWhenDefined(callbacks.onNotAuthorized);
+            return;
+        }
+
+        var createdDraw;
+
+        switch (drawRequest.draw) {
+            case "offered":
+                createdDraw = match.offerDraw();
+                break;
+            case "accepted":
+                createdDraw = match.acceptDraw();
+                break;
+            case "rejected":
+                createdDraw = match.rejectDraw();
+                break;
+            default:
+                callWhenDefined(callbacks.onError);
+                break;
+        }
+
+        if (createdDraw) {
+            store.updateMatch(match, function(err, match){
+               if(err){
+                   callWhenDefined(callbacks.onError);
+               }else{
+                    callWhenDefined(callbacks.onSuccess, createdDraw);
+               }
+            });
+        } else {
+            callWhenDefined(callbacks.onDrawInvalid);
+        }
+
+    });
+
+};
+
+
+var callWhenDefined = function (callback) {
+    var args = Array.prototype.slice.call(arguments, 1);
+    if (callback) {
         callback.apply(null, args);
     }
 };
 
 
-
-var sendMoveMessages = function(match) {
+var sendMoveMessages = function (match) {
 
     var gameLogic = new GameLogic(match);
 
-    var sendMessages = function(color) {
+    var sendMessages = function (color) {
 
         var checkType = gameLogic.getCheckType(color);
         var self = color == model.Color.WHITE ? match.playerWhite : match.playerBlack;
