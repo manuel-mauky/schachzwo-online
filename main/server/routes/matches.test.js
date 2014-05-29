@@ -609,7 +609,13 @@ describe('Mock REST API test /matches', function () {
         var url;
         var match;
         var sseSpy = sinon.spy();
-        sse.sendMessage = sseSpy;
+
+        var sseMessageBackup = sse.sendMessage;
+
+
+        before(function(){
+            sse.sendMessage = sseSpy;
+        })
 
         beforeEach(function (done) {
             matchStore.createMatch({
@@ -621,6 +627,10 @@ describe('Mock REST API test /matches', function () {
                     url = '/matches/' + createdMatch.matchId + "/draw";
                     done();
                 });
+        });
+
+        after(function(){
+            sse.sendMessage = sseMessageBackup;
         });
 
         it("should add a draw", function (done) {
