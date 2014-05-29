@@ -98,13 +98,7 @@ define(['angular'], function (angular) {
                 var update = function () {
                     $http.get(endpoint + "/" + matchId + "/board").success(function (board) {
 
-                        $scope.board = [];
-
-                        board.forEach(function (field) {
-                            if (field.figure) {
-                                $scope.board.push(field);
-                            }
-                        });
+                        $scope.board = board;
 
                         $http.get(endpoint + "/" + matchId + "/moves").success(function (moves) {
                             $scope.moves = moves;
