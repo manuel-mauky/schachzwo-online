@@ -355,6 +355,25 @@ var Match = function (json) {
         return currentSnapshotCache;
     };
 
+    /**
+     * Ermittelt ob ein Rocks durch eine Figur eingetauscht wurde
+     */
+    this.rocksPromotion = function(move) {
+        var fieldFrom = this.getCurrentSnapshot().getFieldFromPosition(move.from);
+        if (fieldFrom.figure.type == FigureType.ROCKS) {
+            if (move.figure.color == Color.BLACK) {
+                if (move.from.row == 1 && move.to.row == 0) {
+                    return true;
+                }
+            } else {
+                if (move.from.row == this.size - 2 && move.to.row == this.size - 1) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
     this.addMove = function(move){
 
         if(! (move instanceof Move)){
@@ -364,10 +383,16 @@ var Match = function (json) {
                 return false;
             }
         }
+
+
+
+        //Doppelte Implementierung wie "isValidMove"
         var fieldFrom = this.getCurrentSnapshot().getFieldFromPosition(move.from);
         var fieldTo = this.getCurrentSnapshot().getFieldFromPosition(move.to);
         if(JSON.stringify(fieldFrom.figure) != JSON.stringify(move.figure)){
-            throw new Error("This Move from" + JSON.stringify(move.from) + " to " + JSON.stringify(move.to) + " with figure " + JSON.stringify(move.figure) + " is invalid!");
+            if(!rocksPromotion(fieldFrom,move)) {
+                throw new Error("This Move from" + JSON.stringify(move.from) + " to " + JSON.stringify(move.to) + " with figure " + JSON.stringify(move.figure) + " is invalid!");
+            }
         }
         var BoardAcessor = require("../logic/board-accessor");
         var acessor = new BoardAcessor(this);
