@@ -243,6 +243,20 @@ route.get("/:id/valid-moves", function (req, res) {
     });
 });
 
+route.get("/:id/captured-pieces", function(req, res) {
+
+    matchController.getCapturedPieces(req.params.id, {
+        onSuccess: function (capturedPieces) {
+            res.json(capturedPieces);
+        },
+
+        onMatchNotFound: function () {
+            matchError404(req, res);
+        }
+    });
+
+});
+
 //TODO GET /matches/:matchId/draw
 //TODO PUT /matches/:matchId/draw
 

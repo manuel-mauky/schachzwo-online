@@ -239,6 +239,21 @@ module.exports.getValidMoves = function(matchId, callbacks){
 };
 
 
+module.exports.getCapturedPieces = function(matchId, callbacks) {
+
+    var store = storeProvider.getStore();
+    store.getMatch(matchId, function (err, match) {
+        if (err || !match) {
+            callWhenDefined(callbacks.onMatchNotFound);
+            return;
+        }
+
+        callWhenDefined(callbacks.onSuccess,new BoardAccessor(match).getCapturedPieces());
+    });
+
+};
+
+
 var callWhenDefined = function(callback){
     var args = Array.prototype.slice.call(arguments,1);
     if(callback){
