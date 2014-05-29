@@ -2,19 +2,13 @@
 
 var express = require("express");
 
-
 var matchController = require("../logic/match-controller");
-
-var modelFactory = require("../model/model-factory.js");
-var model = require("../model/model");
 
 var storeProvider = require("../store/store-provider");
 var sse = require("../messaging/sse");
 var message = require('../messaging/message');
 
 var restUtils = require("./rest-utils");
-
-var uuid = require("node-uuid");
 
 var route = express.Router();
 
@@ -123,18 +117,16 @@ route.get("/:id/opponent", function (req, res) {
 route.post("/:id/login", function (req, res) {
 
     var name;
-    if (req.body) {
-        if (req.body.name) {
-            name = req.body.name;
-        } else {
-            res.statusCode = 400;
-            return res.json(
-                {
-                    name: "Bad login request",
-                    message: "No 'name' attribute in body found"
-                }
-            );
-        }
+    if (req.body && req.body.name) {
+        name = req.body.name;
+    } else {
+        res.statusCode = 400;
+        return res.json(
+            {
+                name: "Bad login request",
+                message: "No 'name' attribute in body found"
+            }
+        );
     }
 
     matchController.login(req.params.id, name,
@@ -257,8 +249,36 @@ route.get("/:id/captured-pieces", function(req, res) {
 
 });
 
-//TODO GET /matches/:matchId/draw
-//TODO PUT /matches/:matchId/draw
+
+route.put("/:id/draw", function (req, res) {
+
+
+    var playerId = restUtils.findPlayerId(req);
+    matchController.createDraw(req.params.id, playerId, req.body, {
+        onSuccess: function (draw) {
+            res.statusCode = 201;
+            res.json(draw);
+        },
+
+        onNotAuthorized: function () {
+            matchError401(req, res);
+        },
+
+        onMatchNotFound: function () {
+            matchError404(req, res);
+        },
+
+        onError: function () {
+            res.statusCode = 400;
+            return res.json("Bad Request");
+        },
+
+        onDrawInvalid: function () {
+            res.statusCode = 403;
+            res.json("The draw request was invalid");
+        }
+    });
+});
 
 
 var matchError404 = function (req, res) {

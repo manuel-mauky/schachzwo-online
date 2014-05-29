@@ -129,6 +129,21 @@ var Move = function(json){
     return this;
 }
 
+var Draw = function (json) {
+    assert.ok(json);
+    assert.ok(json.color);
+    assert.ok(json.type);
+
+    this.color = json.color;
+    this.type = json.type;
+
+    return this;
+};
+Draw.Types = {
+    Offered: 1,
+    Accepted: 2,
+    Rejected: 3
+};
 
 /**
  * The Snapshot constructor. This represents a single point in time of the match.
@@ -269,7 +284,11 @@ var Match = function (json) {
     // for every json-entry create a move instance.
     if (Array.isArray(json.history)) {
         json.history.forEach(function (entry) {
-            this.history.push(new Move(entry));
+            if (entry.type && entry.color) {
+                this.history.push(new Draw(entry));
+            } else if (entry.figure && entry.from && entry.to) {
+                this.history.push(new Move(entry));
+            }
         }, this);
     }
 
@@ -301,14 +320,17 @@ var Match = function (json) {
         }
         var modelFactory = require("./model-factory.js"); // required here to prevent recursive import as model.factory has a dependency to this model.js
 
+        //for performace reasons maybe as static json -> evaluation
         var snapshot = modelFactory.createStartSnapshot(this.size);
 
         for(var i = 0; i < number; i++){
             var move = this.history[i];
-            var fieldFrom = snapshot.getFieldFromPosition(move.from);
-            var fieldTo = snapshot.getFieldFromPosition(move.to);
-            fieldTo.figure = fieldFrom.figure;
-            fieldFrom.figure = undefined;
+            if(move.from && move.to){
+                var fieldFrom = snapshot.getFieldFromPosition(move.from);
+                var fieldTo = snapshot.getFieldFromPosition(move.to);
+                fieldTo.figure = fieldFrom.figure;
+                fieldFrom.figure = undefined;
+            }
         }
         return snapshot;
     };
@@ -380,6 +402,84 @@ var Match = function (json) {
         }
     };
 
+
+    /**
+     * This method is used to offer a draw. The draw is offered by the active player.
+     *
+     * A {@link Draw} instance will be created and added to the history of this match.
+     * A draw can only be offered when there is no offered draw in the last turn.
+     *
+     * This method returns the draw instance when the draw was successfully added.
+     * Otherwise <code>undefined</code> will be returned.
+     */
+    this.offerDraw = function () {
+        if (this.history.length > 0) {
+            var lastHistoryEntry = this.history[this.history.length - 1];
+
+            if (lastHistoryEntry.type == Draw.Types.Offered) {
+                return undefined;
+            }
+        }
+
+
+        var draw = new Draw({
+            color: this.getColorOfActivePlayer(),
+            type: Draw.Types.Offered});
+
+        this.historyPush(draw);
+        return draw;
+    };
+
+    /**
+     * This method is used to reject an offered draw. The rejection is done by the active player.
+     *
+     * You can only reject a draw when there was a draw offered in the previous turn.
+     * When the draw was successfully rejected this method returns the draw instance.
+     * When the draw couldn't be rejected (f.e. when there was no draw offered before) this method
+     * returns <code>undefined</code>
+     */
+    this.rejectDraw = function () {
+        if (this.history.length > 0) {
+            var lastHistoryEntry = this.history[this.history.length - 1];
+
+            if (lastHistoryEntry.type == Draw.Types.Offered) {
+                var draw = new Draw({
+                    color: this.getColorOfActivePlayer(),
+                    type: Draw.Types.Rejected});
+
+                this.historyPush(draw);
+                return draw;
+            }
+        }
+
+        return undefined;
+    };
+
+    /**
+     * This method is used to accept an offered draw. The acception is done by the active player.
+     *
+     * You can only accept a draw when there was a draw offered in the previous turn.
+     * When the draw was successfully accepted this method returns the draw instance.
+     * When the draw couldn't be accepted (f.e. when there was no draw offered before) this method
+     * returns <code>undefined</code>
+     */
+    this.acceptDraw = function () {
+        if (this.history.length > 0) {
+            var lastHistoryEntry = this.history[this.history.length - 1];
+
+            if (lastHistoryEntry.type == Draw.Types.Offered) {
+                var draw = new Draw({
+                    color: this.getColorOfActivePlayer(),
+                    type: Draw.Types.Accepted});
+
+                this.historyPush(draw);
+                return draw;
+            }
+        }
+
+        return undefined;
+    };
+
     /**
      * Adds new player to the match.
      *
@@ -421,8 +521,8 @@ var Match = function (json) {
 
     this.historyContainsMoveFrom = function(row, column){
         var contains = false;
-        this.history.forEach(function(move){
-            if(move.from.column == column && move.from.row == row){
+        this.history.forEach(function (move) {
+            if (move.from && move.from.column == column && move.from.row == row) {
                 contains = true;
                 return;
             }
@@ -436,6 +536,24 @@ var Match = function (json) {
      */
     this.isMatchFullyOccupied = function(){
       return (this.playerBlack && this.playerWhite);
+    };
+
+    /**
+     * returns <code>true</code> when the player with the given id is the active player,
+     * otherwise <code>false</code>
+     *
+     * @param playerId
+     * @returns {boolean}
+     */
+    this.isPlayersTurn = function(playerId){
+        var colorOfPlayer;
+        if(this.playerBlack && this.playerBlack.playerId == playerId){
+            colorOfPlayer = Color.BLACK;
+        } else if(this.playerWhite && this.playerWhite.playerId == playerId) {
+            colorOfPlayer = Color.WHITE;
+        }
+
+        return this.getColorOfActivePlayer() == colorOfPlayer;
     };
 
     return this;
@@ -453,3 +571,4 @@ module.exports.Player = Player;
 module.exports.Match = Match;
 module.exports.Position = Position;
 module.exports.Move = Move;
+module.exports.Draw = Draw;

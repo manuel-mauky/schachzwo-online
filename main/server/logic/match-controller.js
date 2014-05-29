@@ -238,6 +238,57 @@ module.exports.getValidMoves = function(matchId, callbacks){
     });
 };
 
+module.exports.createDraw = function (matchId, playerId, drawRequest, callbacks) {
+    if (!drawRequest || !drawRequest.draw) {
+        callWhenDefined(callbacks.onError);
+        return;
+    }
+
+    var store = storeProvider.getStore();
+    store.getMatch(matchId, function (err, match) {
+        if (err || !match) {
+            callWhenDefined(callbacks.onMatchNotFound);
+            return;
+        }
+
+        if(!match.isPlayersTurn(playerId)){
+            callWhenDefined(callbacks.onNotAuthorized);
+            return;
+        }
+
+        var createdDraw;
+
+        switch (drawRequest.draw) {
+            case "offered":
+                createdDraw = match.offerDraw();
+                break;
+            case "accepted":
+                createdDraw = match.acceptDraw();
+                break;
+            case "rejected":
+                createdDraw = match.rejectDraw();
+                break;
+            default:
+                callWhenDefined(callbacks.onError);
+                break;
+        }
+
+        if (createdDraw) {
+            store.updateMatch(match, function(err, match){
+               if(err){
+                   callWhenDefined(callbacks.onError);
+               }else{
+                    callWhenDefined(callbacks.onSuccess, createdDraw);
+               }
+            });
+        } else {
+            callWhenDefined(callbacks.onDrawInvalid);
+        }
+
+    });
+
+};
+
 
 module.exports.getCapturedPieces = function(matchId, callbacks) {
 
@@ -262,8 +313,7 @@ var callWhenDefined = function(callback){
 };
 
 
-
-var sendMoveMessages = function(match) {
+var sendMoveMessages = function (match) {
 
     var gameLogic = new GameLogic(match);
 

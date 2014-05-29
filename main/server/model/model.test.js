@@ -343,6 +343,98 @@ describe("Match", function(){
     });
 
 
+    describe("Draw", function(){
+        var match;
+        beforeEach(function(){
+            match = modelFactory.createMatch(BoardSize.SMALL);
+        });
+
+        it("offerDraw should add a Draw to the history", function(){
+            var result = match.offerDraw();
+
+            assert.ok(result);
+
+            assert.equal(match.history.length, 1);
+
+            var lastEntry = match.history[0];
+
+            assert.equal(lastEntry.color, Color.BLACK);
+            assert.equal(lastEntry.type, model.Draw.Types.Offered);
+            assert.deepEqual(lastEntry, result);
+        });
+
+        it("offerDraw should not add a Draw when there is already a draw offered", function(){
+            match.offerDraw();
+
+
+            var result = match.offerDraw();
+
+            assert.notOk(result);
+
+            assert.equal(match.history.length, 1);
+        });
+
+        it("rejectDraw should add a second Draw instance to the history", function(){
+            match.offerDraw();
+
+            var result = match.rejectDraw();
+
+            assert.ok(result);
+
+            assert.equal(match.history.length, 2);
+
+            var lastEntry = match.history[1];
+
+            assert.equal(lastEntry.color, Color.WHITE);
+            assert.equal(lastEntry.type, model.Draw.Types.Rejected);
+            assert.deepEqual(lastEntry, result);
+        });
+
+        it("rejectDraw should not work when no draw was offered", function(){
+            match.offerDraw();
+
+            match.rejectDraw();
+
+
+            var result = match.rejectDraw();
+
+            assert.notOk(result);
+
+            assert.equal(match.history.length, 2);
+        });
+
+        it("acceptDraw should add a second Draw instance to the history", function(){
+            match.offerDraw();
+
+            var result = match.acceptDraw();
+
+            assert.ok(result);
+
+            assert.equal(match.history.length, 2);
+
+            var lastEntry = match.history[1];
+
+            assert.equal(lastEntry.color, Color.WHITE);
+            assert.equal(lastEntry.type, model.Draw.Types.Accepted);
+            assert.deepEqual(lastEntry, result);
+        });
+
+        it("acceptDraw should not work when no draw was offered", function(){
+            match.offerDraw();
+
+            match.acceptDraw();
+
+
+            var result = match.acceptDraw();
+
+            assert.notOk(result);
+
+            assert.equal(match.history.length, 2);
+        });
+
+    });
+
+
     describe("historyContainsMoveFrom",function(){
         it("should be return false on empty history",function(){
             var match = modelFactory.createMatch(BoardSize.SMALL);
@@ -354,6 +446,60 @@ describe("Match", function(){
             assert.equal(match.historyContainsMoveFrom(1,1),true);
         });
     });
+
+
+    describe("isPlayersTurn", function(){
+        var match;
+
+        beforeEach(function(){
+            match = modelFactory.createMatch(BoardSize.SMALL);
+        });
+
+        it("should return true when it's the players turn", function(){
+            match.addPlayer({playerId:1, name: "alice"});
+            match.addPlayer({playerId:2, name: "bob"});
+
+            var result = match.isPlayersTurn(1);
+
+            assert.isTrue(result);
+        });
+
+        it("should return false when it's not the players turn", function(){
+            match.addPlayer({playerId:1, name: "alice"});
+            match.addPlayer({playerId:2, name: "bob"});
+
+            var result = match.isPlayersTurn(2);
+
+            assert.isFalse(result);
+        });
+
+        it("should return false when it's not the players turn 2", function(){
+            match.addPlayer({playerId:1, name: "alice"});
+            match.addPlayer({playerId:2, name: "bob"});
+
+            match.addMove2(0,5, 0,4);
+
+            var result = match.isPlayersTurn(1);
+
+            assert.isFalse(result);
+        });
+
+        it("should return false when there is no player defined", function(){
+            var result = match.isPlayersTurn(1);
+
+            assert.isFalse(result);
+        });
+
+        it("should return false when there is no player with this id", function(){
+            match.addPlayer({playerId:1, name: "alice"});
+            match.addPlayer({playerId:2, name: "bob"});
+
+            var result = match.isPlayersTurn(5);
+
+            assert.isFalse(result);
+        });
+
+    })
 });
 
 
