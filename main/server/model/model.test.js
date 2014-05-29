@@ -447,6 +447,30 @@ describe("Match", function(){
         });
     });
 
+    describe("rocksPromotion", function(){
+        var match;
+        beforeEach(function(){
+            match = modelFactory.createMatch(BoardSize.SMALL);
+        });
+       it("shold return false",function(){
+           var move = new Move({figure: {color: Color.BLACK,type: FigureType.ROCKS},from: {column: 0,row: 5},to: {column: 0,row: 4}});
+           assert.equal(match.rocksPromotion(move),false);
+       });
+       it("shold return true",function(){
+           match.addMove2(1,5,1,4);
+           match.addMove2(2,1,2,2);
+           match.addMove2(1,4,1,3);
+           match.addMove2(2,2,1,3);
+           match.addMove2(2,5,2,4);
+           match.addMove2(1,3,2,4);
+           match.addMove2(0,5,0,4);
+           match.addMove2(2,4,2,5);
+           match.addMove2(0,4,0,3);
+           var move = new Move({figure: {color: Color.WHITE,type: FigureType.WOMAN},from: {column: 2,row: 5},to: {column: 1,row: 6}});
+           assert.equal(match.rocksPromotion(move),true);
+       });
+
+    });
 
     describe("isPlayersTurn", function(){
         var match;
