@@ -208,7 +208,7 @@ module.exports.addMove = function(matchId, playerId, moveJson, callbacks){
                     return;
                 }
 
-                sendMoveMessages(match);
+                verifyCheckType(match);
 
                 callWhenDefined(callbacks.onSuccess, match.history);
             });
@@ -272,6 +272,7 @@ module.exports.createDraw = function (matchId, playerId, drawRequest, callbacks)
             case "accepted":
                 createdDraw = match.acceptDraw();
                 sseMessage = message.DRAW_ACCEPTED;
+                match.state = model.State.FINISHED;
                 break;
             case "rejected":
                 createdDraw = match.rejectDraw();
@@ -322,11 +323,11 @@ var callWhenDefined = function(callback){
 };
 
 
-var sendMoveMessages = function (match) {
+var verifyCheckType = function (match) {
 
     var gameLogic = new GameLogic(match);
 
-    var sendMessages = function(color) {
+    var verifyForColor = function(color) {
 
         var checkType = gameLogic.getCheckType(color);
         var self = color == model.Color.WHITE ? match.playerWhite : match.playerBlack;
@@ -337,22 +338,25 @@ var sendMoveMessages = function (match) {
         }
 
         if (checkType == CheckType.CHECK_MATE) {
+            match.state = model.State.FINISHED;
             sse.sendMessage(message.HAS_WON_BY_CHECK_MATE, match.matchId, self.playerId);
             sse.sendMessage(message.HAS_LOST_BY_CHECK_MATE, match.matchId, opponent.playerId);
         }
 
         if (checkType == CheckType.CHECK_TARGET) {
+            match.state = model.State.FINISHED;
             sse.sendMessage(message.HAS_WON_BY_CHECK_TARGET, match.matchId, self.playerId);
             sse.sendMessage(message.HAS_LOST_BY_CHECK_TARGET, match.matchId, opponent.playerId);
         }
 
         if (checkType == CheckType.CHECK_TARGET_BOTH) {
+            match.state = model.State.FINISHED;
             sse.sendMessage(message.HAS_WON_BY_CHECK_TARGET, match.matchId, self.playerId);
             sse.sendMessage(message.HAS_LOST_BY_CHECK_TARGET, match.matchId, opponent.playerId);
         }
     };
 
     sse.sendMessage(message.UPDATE, match.matchId);
-    sendMessages('white');
-    sendMessages('black');
+    verifyForColor('white');
+    verifyForColor('black');
 };

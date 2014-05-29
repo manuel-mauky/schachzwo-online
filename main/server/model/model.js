@@ -46,7 +46,6 @@ var FigureType = {
  */
 var State = {
     PREPARING: "preparing",
-    PAUSE: "pause",
     FINISHED: "finished",
     PLAYING: "playing"
 }
@@ -307,7 +306,7 @@ var Match = function (json) {
             return Color.BLACK;
         }
         else return Color.WHITE;
-    }
+    };
 
     /**
      * Generate a Snapshot up to the given History entry
