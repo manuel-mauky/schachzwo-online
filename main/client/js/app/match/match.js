@@ -74,6 +74,9 @@ define(['angular'], function (angular) {
                     }
                 };
 
+                $scope.draw = function(action) {
+                    $http.get(endpoint + "/" + matchId + "/draw", {draw: action });
+                };
 
                 var initMatch = function () {
 
