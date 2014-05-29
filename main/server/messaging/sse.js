@@ -36,6 +36,23 @@ module.exports.initClient = function (req, res, matchId, playerId) {
     };
 };
 
+/**
+ * Disconnect all clients for the given match.
+ *
+ * @param matchId the ID of the match
+ */
+module.exports.disconnectClients = function(matchId) {
+
+    for (var clientId in clients) {
+        var client = clients[clientId];
+
+        if (client.matchId === matchId) {
+            client.res.send();
+            delete clients[clientId];
+        }
+    }
+};
+
 
 /**
  * Sends a message to clients of the given match. Sends the message to all, if not a concrete player is specified.

@@ -31,7 +31,7 @@ describe('SSE tests', function () {
 
     });
 
-    it("shoud send MATCH_STARTED when second player logs into the game", function(done){
+    it("should send MATCH_STARTED when second player logs into the match", function(done){
        matchStore.createMatch({
            size: 7,
            playerBlack: {playerId: 1, name: 'player1'}}, function(err, createdMatch){
@@ -58,7 +58,27 @@ describe('SSE tests', function () {
 
     });
 
-    it("should send messaging to all clients of the game", function (done) {
+    it("should disconnect all clients of the match", function (done) {
+
+        var source = new EventSource("http://localhost:8000/matches/" + match.matchId);
+
+        source.addEventListener("message", function (event) {
+            assert.fail(undefined, undefined, "The message should not have been received.");
+            done();
+        }, false);
+
+        setTimeout(function () {
+            sse.disconnectClients(match.matchId);
+            sse.sendMessage(message.UPDATE, match.matchId);
+        }, 10);
+
+        setTimeout(function () {
+            done();
+        }, 10);
+
+    });
+
+    it("should send messaging to all clients of the match", function (done) {
 
         var source = new EventSource("http://localhost:8000/matches/" + match.matchId);
 
@@ -73,7 +93,7 @@ describe('SSE tests', function () {
     });
 
 
-    it("should not send messaging to clients of other games", function (done) {
+    it("should not send messaging to clients of other matches", function (done) {
 
         matchStore.createMatch({
             size: 9,
@@ -119,7 +139,7 @@ describe('SSE tests', function () {
 
     });
 
-    it("should not send private messaging to the opponent or spectator", function (done) {
+    it("should not send private messaging to the opponent or onlooker", function (done) {
 
         var listener = function (event) {
             assert.fail(undefined, undefined, "The message should not have been received.");
@@ -134,7 +154,7 @@ describe('SSE tests', function () {
         }).addEventListener("message", listener, false);
 
 
-        // spectator
+        // onlooker
         new EventSource("http://localhost:8000/matches/" + match.matchId)
             .addEventListener("message", listener, false);
 
@@ -149,6 +169,8 @@ describe('SSE tests', function () {
         }, 10);
 
     });
+
+
 
 
 });

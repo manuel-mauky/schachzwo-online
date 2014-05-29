@@ -48,7 +48,7 @@ var registerSSE = function (req, res) {
         var playerId = restUtils.findPlayerId(req);
         return sse.initClient(req, res, match.matchId, playerId);
     });
-};
+}
 
 
 route.post("/", function (req, res) {
@@ -235,7 +235,20 @@ route.get("/:id/valid-moves", function (req, res) {
     });
 });
 
-//TODO PUT /matches/:matchId/draw
+route.get("/:id/captured-pieces", function(req, res) {
+
+    matchController.getCapturedPieces(req.params.id, {
+        onSuccess: function (capturedPieces) {
+            res.json(capturedPieces);
+        },
+
+        onMatchNotFound: function () {
+            matchError404(req, res);
+        }
+    });
+
+});
+
 
 route.put("/:id/draw", function (req, res) {
 

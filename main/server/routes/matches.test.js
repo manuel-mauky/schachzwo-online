@@ -744,4 +744,36 @@ describe('Mock REST API test /matches', function () {
 
     });
 
+    describe('GET /matches/:matchId/captured-pieces', function () {
+
+        it("should return all captured pieces", function (done) {
+
+            var match = {
+                size: 7,
+                playerBlack: {playerId: 1, name: 'player1'},
+                playerWhite: {playerId: 2, name: 'player2'}};
+
+            matchStore.createMatch(match, function (err, match) {
+
+                request(app)
+                    .get('/matches/' + match.matchId + '/captured-pieces')
+                    .expect(200)
+                    .expect(function (res) {
+
+                        assert.isArray(res.body);
+                    })
+                    .end(done);
+
+            });
+        });
+
+        it("should return 404 when there is no match with this id", function (done) {
+            request(app)
+                .post('/matches/someId/captured-pieces')
+                .expect(404, done);
+        });
+
+    });
+
+
 });

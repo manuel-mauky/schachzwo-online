@@ -157,6 +157,7 @@ module.exports.GameLogic = function GameLogic(match) {
             return false;
         }
 
+
         var board = match.getCurrentSnapshot();
         var field = board.getField(move.from.column, move.from.row);
         if (JSON.stringify(field.figure) != JSON.stringify(move.figure)) return false;
