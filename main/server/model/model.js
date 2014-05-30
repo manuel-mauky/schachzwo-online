@@ -3,7 +3,6 @@
 
 var assert = require("assert");
 
-
 /**
  * The size that the board can have.
  *
@@ -272,9 +271,7 @@ var Match = function (json) {
         this.playerBlack = new Player(json.playerBlack);
     }
 
-    var currentSnapshotCache = undefined;
-    var updateCurrentSnapshotCache = true;
-
+    var currentSnapshot;
     this.matchId = json.matchId;
     this.state = json.state || State.PREPARING;
 
@@ -296,6 +293,7 @@ var Match = function (json) {
     }else{
         this.size = BoardSize.SMALL;
     }
+
 
     /**
      * return the Color of the active Player who is on turn
@@ -334,25 +332,48 @@ var Match = function (json) {
         return snapshot;
     };
 
+    /**
+     * This Method perform a Pop of the History and revert the last move in the currentSnapshot
+     */
     this.historyPop = function(){
-        updateCurrentSnapshotCache = true;
-        this.history.pop();
+        currentSnapshot = this.getCurrentSnapshot();
+        var i = this.history.length-1;
+        //ignore DRAW Elements
+        while(! (this.history[i].from && this.history[i].to)){
+            i--;
+        }
+        var move = this.history[i];
+         if(move.from && move.to){
+             var fieldFrom = currentSnapshot.getFieldFromPosition(move.from);
+             var fieldTo = currentSnapshot.getFieldFromPosition(move.to);
+             fieldFrom.figure = fieldTo.figure;
+             fieldTo.figure = move.capturedFigure;
+         }
+        this.history = this.history.splice(i,1);
     };
 
-    this.historyPush = function(element){
-        updateCurrentSnapshotCache = true;
-        this.history.push(element);
+    /**
+     * This Method perform a Push with a move to the history and apply it on the currentSnapshot
+     * @param move
+     */
+    this.historyPush = function(move){
+         if(move.from && move.to){
+            currentSnapshot = this.getCurrentSnapshot();
+             var fieldFrom = currentSnapshot.getFieldFromPosition(move.from);
+             var fieldTo = currentSnapshot.getFieldFromPosition(move.to);
+             move.capturedFigure = fieldTo.figure;
+             fieldTo.figure = fieldFrom.figure;
+             fieldFrom.figure = undefined;
+         }
+         this.history.push(move);
     };
 
     /**
      * Returns the current snapshot of this match.
      */
     this.getCurrentSnapshot = function(){
-        if(updateCurrentSnapshotCache){
-            currentSnapshotCache = this.generateSnapshot(this.history.length);
-            updateCurrentSnapshotCache = false;
-        }
-        return currentSnapshotCache;
+        if(!currentSnapshot) currentSnapshot = this.generateSnapshot(this.history.length);
+        return currentSnapshot;
     };
 
     /**
@@ -404,8 +425,7 @@ var Match = function (json) {
         if(!valid){
             throw new Error("The Figure" + JSON.stringify(move.figure) + " cannot move from " + JSON.stringify(move.from) + " to " + JSON.stringify(move.to));
         }
-        this.history.push(move);
-        updateCurrentSnapshotCache = true;
+        this.historyPush(move);
         return true;
     };
 

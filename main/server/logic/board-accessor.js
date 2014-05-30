@@ -119,24 +119,18 @@ module.exports = function BoardAccessor(match) {
         var snapshot = modelFactory.createStartSnapshot(match.size);
         for(var i = 0; i < match.history.length; i++){
             var move = match.history[i];
-            if(move.from && move.to){
-                var fieldFrom = snapshot.getFieldFromPosition(move.from);
-                var fieldTo = snapshot.getFieldFromPosition(move.to);
-                if(fieldTo.figure){
-                    var found = false;
-                    for(var j = 0; j < result.length; j++){
-                        if(JSON.stringify(result[j].piece) == JSON.stringify(fieldTo.figure)){
-                            result[j].number++;
-                            found = true;
-                            break;
-                        }
-                    }
-                    if(!found){
-                        result.push({number: 1,piece: fieldTo.figure});
+            if(move.capturedFigure){
+                var found = false;
+                for(var j = 0; j < result.length; j++){
+                    if(JSON.stringify(result[j].piece) == JSON.stringify(move.capturedFigure)){
+                        result[j].number++;
+                        found = true;
+                        break;
                     }
                 }
-                fieldTo.figure = fieldFrom.figure;
-                fieldFrom.figure = undefined;
+                if(!found){
+                    result.push({number: 1,piece: move.capturedFigure});
+                }
             }
         }
         return result;

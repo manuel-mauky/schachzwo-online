@@ -211,9 +211,9 @@ describe("getRangeFor", function () {
 
         it("should include the row and column", function(){
             var figure = new Figure({type:FigureType.MAN, color: Color.BLACK});
-            board.getField(1, 4).figure = figure;
             //fake a Move to simulate Movement of the Men to prevent special Movement of the Men form his start position
-            match.historyPush(new model.Move({figure: figure, from: new Position({column: 1, row: 3}), to: new Position({column: 1, row: 4})}));
+            match.historyPush(new model.Move({figure: figure, from: new Position({column: 1, row: 4}), to: new Position({column: 1, row: 4})}));
+            board.getField(1, 4).figure = figure;
 
             var range = accessor.getRangeFor(1,4);
 
@@ -240,13 +240,14 @@ describe("getRangeFor", function () {
 
         it("should not include fields behind an own or enemy figure in the way", function(){
             var figure = new Figure({type:FigureType.MAN, color: Color.BLACK});
-            board.getField(1, 4).figure = figure;
-
-             board.getField(3, 4).figure = new Figure({type:FigureType.ROCKS, color: Color.BLACK}); // my own figure on the same row
-            board.getField(1, 2).figure = new Figure({type:FigureType.ROCKS, color: Color.WHITE}); // enemy figure on the same column
 
             //fake a Move to simulate Movement of the Men to prevent special Movement of the Men form his start position
-            match.historyPush(new model.Move({figure: figure, from: new Position({column: 1, row: 3}), to: new Position({column: 1, row: 4})}));
+            match.historyPush(new model.Move({figure: figure, from: new Position({column: 1, row: 4}), to: new Position({column: 1, row: 4})}));
+
+            board.getField(1, 4).figure = figure;
+            board.getField(3, 4).figure = new Figure({type:FigureType.ROCKS, color: Color.BLACK}); // my own figure on the same row
+            board.getField(1, 2).figure = new Figure({type:FigureType.ROCKS, color: Color.WHITE}); // enemy figure on the same column
+
 
             var range = accessor.getRangeFor(1,4);
 
