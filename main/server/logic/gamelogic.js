@@ -139,9 +139,9 @@ module.exports.GameLogic = function GameLogic(match) {
 
     /**
      * Checks if a Move is valid on checking the move.from Field with the snapshot and the move.to field with the Range of this figure
-     * @type {isValidMove}
+     * @type {testPlayersTurn}
      */
-    this.isValidMove = function (playerId, move) {
+    this.testPlayersTurn = function (playerId, move) {
 
         try {
             move = new model.Move(move);
@@ -150,25 +150,12 @@ module.exports.GameLogic = function GameLogic(match) {
         }
 
         if(!match.isPlayersTurn(playerId)){
-            return false;
+            throw new Error("This move is invalid because the given Player is not on turn");
         }
 
         if(match.getColorOfActivePlayer() != move.figure.color){
-            return false;
+            throw new Error("This move is invalid because the active Player moved a figure of the opponent color");
         }
-
-        //Doppelte Validierung ausschalten
-/*
-        var board = match.getCurrentSnapshot();
-        var field = board.getField(move.from.column, move.from.row);
-        if (JSON.stringify(field.figure) != JSON.stringify(move.figure)) return false;
-        var range = accessor.getRangeFor(move.from.column, move.from.row);
-        var isValid = false;
-        range.forEach(function (element) {
-            if (element.column == move.to.column && element.row == move.to.row) isValid = true;
-        });
-        return isValid;
-        */
         return true;
     };
 

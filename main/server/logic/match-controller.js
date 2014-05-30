@@ -199,9 +199,10 @@ module.exports.addMove = function(matchId, playerId, moveJson, callbacks){
             callWhenDefined(callbacks.onMoveFailed,'Move can not be applied because the request is invalid.');
         }
 
-        if(new GameLogic(match).isValidMove(playerId, move)){
-            match.addMove(move);
+        try{
 
+            new GameLogic(match).testPlayersTurn(playerId, move);
+            match.addMove(move);
             store.updateMatch(match, function(err, match){
                 if(err || !match){
                     callWhenDefined(callbacks.onMoveFailed,'Move can not be applied because the move is invalid.');
@@ -212,9 +213,12 @@ module.exports.addMove = function(matchId, playerId, moveJson, callbacks){
 
                 callWhenDefined(callbacks.onSuccess, match.history);
             });
-        }else{
-            callWhenDefined(callbacks.onMoveFailed,'Move can not be applied because the move is invalid.');
         }
+        catch(error)
+        {
+            callWhenDefined(callbacks.onMoveFailed,error);
+        }
+
     });
 };
 

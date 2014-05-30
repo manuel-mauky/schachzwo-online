@@ -66,7 +66,7 @@ describe("gamelogic", function () {
         });
     });
 
-    describe("isValidMove",function(){
+    describe("testPlayersTurn",function(){
         var match;
         var validMove = new model.Move({figure: {color: model.Color.BLACK, type: model.FigureType.ROCKS},
             from: {column: 2, row: 5},
@@ -83,11 +83,13 @@ describe("gamelogic", function () {
         });
 
         it("should accept an validMove", function(){
-            assert.isTrue(logic.isValidMove(1, validMove));
+            assert.isTrue(logic.testPlayersTurn(1, validMove));
         });
 
         it("should not accept an invalidMove", function(){
-            assert.isFalse(logic.isValidMove(1, invalidMove));
+            assert.throws(function(){
+                logic.testPlayersTurn(2, invalidMove);
+            });
         });
     });
 
