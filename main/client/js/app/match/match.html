@@ -34,14 +34,14 @@
             </div>
 
             <div class="form-group">
-                <a class="btn btn-warning" role="button" href="#" ng-show="itsMyTurn">Remis anbieten</a>
-                <a class="btn btn-danger" role="button" href="#" ng-show="itsMyTurn">Aufgeben</a>
+                <a class="btn btn-warning" role="button" href="" ng-show="itsMyTurn" ng-click="offerDraw()">Remis anbieten</a>
+                <a class="btn btn-danger" role="button" href="" ng-show="itsMyTurn">Aufgeben</a>
             </div>
 
             <div>
 
                 <span ng-show="onlooker">Du bist ein Zaungast</span>
-                <span ng-show="match.state != 'preparing' && itsMyTurn">Du bist am Zug</span>
+                <span ng-show="itsMyTurn">Du bist am Zug</span>
                 <span ng-show="match.state == 'preparing'">Auf Gegner warten ...</span>
             </div>
 

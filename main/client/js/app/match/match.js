@@ -9,7 +9,7 @@ define(['angular', 'jquery'], function (angular, $) {
                 var matchId = $routeParams.matchId;
                 var selectedField = {};
                 var validMoves = [];
-                var move;
+                var currentMove;
 
                 $scope.matchLink = matchLink(matchId);
                 $scope.match = {size: 7, state: 'preparing'};
@@ -58,16 +58,16 @@ define(['angular', 'jquery'], function (angular, $) {
 
                             if (field && pos.row == field.position.row && pos.column == field.position.column) {
 
-                                move = {
+                                currentMove = {
                                     figure: selectedField.figure,
                                     from: selectedField.position,
                                     to: field.position
                                 };
 
-                                if (isPromotionPossible(move)) {
+                                if (isPromotionPossible(currentMove)) {
                                     $('#promotion-modal').modal('show');
                                 } else {
-                                   postMove();
+                                    postMove();
                                 }
                                 return;
                             }
@@ -76,16 +76,29 @@ define(['angular', 'jquery'], function (angular, $) {
                 };
 
 
-                $scope.promoteRocks = function(piece) {
-                    if (move) {
-                        move.figure = piece;
+                $scope.promoteRocks = function (piece) {
+                    if (currentMove) {
+                        currentMove.figure = piece;
                         postMove();
                         $('#promotion-modal').modal('hide');
                     }
                 };
 
-                $scope.draw = function (action) {
-                    $http.put(endpoint + "/" + matchId + "/draw", {draw: action });
+                $scope.offerDraw = function () {
+                    $http.put(endpoint + "/" + matchId + "/draw", {draw: "offered" });
+                };
+
+
+                $scope.surrender = function () {
+                    if ($scope.itsMyTurn) {
+                        var ownZenith = getOwnZenith();
+
+                        postMove({
+                            figure: ownZenith.figure,
+                            from: ownZenith.position,
+                            to: getOrigin()
+                        });
+                    }
                 };
 
                 var initMatch = function () {
@@ -107,15 +120,16 @@ define(['angular', 'jquery'], function (angular, $) {
 
                 var update = function () {
 
-                    move = null;
-
+                    currentMove = null;
                     $http.get(endpoint + "/" + matchId + "/board").success(function (board) {
 
                         $scope.board = board;
 
                         $http.get(endpoint + "/" + matchId + "/moves").success(function (moves) {
                             $scope.moves = moves;
-                            $scope.itsMyTurn = !$scope.onlooker && (moves.length + ($scope.self.color == 'white' ? 1 : 0)) % 2 == 0;
+                            $scope.itsMyTurn = !$scope.onlooker
+                                && $scope.match.state == 'playing'
+                                && (moves.length + ($scope.self.color == 'white' ? 1 : 0)) % 2 == 0;
                             markThreateningFields();
                         });
 
@@ -136,9 +150,9 @@ define(['angular', 'jquery'], function (angular, $) {
                     });
                 };
 
-                var postMove = function() {
-                    if (move) {
-                        $http.post(endpoint + "/" + matchId + "/moves", move).success(function () {
+                var postMove = function (move) {
+                    if (move || currentMove) {
+                        $http.post(endpoint + "/" + matchId + "/moves", move || currentMove).success(function () {
                             $scope.itsMyTurn = false;
                             update();
                         });
@@ -172,7 +186,6 @@ define(['angular', 'jquery'], function (angular, $) {
                 };
 
                 var getValidMoves = function (field) {
-
                     for (var i in validMoves) {
                         var entry = validMoves[i]
                         if (entry.field.position.row == field.position.row && entry.field.position.column == field.position.column) {
@@ -180,6 +193,14 @@ define(['angular', 'jquery'], function (angular, $) {
                         }
                     }
                     return [];
+                };
+
+                var getOrigin = function () {
+                    if (match.size == 7) {
+                        return {row: 3, column: 3};
+                    } else {
+                        return {row: 4, column: 4};
+                    }
                 };
 
 
