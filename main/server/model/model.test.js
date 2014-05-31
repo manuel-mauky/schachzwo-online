@@ -297,6 +297,35 @@ describe("Match", function(){
         });
     });
 
+    describe("historyPush & historyPop",function(){
+
+        var match;
+
+        var validMove1 = {figure: {color: model.Color.BLACK, type: model.FigureType.ROCKS},from: {column: 2, row: 5},to: {column: 2, row: 4}};
+        var validMove2 = {figure: {color: model.Color.BLACK, type: model.FigureType.ROCKS},from: {column: 2, row: 4},to: {column: 2, row: 3}};
+       it("should add and remove moves",function(){
+           match  = modelFactory.createMatch(BoardSize.SMALL);
+           match.historyPush(validMove1);
+           assert.equal(match.history.length,1);
+           assert.notOk(match.getCurrentSnapshot().getField(2,5).figure);
+           assert.equal(match.getCurrentSnapshot().getField(2,4).figure.type,FigureType.ROCKS);
+
+           match.historyPush(validMove2);
+           assert.equal(match.history.length,2);
+           assert.notOk(match.getCurrentSnapshot().getField(2,4).figure);
+           assert.equal(match.getCurrentSnapshot().getField(2,3).figure.type,FigureType.ROCKS);
+
+            match.historyPop();
+            assert.equal(match.history.length,1);
+            assert.notOk(match.getCurrentSnapshot().getField(2,3).figure);
+            assert.equal(match.getCurrentSnapshot().getField(2,4).figure.type,FigureType.ROCKS);
+
+            match.historyPop();
+            assert.equal(match.history.length,0);
+            assert.notOk(match.getCurrentSnapshot().getField(2,4).figure);
+            assert.equal(match.getCurrentSnapshot().getField(2,5).figure.type,FigureType.ROCKS);
+        });
+    });
 
     describe("AddMove function of Match", function () {
         var match;

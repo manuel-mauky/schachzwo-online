@@ -550,10 +550,8 @@ describe('Mock REST API test /matches', function () {
 
         it("should return all valid moves", function (done) {
 
-            var match = {
-                size: 7,
-                playerBlack: {playerId: 1, name: 'player1'},
-                playerWhite: {playerId: 2, name: 'player2'}};
+            var match = modelFactory.createMatch(model.BoardSize.SMALL);
+            match.state = model.State.PLAYING;
 
             matchStore.createMatch(match, function (err, match) {
 

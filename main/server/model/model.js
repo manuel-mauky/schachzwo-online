@@ -335,21 +335,21 @@ var Match = function (json) {
     /**
      * This Method perform a Pop of the History and revert the last move in the currentSnapshot
      */
-    this.historyPop = function(){
+    this.historyPop = function() {
         currentSnapshot = this.getCurrentSnapshot();
-        var i = this.history.length-1;
+        var i = this.history.length - 1;
         //ignore DRAW Elements
-        while(! (this.history[i].from && this.history[i].to)){
+        while (!(this.history[i].from && this.history[i].to)) {
             i--;
         }
         var move = this.history[i];
-         if(move.from && move.to){
-             var fieldFrom = currentSnapshot.getFieldFromPosition(move.from);
-             var fieldTo = currentSnapshot.getFieldFromPosition(move.to);
-             fieldFrom.figure = fieldTo.figure;
-             fieldTo.figure = move.capturedFigure;
-         }
-        this.history = this.history.splice(i,1);
+        if (move.from && move.to) {
+            var fieldFrom = currentSnapshot.getFieldFromPosition(move.from);
+            var fieldTo = currentSnapshot.getFieldFromPosition(move.to);
+            fieldFrom.figure = fieldTo.figure;
+            fieldTo.figure = move.capturedFigure;
+        }
+        this.history.splice(i,1);
     };
 
     /**

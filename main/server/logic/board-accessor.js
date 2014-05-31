@@ -105,7 +105,29 @@ module.exports = function BoardAccessor(match) {
     };
 
     var getValidMoves = this.getValidMoves = function (color) {
-        return applyMethodToEachFigureOnBoard(color, getRangeFor);
+        var color = color || match.getColorOfActivePlayer();
+        var result = [];
+        var ranges = applyMethodToEachFigureOnBoard(color, getRangeFor);
+        var gameLogic = require("./gamelogic");
+        var CheckType = gameLogic.CheckType;
+        var GameLogic = gameLogic.GameLogic;
+        var logic = new GameLogic(match);
+         ranges.forEach(function(element){
+             var zenithPosition = logic.getZenithPosition(color,match.getCurrentSnapshot()).position;
+             var tail = [];
+             element.fields.forEach(function(position){
+                if(element.field.figure.type == FigureType.ZENITH){
+                    zenithPosition = position;
+                }
+                match.historyPush(new model.Move({figure: element.field.figure, from: element.field.position, to: position}));
+                 if(getThreatenPositions(zenithPosition.column,zenithPosition.row).length == 0){
+                    tail.push(position);
+                }
+                 match.historyPop();
+             });
+             result.push({field: element.field, fields: tail});
+         });
+        return result;
     };
 
 
