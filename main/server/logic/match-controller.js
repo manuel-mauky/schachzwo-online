@@ -197,11 +197,21 @@ module.exports.addMove = function(matchId, playerId, moveJson, callbacks){
             move = new model.Move(moveJson);
         }catch(error){
             callWhenDefined(callbacks.onMoveFailed,'Move can not be applied because the request is invalid.');
+            return;
+        }
+
+
+        if(!match.isPlayersTurn(playerId)){
+            callWhenDefined(callbacks.onMoveFailed, "This move is invalid because the given Player is not on turn");
+            return;
+        }
+
+        if(match.getColorOfActivePlayer() != move.figure.color){
+            callWhenDefined(callbacks.onMoveFailed, "This move is invalid because the active Player moved a figure of the opponent color");
+            return;
         }
 
         try{
-
-            new GameLogic(match).testPlayersTurn(playerId, move);
             match.addMove(move);
             store.updateMatch(match, function(err, match){
                 if(err || !match){
@@ -213,12 +223,10 @@ module.exports.addMove = function(matchId, playerId, moveJson, callbacks){
 
                 callWhenDefined(callbacks.onSuccess, match.history);
             });
-        }
-        catch(error)
-        {
-            callWhenDefined(callbacks.onMoveFailed,error);
-        }
 
+        } catch (error){
+            callWhenDefined(callbacks.onMoveFailed, error);
+        }
     });
 };
 

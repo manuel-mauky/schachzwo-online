@@ -66,33 +66,6 @@ describe("gamelogic", function () {
         });
     });
 
-    describe("testPlayersTurn",function(){
-        var match;
-        var validMove = new model.Move({figure: {color: model.Color.BLACK, type: model.FigureType.ROCKS},
-            from: {column: 2, row: 5},
-            to: {column: 2, row: 4}});
-        var invalidMove = new model.Move({figure: {color: model.Color.BLACK, type: model.FigureType.ROCKS},
-            from: {column: 2, row: 5},
-            to: {column: 3, row: 4}});
-
-        beforeEach(function(){
-            match  = modelFactory.createMatch(BoardSize.SMALL);
-            match.playerBlack = {playerId: 1, name: 'player1'};
-            match.playerWhite=  {playerId: 2, name: 'player2'};
-            logic = new GameLogic(match);
-        });
-
-        it("should accept an validMove", function(){
-            assert.isTrue(logic.testPlayersTurn(1, validMove));
-        });
-
-        it("should not accept an invalidMove", function(){
-            assert.throws(function(){
-                logic.testPlayersTurn(2, invalidMove);
-            });
-        });
-    });
-
     describe("getValidMoves",function(){
 
     });

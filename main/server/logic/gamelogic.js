@@ -138,28 +138,6 @@ module.exports.GameLogic = function GameLogic(match) {
     };
 
     /**
-     * Checks if a Move is valid on checking the move.from Field with the snapshot and the move.to field with the Range of this figure
-     * @type {testPlayersTurn}
-     */
-    this.testPlayersTurn = function (playerId, move) {
-
-        try {
-            move = new model.Move(move);
-        } catch (error) {
-            return false;
-        }
-
-        if(!match.isPlayersTurn(playerId)){
-            throw new Error("This move is invalid because the given Player is not on turn");
-        }
-
-        if(match.getColorOfActivePlayer() != move.figure.color){
-            throw new Error("This move is invalid because the active Player moved a figure of the opponent color");
-        }
-        return true;
-    };
-
-    /**
      * Checks whether the player with the given playerId is participating on the given match. In this case this method
      * returns <code>true</code>.
      *
