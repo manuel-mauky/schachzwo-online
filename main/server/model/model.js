@@ -367,7 +367,7 @@ var Match = function (json) {
              var fieldFrom = currentSnapshot.getFieldFromPosition(move.from);
              var fieldTo = currentSnapshot.getFieldFromPosition(move.to);
              move.capturedFigure = fieldTo.figure;
-             fieldTo.figure = fieldFrom.figure;
+             fieldTo.figure = move.figure;
              fieldFrom.figure = undefined;
          }
          this.history.push(move);
@@ -416,7 +416,7 @@ var Match = function (json) {
         var fieldFrom = this.getCurrentSnapshot().getFieldFromPosition(move.from);
         var fieldTo = this.getCurrentSnapshot().getFieldFromPosition(move.to);
         if(JSON.stringify(fieldFrom.figure) != JSON.stringify(move.figure)){
-            if(!this.rocksPromotion(fieldFrom,move)) {
+            if(!this.rocksPromotion(move)) {
                 throw new Error("This Move from" + JSON.stringify(move.from) + " to " + JSON.stringify(move.to) + " with figure " + JSON.stringify(move.figure) + " is invalid!");
             }
         }
