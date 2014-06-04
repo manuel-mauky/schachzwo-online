@@ -330,7 +330,7 @@ var Match = function (json) {
             if(move.from && move.to){
                 var fieldFrom = snapshot.getFieldFromPosition(move.from);
                 var fieldTo = snapshot.getFieldFromPosition(move.to);
-                fieldTo.figure = fieldFrom.figure;
+                fieldTo.figure = move.figure;
                 fieldFrom.figure = undefined;
             }
         }
