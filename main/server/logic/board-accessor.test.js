@@ -8,6 +8,7 @@
 var assert = require("chai").assert;
 
 var BoardAccessor = require("./board-accessor");
+var StoreProvider = require("../store/store-provider");
 
 var model = require("./../model/model");
 
@@ -994,7 +995,7 @@ describe ("BoardAcessor",function(){
             assert.equal(pieces[1].piece.type,FigureType.KNIGHT);
         });
 
-        it("should return 4 pieces on a history with 4 captures Piece",function(){
+        it("should return 4 pieces on a history with 4 captures Piece after storage",function(done){
             match.addMove2(1,6,0,4);
             match.addMove2(1,1,1,2);
             match.addMove2(0,4,1,2);
@@ -1003,15 +1004,23 @@ describe ("BoardAcessor",function(){
             match.addMove2(6,2,6,3);
             match.addMove2(3,1,1,0);
             match.addMove2(0,0,1,0);
-            var pieces = accessor.getCapturedPieces();
 
-            assert.equal(pieces.length,3);
-            assert.equal(pieces[0].number,2);
-            assert.equal(pieces[0].piece.type,FigureType.ROCKS);
-            assert.equal(pieces[1].number,1);
-            assert.equal(pieces[1].piece.type,FigureType.KNIGHT);
-            assert.equal(pieces[2].number,1);
-            assert.equal(pieces[2].piece.type,FigureType.KNIGHT);
+            var store = new StoreProvider.getStore();
+            store.createMatch(match,function(err,result){
+                store.getMatch(result.matchId, function (err, newLoadedMatch){
+                    assert.ok(newLoadedMatch);
+                    accessor = new BoardAccessor(newLoadedMatch);
+                    var pieces = accessor.getCapturedPieces();
+                    assert.equal(pieces.length,3);
+                    assert.equal(pieces[0].number,2);
+                    assert.equal(pieces[0].piece.type,FigureType.ROCKS);
+                    assert.equal(pieces[1].number,1);
+                    assert.equal(pieces[1].piece.type,FigureType.KNIGHT);
+                    assert.equal(pieces[2].number,1);
+                    assert.equal(pieces[2].piece.type,FigureType.KNIGHT);
+                    done();
+                })
+            });
         });
     });
 });

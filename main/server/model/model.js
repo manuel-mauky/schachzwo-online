@@ -124,6 +124,11 @@ var Move = function(json){
     this.to = new Position(json.to);
 
 
+    if(json.capturedFigure){
+        this.capturedFigure = new Figure(json.capturedFigure);
+    }
+
+
     return this;
 }
 

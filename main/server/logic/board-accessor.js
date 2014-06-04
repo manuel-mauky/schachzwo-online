@@ -137,8 +137,6 @@ module.exports = function BoardAccessor(match) {
      */
     var getCapturedPieces = this.getCapturedPieces = function () {
         var result = [];
-        var modelFactory = require("../model/model-factory.js"); // required here to prevent recursive import as model.factory has a dependency to this model.js
-        var snapshot = modelFactory.createStartSnapshot(match.size);
         for(var i = 0; i < match.history.length; i++){
             var move = match.history[i];
             if(move.capturedFigure){
