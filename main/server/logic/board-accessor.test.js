@@ -923,7 +923,7 @@ describe ("BoardAcessor",function(){
             accessor = new BoardAccessor(match);
         });
 
-        it("should return ", function(){
+        it("should not be possible to move white rocks, because it would put the white zenith in state: check", function(){
             match.addMove2(6,5,6,4);
             match.addMove2(3,1,3,2);
             match.addMove2(6,4,6,3);
@@ -935,8 +935,26 @@ describe ("BoardAcessor",function(){
             var list = accessor.getValidMoves(Color.WHITE);
             assert.isArray(list);
             assert.equal(list.length,13);
-            assert.equal(list[7].fields.length,0);
             assert.equal(list[7].field.figure.type, FigureType.ROCKS);
+            assert.equal(list[7].fields.length,0);
+        });
+
+        it.skip("should be possible to move the zenith to origin", function(){
+            match.addMove2(2,5,2,4);
+            match.addMove2(3,1,3,2);
+            match.addMove2(0,5,0,4);
+            match.addMove2(3,0,3,1);
+            match.addMove2(0,4,0,3);
+            match.addMove2(3,1,2,2);
+            match.addMove2(0,3,0,2);
+
+            var list = accessor.getValidMoves(Color.WHITE);
+            assert.isArray(list);
+            assert.equal(list.length,10);
+            assert.equal(list[3].field.figure.type, FigureType.ZENITH);
+            assert.equal(list[3].fields.length, 4);
+
+
         });
     });
 
