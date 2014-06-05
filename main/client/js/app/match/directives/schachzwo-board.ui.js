@@ -90,11 +90,11 @@
             }
         },
 
-        _transformColumn: function(column) {
+        _transformColumn: function (column) {
             return this.options.self === Color.BLACK ? column : this.options.boardSize - column - 1;
         },
 
-        _transformRow: function(row) {
+        _transformRow: function (row) {
             return this.options.self === Color.BLACK ? row : this.options.boardSize - row - 1;
         },
 
@@ -293,19 +293,20 @@
             for (var i in this.fields) {
                 var field = this.fields[i];
 
-                this._checkColRow(field.position.row);
-                this._checkColRow(field.position.column);
+                var row = field.position.row;
+                var column = field.position.column;
 
-                if (field.accessible) {
-                    fillFloor(this._transformRow(field.position.row), this._transformColumn(field.position.column), boardAccessibleFieldColor);
-                }
-
-                if (field.threatening) {
-                    fillFloor(this._transformRow(field.position.row), this._transformColumn(field.position.column), boardThreateningFieldColor);
-                }
+                this._checkColRow(row);
+                this._checkColRow(column);
 
                 if (field.selected) {
-                    fillFloor(this._transformRow(field.position.row), this._transformColumn(field.position.column), boardSelectedFieldColor);
+                    fillFloor(this._transformRow(row), this._transformColumn(column), boardSelectedFieldColor);
+                }
+                if (field.accessible) {
+                    fillFloor(this._transformRow(row), this._transformColumn(column), boardAccessibleFieldColor);
+                }
+                if (field.threatening) {
+                    fillFloor(this._transformRow(row), this._transformColumn(column), boardThreateningFieldColor);
                 }
             }
 

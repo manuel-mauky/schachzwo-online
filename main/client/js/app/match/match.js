@@ -130,10 +130,6 @@ define(['angular', 'jquery', 'angular-growl'], function (angular, $) {
                     }
                 };
 
-                $scope.end = function () {
-                    $('#end-modal').modal('hide');
-                    $location.path('index.html');
-                };
 
                 var initMatch = function () {
 
