@@ -109,7 +109,6 @@ module.exports.GameLogic = function GameLogic(match) {
                     if (accessor.getThreatenPositions(zenithField.position.column, zenithField.position.row).length == 0) {
                         if(element.figure.type != FigureType.ZENITH){
                             isCheckMate = false;
-                            return;
                         }
                     }
                     match.historyPop();
