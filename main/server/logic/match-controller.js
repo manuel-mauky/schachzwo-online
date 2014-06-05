@@ -377,7 +377,7 @@ var verifyCheckType = function (match) {
         if (checkType == CheckType.CHECK_TARGET_BOTH) {
             match.state = model.State.FINISHED;
             sse.sendMessage(message.HAS_WON_BY_CHECK_TARGET, match.matchId, self.playerId);
-            sse.sendMessage(message.HAS_LOST_BY_CHECK_TARGET, match.matchId, opponent.playerId);
+            sse.sendMessage(message.HAS_LOST_BUT_CAN_FOLLOW_UP, match.matchId, opponent.playerId);
         }
     };
 
