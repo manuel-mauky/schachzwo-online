@@ -211,8 +211,7 @@ module.exports.addMove = function(matchId, playerId, moveJson, callbacks){
             return;
         }
 
-        try{
-            match.addMove(move);
+        if (match.addMove(move)) {
             store.updateMatch(match, function(err, match){
                 if(err || !match){
                     callWhenDefined(callbacks.onMoveFailed,'Move can not be applied because the move is invalid.');
@@ -224,8 +223,22 @@ module.exports.addMove = function(matchId, playerId, moveJson, callbacks){
                 callWhenDefined(callbacks.onSuccess, match.history);
             });
 
-        } catch (error){
-            callWhenDefined(callbacks.onMoveFailed, error);
+        } else {
+
+                if (new BoardAccessor(match).isOrigin(move.to.column, move.to.row) && model.FigureType.ZENITH == move.figure.type) {
+                    match.state = model.State.FINISHED;
+                    store.updateMatch(match, function (err, match) {
+                        if (err) {
+                            callWhenDefined(callbacks.onMoveFailed, 'Move can not be applied because the move is invalid.');
+                        } else {
+                            sse.sendMessage(message.HAS_LOST_BY_GIVEN_UP, match.matchId, playerId);
+                            sse.sendMessage(message.HAS_WON_BY_GIVEN_UP, match.matchId, match.getOpponentPlayerId(playerId));
+                            callWhenDefined(callbacks.onSuccess, match.history);
+                        }
+                    });
+                } else {
+                    callWhenDefined(callbacks.onMoveFailed,'Move can not be applied because the move is invalid.');
+                }
         }
     });
 };

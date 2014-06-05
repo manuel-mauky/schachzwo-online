@@ -299,7 +299,6 @@ var Match = function (json) {
         this.size = BoardSize.SMALL;
     }
 
-
     /**
      * return the Color of the active Player who is on turn
      * @returns the Color of the active Player
@@ -410,25 +409,23 @@ var Match = function (json) {
             }
         }
 
-
-
         //Doppelte Implementierung wie "isValidMove"
         var fieldFrom = this.getCurrentSnapshot().getFieldFromPosition(move.from);
         var fieldTo = this.getCurrentSnapshot().getFieldFromPosition(move.to);
         if(JSON.stringify(fieldFrom.figure) != JSON.stringify(move.figure)){
             if(!this.rocksPromotion(move)) {
-                throw new Error("This Move from" + JSON.stringify(move.from) + " to " + JSON.stringify(move.to) + " with figure " + JSON.stringify(move.figure) + " is invalid!");
+              return false;
             }
         }
-        var BoardAcessor = require("../logic/board-accessor");
-        var acessor = new BoardAcessor(this);
-        var fields = acessor.getRangeFor(move.from.column,move.from.row);
+        var BoardAccessor = require("../logic/board-accessor");
+        var accessor = new BoardAccessor(this);
+        var fields = accessor.getRangeFor(move.from.column,move.from.row);
         var valid = false;
         fields.forEach(function(element){
             if(element.column == move.to.column && element.row == move.to.row) valid = true;
         });
         if(!valid){
-            throw new Error("The Figure" + JSON.stringify(move.figure) + " cannot move from " + JSON.stringify(move.from) + " to " + JSON.stringify(move.to));
+          return false;
         }
         this.historyPush(move);
         return true;

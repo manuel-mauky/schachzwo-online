@@ -231,7 +231,7 @@ define(['angular', 'jquery', 'angular-growl'], function (angular, $) {
                 };
 
                 var getOrigin = function () {
-                    if (match.size == 7) {
+                    if ($scope.match.size == 7) {
                         return {row: 3, column: 3};
                     } else {
                         return {row: 4, column: 4};

@@ -524,6 +524,34 @@ describe('Mock REST API test /matches', function () {
                 .expect(400, done);
         });
 
+        it("should accept a 'surrender' move", function(done) {
+
+            var move = {figure: {color: model.Color.BLACK, type: model.FigureType.ZENITH},
+                from: {column: 3, row: 6},
+                to: {column: 3, row: 3}};
+
+            request(app)
+                .post('/matches/' + match.matchId + '/moves')
+                .send(move)
+                .set('Authorization', matches.HTTP_AUTHORIZATION_METHOD + ' 1')
+                .expect(201, done);
+
+        });
+
+        it("should not accept a invalid 'surrender' move", function(done) {
+
+            var move = {figure: {color: model.Color.BLACK, type: model.FigureType.ROCKS},
+                from: {column: 3, row: 5},
+                to: {column: 3, row: 3}};
+
+            request(app)
+                .post('/matches/' + match.matchId + '/moves')
+                .send(move)
+                .set('Authorization', matches.HTTP_AUTHORIZATION_METHOD + ' 1')
+                .expect(400, done);
+
+        });
+
         it("should support HTTP Auth", function (done) {
 
             var move = {figure: {color: model.Color.BLACK, type: model.FigureType.ROCKS},
