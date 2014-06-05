@@ -118,6 +118,10 @@ module.exports = function BoardAccessor(match) {
              element.fields.forEach(function(position){
                 if(element.field.figure.type == FigureType.ZENITH){
                     zenithPosition = position;
+                    if(isOrigin(zenithPosition.column,zenithPosition.row)){
+                        tail.push(position);
+                        return;
+                    }
                 }
                 match.historyPush(new model.Move({figure: element.field.figure, from: element.field.position, to: position}));
                  if(getThreatenPositions(zenithPosition.column,zenithPosition.row).length == 0){

@@ -184,6 +184,17 @@ describe ("BoardAcessor",function(){
                 assert.include(range, {column: 0, row: 3});
             });
 
+            it("should not include include the Origin if the Rocks stands on side beforee the origin", function () {
+
+                board.getField(2, 4).figure = new Figure({type: FigureType.ROCKS, color: Color.BLACK});
+
+                var range = accessor.getRangeFor(2, 4);
+
+                assert.equal(range.length, 1);
+
+                assert.include(range, {column: 2, row: 3});
+            });
+
         });
 
         describe("Man", function (){
@@ -939,7 +950,7 @@ describe ("BoardAcessor",function(){
             assert.equal(list[7].fields.length,0);
         });
 
-        it.skip("should be possible to move the zenith to origin", function(){
+        it("should be possible to move the zenith to origin", function(){
             match.addMove2(2,5,2,4);
             match.addMove2(3,1,3,2);
             match.addMove2(0,5,0,4);
