@@ -66,7 +66,34 @@ describe("gamelogic", function () {
         });
     });
 
-    describe("getValidMoves",function(){
+    describe("bug: player moves without user interaction",function(){
+
+        it("white player should not do a move on its own", function(){
+           match = modelFactory.createEmptyMatch(BoardSize.SMALL);
+           match.playerBlack = {playerId: 1, name: 'player1'};
+           match.playerWhite = {playerId: 2, name: 'player2'};
+           logic = new GameLogic(match);
+
+           match.addMove2(4,5,4,4);
+           match.addMove2(5,1,5,2);
+           match.addMove2(4,4,4,3);
+           match.addMove2(5,2,4,3);
+           match.addMove2(5,5,5,4);
+           match.addMove2(4,3,4,4);
+           match.addMove2(4,6,6,4);
+           match.addMove2(6,1,6,2);
+           match.addMove2(5,4,5,3);
+           match.addMove2(4,4,4,5);
+           match.addMove2(3,6,4,5);
+           match.addMove2(4,1,4,2);
+           match.addMove2(5,3,4,2);
+           match.addMove2(3,1,3,2);
+           match.addMove2(6,4,6,3);
+
+           assert.equal(match.getCurrentSnapshot().getField(5,2).figure, undefined); // undefined
+
+
+        });
 
     });
 
