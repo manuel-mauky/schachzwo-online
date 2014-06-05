@@ -86,6 +86,7 @@
                 <div class="modal-body">
 
                     <p ng-repeat="piece in availablePieces">
+                        <img src="../img/pieces/{{piece.type}}.svg" alt="">
                         <a class="btn btn-primary" ng-click="promoteRocks(piece)" href="">{{piece.type}}</a>
                     </p>
 
