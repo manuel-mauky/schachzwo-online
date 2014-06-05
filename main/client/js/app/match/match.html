@@ -75,11 +75,10 @@
 
 
     <!-- Piece Exchange Modal -->
-    <div class="modal fade" id="promotion-modal" tabindex="-1" role="dialog" aria-labelledby="exchange-modal-label" aria-hidden="true">
+    <div class="modal fade" id="promotion-modal" tabindex="-1" role="dialog" aria-labelledby="exchange-modal-label" aria-hidden="true" data-backdrop="static">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h4 class="modal-title" id="exchange-modal-label">Figur wechseln</h4>
                 </div>
                 <div class="modal-body">
@@ -88,6 +87,47 @@
                         <a class="btn btn-primary" ng-click="promoteRocks(piece)" href="">{{piece.type}}</a>
                     </p>
 
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Draw Modal -->
+    <div class="modal fade" id="draw-modal" tabindex="-1" role="dialog" aria-labelledby="draw-modal-label" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="draw-modal-label">Remis angeboten</h4>
+                </div>
+                <div class="modal-body">
+
+                    TODO: Text
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" ng-click="rejectDraw()">Ablehnen</button>
+                    <button type="button" class="btn btn-primary" ng-click="acceptDraw()">Annehmen</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- End Modal -->
+    <div class="modal fade" id="end-modal" tabindex="-1" role="dialog" aria-labelledby="end-modal-label" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="end-modal-label">Die Partie ist vorbei!</h4>
+                </div>
+                <div class="modal-body">
+
+                    <span ng-bind="endCause"/>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" ng-click="end()">Ok</button>
                 </div>
             </div>
         </div>

@@ -3,8 +3,8 @@
 define(['angular', 'jquery'], function (angular, $) {
 
     angular.module('match', []).
-        controller('matchCtrl', ['$scope', '$routeParams', '$http', 'endpoint', 'sse', 'matchLink',
-            function ($scope, $routeParams, $http, endpoint, sse, matchLink) {
+        controller('matchCtrl', ['$scope', '$routeParams', '$http', '$location', 'endpoint', 'sse', 'matchLink',
+            function ($scope, $routeParams, $http, $location, endpoint, sse, matchLink) {
 
                 var matchId = $routeParams.matchId;
                 var selectedField = {};
@@ -20,23 +20,36 @@ define(['angular', 'jquery'], function (angular, $) {
                 $scope.onlooker = false;
                 $scope.availablePieces = [];
 
-
                 sse(matchId).addEventListener("message", function (event) {
                     console.log(event.data);
 
-                    if (event.data == "update") {
+                    if (event.data == "update" || event.data == "draw-rejected") {
                         clearSelections();
                         update();
                     }
                     if (event.data == "match-started") {
                         initMatch();
                     }
+                    if (event.data == "draw-offered") {
+                        $('#draw-modal').modal('show');
+                    }
+
+                    if (event.data == "draw-accepted" || event.data.indexOf("lost") == 0 || event.data.indexOf("won") == 0) {
+                        $scope.itsMyTurn = false;
+                        $scope.endCause = event.data == "draw-accepted" ? "draw" : event.data;
+                        $scope.$apply();
+                        $('#end-modal').modal('show');
+                    }
+
+                    if (event.data == "draw-rejected") {
+                        //TODO growl
+                    }
 
                 }, false);
 
 
                 $scope.onSelect = function (row, column) {
-                    if (!$scope.itsMyTurn || $scope.match.state != 'playing') {
+                    if (!$scope.itsMyTurn || $scope.match.state != 'playing' || $scope.drawOffered) {
                         return;
                     }
 
@@ -75,7 +88,6 @@ define(['angular', 'jquery'], function (angular, $) {
                     }
                 };
 
-
                 $scope.promoteRocks = function (piece) {
                     if (currentMove) {
                         currentMove.figure = piece;
@@ -85,20 +97,41 @@ define(['angular', 'jquery'], function (angular, $) {
                 };
 
                 $scope.offerDraw = function () {
-                    $http.put(endpoint + "/" + matchId + "/draw", {draw: "offered" });
+                    $http.put(endpoint + "/" + matchId + "/draw", {draw: "offered" }).success(function () {
+                        $scope.itsMyTurn = false;
+                        clearSelections();
+                    });
                 };
 
+                $scope.rejectDraw = function () {
+                    $http.put(endpoint + "/" + matchId + "/draw", {draw: "rejected" }).success(function () {
+                        $('#draw-modal').modal('hide');
+                    });
+                };
+
+                $scope.acceptDraw = function () {
+                    $http.put(endpoint + "/" + matchId + "/draw", {draw: "accepted" }).success(function () {
+                        $('#draw-modal').modal('hide');
+                        $scope.endCause = "draw";
+                        $scope.$apply();
+                        $('#end-modal').modal('show');
+                    });
+                };
 
                 $scope.surrender = function () {
                     if ($scope.itsMyTurn) {
                         var ownZenith = getOwnZenith();
-
                         postMove({
                             figure: ownZenith.figure,
                             from: ownZenith.position,
                             to: getOrigin()
                         });
                     }
+                };
+
+                $scope.end = function () {
+                    $('#end-modal').modal('hide');
+                    $location.path('index.html');
                 };
 
                 var initMatch = function () {
@@ -108,6 +141,9 @@ define(['angular', 'jquery'], function (angular, $) {
 
                         $http.get(endpoint + "/" + matchId + "/self").success(function (player) {
                             $scope.self = player;
+                            if (player.color === "black" && !match.playerWhite) {
+                                $('#link-modal').modal('show');
+                            }
                             update();
                         }).error(function () {
                             $scope.onlooker = true;
@@ -242,6 +278,5 @@ define(['angular', 'jquery'], function (angular, $) {
                 initMatch();
 
             }]);
-
 
 });
