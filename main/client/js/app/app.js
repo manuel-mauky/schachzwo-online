@@ -2,10 +2,12 @@
 
 define([
     'angular',
-    'angular-route'], function (angular) {
+    'angular-route',
+    'angular-growl'], function (angular) {
 
     angular.module('schachzwoApp', [
         'ngRoute',
+        'angular-growl',
         'match',
         'landing',
         'login',
@@ -34,6 +36,9 @@ define([
 
             $routeProvider.otherwise({redirectTo: '/'});
 
+        }]).
+        config(['growlProvider', function(growlProvider) {
+            growlProvider.globalTimeToLive(5000);
         }]).
         value('version', '0.1').
         value('endpoint', '../matches').

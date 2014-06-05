@@ -1,10 +1,10 @@
 'use strict';
 
-define(['angular', 'jquery'], function (angular, $) {
+define(['angular', 'jquery', 'angular-growl'], function (angular, $) {
 
     angular.module('match', []).
-        controller('matchCtrl', ['$scope', '$routeParams', '$http', '$location', 'endpoint', 'sse', 'matchLink',
-            function ($scope, $routeParams, $http, $location, endpoint, sse, matchLink) {
+        controller('matchCtrl', ['$scope', '$routeParams', '$http', '$location', 'growl', 'endpoint', 'sse', 'matchLink',
+            function ($scope, $routeParams, $http, $location, growl, endpoint, sse, matchLink) {
 
                 var matchId = $routeParams.matchId;
                 var selectedField = {};
@@ -28,6 +28,7 @@ define(['angular', 'jquery'], function (angular, $) {
                         update();
                     }
                     if (event.data == "match-started") {
+                        growl.addSuccessMessage("Die Partie kann beginnen");
                         initMatch();
                     }
                     if (event.data == "draw-offered") {
@@ -42,7 +43,7 @@ define(['angular', 'jquery'], function (angular, $) {
                     }
 
                     if (event.data == "draw-rejected") {
-                        //TODO growl
+                        growl.addWarnMessage("Remis wurde abgelehnt");
                     }
 
                 }, false);
@@ -153,14 +154,12 @@ define(['angular', 'jquery'], function (angular, $) {
 
                 };
 
-
                 var update = function () {
 
                     currentMove = null;
                     $http.get(endpoint + "/" + matchId + "/board").success(function (board) {
 
                         $scope.board = board;
-
                         $http.get(endpoint + "/" + matchId + "/moves").success(function (moves) {
                             $scope.moves = moves;
                             $scope.itsMyTurn = !$scope.onlooker

@@ -6,6 +6,7 @@ requirejs.config({
         //AngularJS
         angular: 'libs/angular/angular.min',
         'angular-route': 'libs/angular/angular-route.min',
+        'angular-growl': 'libs/angular/angular-growl.min',
 
         //jQuery
         jquery: 'libs/jquery/jquery-2.1.0.min',
@@ -23,6 +24,7 @@ requirejs.config({
             exports: 'angular'
         },
         'angular-route': ['angular'],
+        'angular-growl': ['angular'],
         bootstrap: ['jquery'],
         'jquery-ui': ['jquery'],
         'schachzwo-board.ui': ['jquery-ui']
