@@ -3,8 +3,8 @@
 define(['angular', 'jquery', 'angular-growl'], function (angular, $) {
 
     angular.module('match', []).
-        controller('matchCtrl', ['$scope', '$routeParams', '$http', '$location', 'growl', 'endpoint', 'sse', 'matchLink',
-            function ($scope, $routeParams, $http, $location, growl, endpoint, sse, matchLink) {
+        controller('matchCtrl', ['$scope', '$routeParams', '$http', '$location', 'growl', 'endpoint', 'sse', 'matchLink', 'endMessages',
+            function ($scope, $routeParams, $http, $location, growl, endpoint, sse, matchLink, endMessages) {
 
                 var matchId = $routeParams.matchId;
                 var selectedField = {};
@@ -157,6 +157,10 @@ define(['angular', 'jquery', 'angular-growl'], function (angular, $) {
 
                 $scope.isItBottomPlayersTurn = function () {
                     return $scope.match.state == "playing" && ($scope.moves.length + ($scope.self.color == 'white' ? 1 : 0)) % 2 == 0;
+                };
+
+                $scope.getEndMessage = function() {
+                    return endMessages($scope.endCause);
                 };
 
                 $scope.end = function () {

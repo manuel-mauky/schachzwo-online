@@ -13,7 +13,8 @@ define([
         'login',
         'schachzwoBoard',
         'sse',
-        'matchLink']).
+        'matchLink',
+        'endMessages']).
         config(['$routeProvider', function ($routeProvider) {
 
             $routeProvider.when("/match/:matchId/login",

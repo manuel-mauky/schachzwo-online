@@ -43,7 +43,8 @@ require([
         'app/login/login',
         'app/match/directives/schachzwo-board',
         'app/match/services/sse',
-        'app/match/services/match-link'],
+        'app/match/services/match-link',
+        'app/match/services/end-messages'],
     function (angular) {
         require(['domReady!'], function (document) {
 
