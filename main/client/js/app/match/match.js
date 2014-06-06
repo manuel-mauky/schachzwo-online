@@ -29,6 +29,7 @@ define(['angular', 'jquery', 'angular-growl'], function (angular, $) {
                     }
                     if (event.data == "match-started") {
                         growl.addSuccessMessage("Die Partie kann beginnen");
+                        $('#link-modal').modal('hide');
                         initMatch();
                     }
                     if (event.data == "draw-offered") {
@@ -132,9 +133,9 @@ define(['angular', 'jquery', 'angular-growl'], function (angular, $) {
 
                 $scope.getBottomPlayerName = function () {
                     try {
-                   return $scope.self.color === 'black' ? $scope.match.playerBlack.name : $scope.match.playerWhite.name;
+                        return $scope.self.color === 'black' ? $scope.match.playerBlack.name : $scope.match.playerWhite.name;
                     } catch (e) {
-                        return $scope.onlooker ? "Schwarzer Spieler" :"Du";
+                        return $scope.onlooker ? "Schwarzer Spieler" : "Du";
                     }
                 };
 
@@ -146,11 +147,11 @@ define(['angular', 'jquery', 'angular-growl'], function (angular, $) {
                     }
                 };
 
-                $scope.isItTopPlayersTurn = function() {
+                $scope.isItTopPlayersTurn = function () {
                     return $scope.match.state == "playing" && !$scope.isItBottomPlayersTurn();
                 };
 
-                $scope.isItBottomPlayersTurn = function() {
+                $scope.isItBottomPlayersTurn = function () {
                     return $scope.match.state == "playing" && ($scope.moves.length + ($scope.self.color == 'white' ? 1 : 0)) % 2 == 0;
                 };
 
@@ -195,7 +196,10 @@ define(['angular', 'jquery', 'angular-growl'], function (angular, $) {
                         $http.get(endpoint + "/" + matchId + "/captured-pieces").success(function (pieces) {
 
                             $scope.availablePieces = pieces.filter(function (entry) {
-                                return entry.number > 0 && entry.piece && entry.piece.color == $scope.self.color;
+                                return entry.number > 0 &&
+                                    entry.piece &&
+                                    entry.piece.color == $scope.self.color &&
+                                    entry.piece.type != "rocks";
                             }).map(function (entry) {
                                 return entry.piece;
                             });
@@ -285,7 +289,7 @@ define(['angular', 'jquery', 'angular-growl'], function (angular, $) {
                 };
 
                 var isPromotionPossible = function (move) {
-                    if (move.figure.type != "rocks") {
+                    if (move.figure.type != "rocks" || $scope.availablePieces.length == 0) {
                         return false;
                     }
                     var lastRow = $scope.self.color == 'white' ? $scope.match.size - 1 : 0;
