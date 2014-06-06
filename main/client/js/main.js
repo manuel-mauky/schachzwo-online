@@ -11,6 +11,7 @@ requirejs.config({
         //jQuery
         jquery: 'libs/jquery/jquery-2.1.0.min',
         'jquery-ui': 'libs/jquery/jquery-ui.min',
+        'jquery-validate': 'libs/jquery/jquery.validate.min',
         'schachzwo-board.ui': 'app/match/directives/schachzwo-board.ui',
 
         //other
@@ -26,6 +27,7 @@ requirejs.config({
         'angular-route': ['angular'],
         'angular-growl': ['angular'],
         bootstrap: ['jquery'],
+        'jquery-validate': ['jquery'],
         'jquery-ui': ['jquery'],
         'schachzwo-board.ui': ['jquery-ui']
     }

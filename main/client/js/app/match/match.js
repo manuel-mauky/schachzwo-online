@@ -130,6 +130,30 @@ define(['angular', 'jquery', 'angular-growl'], function (angular, $) {
                     }
                 };
 
+                $scope.getBottomPlayerName = function () {
+                    try {
+                   return $scope.self.color === 'black' ? $scope.match.playerBlack.name : $scope.match.playerWhite.name;
+                    } catch (e) {
+                        return $scope.onlooker ? "Schwarzer Spieler" :"Du";
+                    }
+                };
+
+                $scope.getTopPlayerName = function () {
+                    try {
+                        return $scope.self.color === 'black' ? $scope.match.playerWhite.name : $scope.match.playerBlack.name;
+                    } catch (e) {
+                        return $scope.onlooker ? "Weißer Spieler" : "Dein Gegner";
+                    }
+                };
+
+                $scope.isItTopPlayersTurn = function() {
+                    return $scope.match.state == "playing" && !$scope.isItBottomPlayersTurn();
+                };
+
+                $scope.isItBottomPlayersTurn = function() {
+                    return $scope.match.state == "playing" && ($scope.moves.length + ($scope.self.color == 'white' ? 1 : 0)) % 2 == 0;
+                };
+
 
                 var initMatch = function () {
 

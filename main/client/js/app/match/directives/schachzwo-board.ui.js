@@ -57,7 +57,7 @@
             this.fields = fields;
             var width = this.canvas.attr('width');
             var height = this.canvas.attr('height');
-            this._draw(width, height);
+            this._draw(Math.min(width, height));
         },
 
         _respond: function () {
@@ -65,11 +65,12 @@
             var container = this.canvas.parent();
 
             var width = container.width();
-            var height = container.height() * .9;
-            this.canvas.attr('width', width);
-            this.canvas.attr('height', height);
+            var height = window.innerHeight * .8;
+            var boardWidth = Math.min(width, height);
+            this.canvas.attr('width', boardWidth);
+            this.canvas.attr('height', boardWidth);
 
-            this._draw(width, height);
+            this._draw(boardWidth);
         },
 
         _checkColor: function (color) {
@@ -98,7 +99,7 @@
             return this.options.self === Color.BLACK ? row : this.options.boardSize - row - 1;
         },
 
-        _draw: function (width, height) {
+        _draw: function (boardWidth) {
 
             var context = this.canvasContext;
             var boardSize = this.options.boardSize;
@@ -117,11 +118,10 @@
 
             this._checkBoardSize(boardSize);
 
-            var boardWidth = Math.min(width, height);
             var border = (3 / 100) * boardWidth;
             boardWidth -= 2 * border;
 
-            var x0 = (width - boardWidth) / 2;
+            var x0 = border;
             var y0 = border;
             var fieldSize = boardWidth / boardSize;
 
