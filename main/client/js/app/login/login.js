@@ -3,8 +3,8 @@
 define(['angular', 'jquery', 'jquery-validate'], function (angular, $) {
 
     angular.module("login", [])
-        .controller("loginCtrl", ["$scope", "$http", "$routeParams", "endpoint", "$location",
-            function ($scope, $http, $routeParams, endpoint, $location) {
+        .controller("loginCtrl", ["$scope", "$http", "$routeParams", "endpoint", "$location", "$cookies",
+            function ($scope, $http, $routeParams, endpoint, $location, $cookies) {
 
                 var matchId = $routeParams.matchId;
 
@@ -37,6 +37,7 @@ define(['angular', 'jquery', 'jquery-validate'], function (angular, $) {
                 });
 
                 $scope.match = {size: 7};
+                $scope.playerName = $cookies.schachZwoPlayerName;
 
                 $http.get(endpoint + "/" + matchId).success(function (match) {
                     $scope.match = match;
@@ -44,7 +45,7 @@ define(['angular', 'jquery', 'jquery-validate'], function (angular, $) {
                 });
 
                 $scope.login = function () {
-
+                    $cookies.schachZwoPlayerName =  $scope.playerName;
                     console.log("login : " + matchId);
                     $http.post(endpoint + "/" + matchId + "/login", {name: $scope.playerName})
                         .success(function (player) {

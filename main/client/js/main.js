@@ -7,6 +7,7 @@ requirejs.config({
         angular: 'libs/angular/angular.min',
         'angular-route': 'libs/angular/angular-route.min',
         'angular-growl': 'libs/angular/angular-growl.min',
+        'angular-cookies': 'libs/angular/angular-cookies.min',
 
         //jQuery
         jquery: 'libs/jquery/jquery-2.1.0.min',
@@ -26,6 +27,7 @@ requirejs.config({
         },
         'angular-route': ['angular'],
         'angular-growl': ['angular'],
+        'angular-cookies': ['angular'],
         bootstrap: ['jquery'],
         'jquery-validate': ['jquery'],
         'jquery-ui': ['jquery'],

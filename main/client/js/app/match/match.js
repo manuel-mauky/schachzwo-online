@@ -163,14 +163,6 @@ define(['angular', 'jquery', 'angular-growl'], function (angular, $) {
                     return endMessages($scope.endCause);
                 };
 
-                $scope.end = function () {
-                    $('#end-modal').modal('hide');
-                    $('body').removeClass('modal-open');
-                    $('.modal-backdrop').remove();
-                    $location.path("/index.html");
-                };
-
-
                 var initMatch = function () {
 
                     $http.get(endpoint + "/" + matchId).success(function (match) {
