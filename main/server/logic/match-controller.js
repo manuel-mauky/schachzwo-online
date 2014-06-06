@@ -212,13 +212,22 @@ module.exports.addMove = function(matchId, playerId, moveJson, callbacks){
         }
 
         if (match.addMove(move)) {
+
+            var gameLogic = new GameLogic(match);
+            var color = match.getColorOfActivePlayer() == model.Color.WHITE ? model.Color.BLACK : model.Color.WHITE;
+            var checkType = gameLogic.getCheckType(color);
+
+            if(checkType == CheckType.CHECK_MATE ||checkType == CheckType.CHECK_TARGET || checkType == CheckType.CHECK_TARGET_BOTH){
+                match.state = model.State.FINISHED;
+            }
+
             store.updateMatch(match, function(err, match){
                 if(err || !match){
                     callWhenDefined(callbacks.onMoveFailed,'Move can not be applied because the move is invalid.');
                     return;
                 }
 
-                verifyCheckType(match);
+                verifyCheckType(match,checkType);
 
                 callWhenDefined(callbacks.onSuccess, match.history);
             });
@@ -348,40 +357,33 @@ var callWhenDefined = function(callback){
 };
 
 
-var verifyCheckType = function (match) {
+var verifyCheckType = function (match,checkType) {
 
-    var gameLogic = new GameLogic(match);
+    var color = match.getColorOfActivePlayer();
+    var self = color == model.Color.WHITE ? match.playerBlack : match.playerWhite;
+    var opponent = color == model.Color.WHITE ? match.playerWhite : match.playerBlack;
 
-    var verifyForColor = function(color) {
+    if (checkType == CheckType.CHECK) {
+        sse.sendMessage(message.IS_IN_CHECK, match.matchId, self.playerId);
+    }
 
-        var checkType = gameLogic.getCheckType(color);
-        var self = color == model.Color.WHITE ? match.playerWhite : match.playerBlack;
-        var opponent = color == model.Color.WHITE ? match.playerBlack : match.playerWhite;
+    if (checkType == CheckType.CHECK_MATE) {
+        match.state = model.State.FINISHED;
+        sse.sendMessage(message.HAS_WON_BY_CHECK_MATE, match.matchId, self.playerId);
+        sse.sendMessage(message.HAS_LOST_BY_CHECK_MATE, match.matchId, opponent.playerId);
+    }
 
-        if (checkType == CheckType.CHECK) {
-            sse.sendMessage(message.IS_IN_CHECK, match.matchId, self.playerId);
-        }
+    if (checkType == CheckType.CHECK_TARGET) {
+        match.state = model.State.FINISHED;
+        sse.sendMessage(message.HAS_WON_BY_CHECK_TARGET, match.matchId, self.playerId);
+        sse.sendMessage(message.HAS_LOST_BY_CHECK_TARGET, match.matchId, opponent.playerId);
+    }
 
-        if (checkType == CheckType.CHECK_MATE) {
-            match.state = model.State.FINISHED;
-            sse.sendMessage(message.HAS_WON_BY_CHECK_MATE, match.matchId, self.playerId);
-            sse.sendMessage(message.HAS_LOST_BY_CHECK_MATE, match.matchId, opponent.playerId);
-        }
-
-        if (checkType == CheckType.CHECK_TARGET) {
-            match.state = model.State.FINISHED;
-            sse.sendMessage(message.HAS_WON_BY_CHECK_TARGET, match.matchId, self.playerId);
-            sse.sendMessage(message.HAS_LOST_BY_CHECK_TARGET, match.matchId, opponent.playerId);
-        }
-
-        if (checkType == CheckType.CHECK_TARGET_BOTH) {
-            match.state = model.State.FINISHED;
-            sse.sendMessage(message.HAS_WON_BY_CHECK_TARGET, match.matchId, self.playerId);
-            sse.sendMessage(message.HAS_LOST_BUT_CAN_FOLLOW_UP, match.matchId, opponent.playerId);
-        }
-    };
+    if (checkType == CheckType.CHECK_TARGET_BOTH) {
+        match.state = model.State.FINISHED;
+        sse.sendMessage(message.HAS_WON_BY_CHECK_TARGET, match.matchId, self.playerId);
+        sse.sendMessage(message.HAS_LOST_BUT_CAN_FOLLOW_UP, match.matchId, opponent.playerId);
+    }
 
     sse.sendMessage(message.UPDATE, match.matchId);
-    verifyForColor('white');
-    verifyForColor('black');
 };
