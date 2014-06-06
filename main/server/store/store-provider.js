@@ -13,7 +13,7 @@ var StoreType = {
     MONGODB: 2
 };
 
-module.exports.activeStoreType = StoreType.INMEMORY;
+module.exports.activeStoreType = StoreType.MONGODB;
 
 module.exports.getStore = function(){
     "use strict";
