@@ -124,10 +124,15 @@
             </div>
             <div class="modal-body">
 
-                <p ng-repeat="piece in availablePieces">
-                    <img src="../img/pieces/{{piece.type}}-{{piece.color}}.svg" alt="">
-                    <a class="btn btn-primary" ng-click="promoteRocks(piece)" href="">{{piece.type}}</a>
-                </p>
+                <div class="row">
+
+                    <div class="col-xs-6 col-md-3"  ng-repeat="piece in availablePieces">
+                        <a ng-click="promoteRocks(piece)" class="thumbnail">
+                            <img src="../img/pieces/{{piece.type}}-{{piece.color}}.svg" style="width: 80px; height: 80px;">
+                        </a>
+                    </div>
+
+                </div>
 
             </div>
         </div>
