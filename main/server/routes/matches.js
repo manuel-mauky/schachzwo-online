@@ -48,7 +48,7 @@ var registerSSE = function (req, res) {
         var playerId = restUtils.findPlayerId(req);
         return sse.initClient(req, res, match.matchId, playerId);
     });
-}
+};
 
 
 route.post("/", function (req, res) {
@@ -129,10 +129,15 @@ route.post("/:id/login", function (req, res) {
         );
     }
 
-    matchController.login(req.params.id, name,
+
+    var playerId = restUtils.findPlayerId(req);
+
+    matchController.login(req.params.id, playerId, name,
         {
             onSuccess: function (player) {
-                res.cookie(PLAYER_COOKIE_NAME, player.playerId);
+                res.cookie(PLAYER_COOKIE_NAME, player.playerId, {
+                    maxAge:  (30 * 24 * 60 * 60 * 1000) // 30 days as millis
+                });
 
                 res.json(player);
             },
