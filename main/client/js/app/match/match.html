@@ -37,10 +37,9 @@
 
             <div class="row">
 
-
                 <div class="col-md-8 col-lg-6" style="padding-top: 80px;">
 
-                    <div class="panel panel-default">
+                    <div class="panel panel-default" ng-show="match.state != 'finished'">
                         <div class="panel-body">
 
                             <button type="button" class="btn btn-primary btn-lg" data-toggle="modal"
@@ -62,7 +61,7 @@
 
                             <p style="padding-top: 20px">
 
-                            <div class="alert alert-info" ng-show="onlooker">Du bist ein Zaungast</div>
+                            <div class="alert alert-info" ng-show="onlooker">Du bist Zuschauer der Partie</div>
                             <div class="alert alert-success" ng-show="itsMyTurn">Du bist am Zug</div>
                             <div class="alert alert-warning" ng-show="match.state == 'preparing'">Auf Gegner warten
                                 ...
@@ -71,6 +70,9 @@
                         </div>
 
                     </div>
+
+                    <div class="alert alert-warning"  ng-show="match.state == 'finished'">Die Partie ist beendet</div>
+
                 </div>
 
 
@@ -100,7 +102,7 @@
 
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Schließen</button>
                     </div>
                 </div>
             </div>
@@ -138,9 +140,7 @@
                         <h4 class="modal-title" id="draw-modal-label">Remis angeboten</h4>
                     </div>
                     <div class="modal-body">
-
-                        TODO: Text
-
+                        Dein Gegenspieler hat dir ein Remis angeboten
                     </div>
 
                     <div class="modal-footer">
@@ -165,7 +165,8 @@
 
                     </div>
                     <div class="modal-footer">
-                        <a class="btn btn-primary" href="index.html">Ok</a>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Zurück zum Spielfeld</button>
+                        <a class="btn btn-primary" href="index.html">Zur Startseite</a>
                     </div>
                 </div>
             </div>

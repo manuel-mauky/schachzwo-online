@@ -249,10 +249,12 @@ define(['angular', 'jquery', 'angular-growl'], function (angular, $) {
                 };
 
                 var getValidMoves = function (field) {
-                    for (var i in validMoves) {
-                        var entry = validMoves[i]
-                        if (entry.field.position.row == field.position.row && entry.field.position.column == field.position.column) {
-                            return entry.fields;
+                    if (field && field.position) {
+                        for (var i in validMoves) {
+                            var entry = validMoves[i];
+                            if (entry.field.position.row == field.position.row && entry.field.position.column == field.position.column) {
+                                return entry.fields;
+                            }
                         }
                     }
                     return [];
