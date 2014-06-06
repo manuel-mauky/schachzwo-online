@@ -159,6 +159,13 @@ define(['angular', 'jquery', 'angular-growl'], function (angular, $) {
                     return $scope.match.state == "playing" && ($scope.moves.length + ($scope.self.color == 'white' ? 1 : 0)) % 2 == 0;
                 };
 
+                $scope.end = function () {
+                    $('#end-modal').modal('hide');
+                    $('body').removeClass('modal-open');
+                    $('.modal-backdrop').remove();
+                    $location.path("/index.html");
+                };
+
 
                 var initMatch = function () {
 

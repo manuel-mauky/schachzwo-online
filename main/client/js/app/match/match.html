@@ -71,7 +71,7 @@
 
                     </div>
 
-                    <div class="alert alert-warning"  ng-show="match.state == 'finished'">Die Partie ist beendet</div>
+                    <div class="alert alert-warning" ng-show="match.state == 'finished'">Die Partie ist beendet</div>
 
                 </div>
 
@@ -109,68 +109,69 @@
         </div>
 
 
-        <!-- Piece Exchange Modal -->
-        <div class="modal fade" id="promotion-modal" tabindex="-1" role="dialog"
-             aria-labelledby="exchange-modal-label"
-             aria-hidden="true" data-backdrop="static">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title" id="exchange-modal-label">Figur wechseln</h4>
-                    </div>
-                    <div class="modal-body">
+    </div>
+</div>
 
-                        <p ng-repeat="piece in availablePieces">
-                            <img src="../img/pieces/{{piece.type}}-{{piece.color}}.svg" alt="">
-                            <a class="btn btn-primary" ng-click="promoteRocks(piece)" href="">{{piece.type}}</a>
-                        </p>
 
-                    </div>
-                </div>
+<!-- Piece Exchange Modal -->
+<div class="modal fade" id="promotion-modal" tabindex="-1" role="dialog"
+     aria-labelledby="exchange-modal-label"
+     aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="exchange-modal-label">Figur wechseln</h4>
+            </div>
+            <div class="modal-body">
+
+                <p ng-repeat="piece in availablePieces">
+                    <img src="../img/pieces/{{piece.type}}-{{piece.color}}.svg" alt="">
+                    <a class="btn btn-primary" ng-click="promoteRocks(piece)" href="">{{piece.type}}</a>
+                </p>
+
             </div>
         </div>
+    </div>
+</div>
 
 
-        <!-- Draw Modal -->
-        <div class="modal fade" id="draw-modal" tabindex="-1" role="dialog" aria-labelledby="draw-modal-label"
-             aria-hidden="true" data-backdrop="static">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title" id="draw-modal-label">Remis angeboten</h4>
-                    </div>
-                    <div class="modal-body">
-                        Dein Gegenspieler hat dir ein Remis angeboten
-                    </div>
+<!-- Draw Modal -->
+<div class="modal fade" id="draw-modal" tabindex="-1" role="dialog" aria-labelledby="draw-modal-label"
+     aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="draw-modal-label">Remis angeboten</h4>
+            </div>
+            <div class="modal-body">
+                Dein Gegenspieler hat dir ein Remis angeboten
+            </div>
 
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" ng-click="rejectDraw()">Ablehnen</button>
-                        <button type="button" class="btn btn-primary" ng-click="acceptDraw()">Annehmen</button>
-                    </div>
-                </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" ng-click="rejectDraw()">Ablehnen</button>
+                <button type="button" class="btn btn-primary" ng-click="acceptDraw()">Annehmen</button>
             </div>
         </div>
+    </div>
+</div>
 
-        <!-- End Modal -->
-        <div class="modal fade" id="end-modal" tabindex="-1" role="dialog" aria-labelledby="end-modal-label"
-             data-backdrop="static">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title" id="end-modal-label">Die Partie ist vorbei!</h4>
-                    </div>
-                    <div class="modal-body">
+<!-- End Modal -->
+<div class="modal fade" id="end-modal" tabindex="-1" role="dialog" aria-labelledby="end-modal-label"
+     data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="end-modal-label">Die Partie ist vorbei!</h4>
+            </div>
+            <div class="modal-body">
 
-                        <span ng-bind="endCause"/>
+                <span ng-bind="endCause"/>
 
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Zurück zum Spielfeld</button>
-                        <a class="btn btn-primary" href="index.html">Zur Startseite</a>
-                    </div>
-                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Zurück zum Spielfeld</button>
+                <button class="btn btn-primary" ng-click="end()">Zur Startseite</button>
             </div>
         </div>
-
     </div>
 </div>
