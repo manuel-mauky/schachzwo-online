@@ -212,6 +212,14 @@ module.exports.addMove = function(matchId, playerId, moveJson, callbacks){
         }
 
         if (match.addMove(move)) {
+
+            var gameLogic = new GameLogic(match);
+            var checkType = gameLogic.getCheckType(match.getColorOfActivePlayer());
+
+            if(checkType == CheckType.CHECK_MATE ||checkType == CheckType.CHECK_TARGET || checkType == CheckType.CHECK_TARGET_BOTH){
+                match.state = model.State.FINISHED;
+            }
+
             store.updateMatch(match, function(err, match){
                 if(err || !match){
                     callWhenDefined(callbacks.onMoveFailed,'Move can not be applied because the move is invalid.');
