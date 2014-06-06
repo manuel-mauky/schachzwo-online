@@ -47,6 +47,10 @@ define(['angular', 'jquery', 'angular-growl'], function (angular, $) {
                         growl.addWarnMessage("Remis wurde abgelehnt");
                     }
 
+                    if (event.data == "check") {
+                        growl.addWarnMessage("Du stehst im Schach!");
+                    }
+
                 }, false);
 
 
