@@ -11,7 +11,7 @@ define(['angular'], function (angular) {
                         return "Du hast gewonnen! – Sieg durch „Schach Matt“, du bekommst 0,5 Punkte!";
                     case "won-check-target":
                         return "Du hast gewonnen! – Sieg durch „Schach Ziel“, du bekommst 2 Punkte!";
-                    case "won-check-target-2":
+                    case "won-check-target-and-opponent-follow-up":
                         return "Du hast gewonnen! – Sieg durch „Schach Ziel mit Nachrücken“, du bekommst 2 Punkte!";
                     case "won-given-up":
                         return "Du hast gewonnen! – Dein Mitspieler hat aufgegeben, du bekommst 2 Punkte!";
