@@ -214,7 +214,11 @@ module.exports.addMove = function(matchId, playerId, moveJson, callbacks){
         if (match.addMove(move)) {
 
             var gameLogic = new GameLogic(match);
-            var color = match.getColorOfActivePlayer() == model.Color.WHITE ? model.Color.BLACK : model.Color.WHITE;
+            var color = match.getColorOfActivePlayer();
+            if (new BoardAccessor(match).isOrigin(move.to.column, move.to.row) && model.FigureType.ZENITH == move.figure.type){
+                color = match.getColorOfActivePlayer() == model.Color.WHITE ? model.Color.BLACK : model.Color.WHITE;
+            }
+
             var checkType = gameLogic.getCheckType(color);
 
             if(checkType == CheckType.CHECK_MATE ||checkType == CheckType.CHECK_TARGET || checkType == CheckType.CHECK_TARGET_BOTH){
@@ -227,7 +231,7 @@ module.exports.addMove = function(matchId, playerId, moveJson, callbacks){
                     return;
                 }
 
-                verifyCheckType(match,checkType);
+                verifyCheckType(match,checkType,color);
 
                 callWhenDefined(callbacks.onSuccess, match.history);
             });
@@ -357,11 +361,12 @@ var callWhenDefined = function(callback){
 };
 
 
-var verifyCheckType = function (match,checkType) {
+var verifyCheckType = function (match,checkType,color) {
 
-    var color = match.getColorOfActivePlayer();
     var self = color == model.Color.WHITE ? match.playerBlack : match.playerWhite;
     var opponent = color == model.Color.WHITE ? match.playerWhite : match.playerBlack;
+
+    sse.sendMessage(message.UPDATE, match.matchId);
 
     if (checkType == CheckType.CHECK) {
         sse.sendMessage(message.IS_IN_CHECK, match.matchId, self.playerId);
@@ -381,9 +386,8 @@ var verifyCheckType = function (match,checkType) {
 
     if (checkType == CheckType.CHECK_TARGET_BOTH) {
         match.state = model.State.FINISHED;
-        sse.sendMessage(message.HAS_WON_BY_CHECK_TARGET, match.matchId, self.playerId);
+        sse.sendMessage(message.HAS_WON_BY_CHECK_TARGET_AND_OPPONENT_FOLLOW_UP, match.matchId, self.playerId);
         sse.sendMessage(message.HAS_LOST_BUT_CAN_FOLLOW_UP, match.matchId, opponent.playerId);
     }
 
-    sse.sendMessage(message.UPDATE, match.matchId);
 };

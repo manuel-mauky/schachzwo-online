@@ -25,6 +25,7 @@ module.exports = {
     DRAW_ACCEPTED: "draw-accepted",
     DRAW_REJECTED: "draw-rejected",
     HAS_WON_BY_CHECK_TARGET: "won-check-target",
+    HAS_WON_BY_CHECK_TARGET_AND_OPPONENT_FOLLOW_UP: "won-check-target-and-opponent-follow-up",
     HAS_WON_BY_CHECK_MATE: "won-check-mate",
     HAS_WON_BY_GIVEN_UP: "won-given-up",
     HAS_LOST_BY_CHECK_TARGET: "lost-check-target",
