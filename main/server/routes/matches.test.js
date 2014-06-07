@@ -161,10 +161,75 @@ describe('Mock REST API test /matches', function () {
                         assert.isDefined(res.body.playerId);
                         assert.equal(res.body.color, model.Color.BLACK);
                     })
-                    .end(done);
+                    .end(function(err, res){
+                        if(err) throw err;
+
+                        matchStore.getMatch(match.matchId, function(err, match){
+                            if(err) throw err;
+
+                            assert.deepEqual(match.playerBlack, {playerId: res.body.playerId, name: "Bob"});
+                            assert.notOk(match.playerWhite);
+                            done();
+                        });
+                    });
+            });
+        });
+
+        it("should not add a new player when there is already a player with this id participating in the match", function(done){
+            var match = {
+                size: 7,
+                playerBlack: {playerId: 1, name: 'Bob'}};
+
+            matchStore.createMatch(match, function(err, match){
+
+                request(app)
+                    .post('/matches/' + match.matchId + '/login')
+                    .send({name: 'Bob'})
+                    .set('Cookie', [matches.PLAYER_COOKIE_NAME + '=1'])
+                    .expect(function(res) {
+                        assert.equal(res.body.name, "Bob");
+                        assert.isDefined(res.body.playerId);
+                        assert.equal(res.body.color, model.Color.BLACK);
+                    }).end(function(err){
+                        if(err) throw err;
+
+                        matchStore.getMatch(match.matchId, function(err, match){
+                            if(err) throw err;
+
+                            assert.deepEqual(match.playerBlack, {playerId: 1, name: "Bob"});
+                            assert.notOk(match.playerWhite);
+                            done();
+                        });
+                    })
 
             });
+        });
 
+        it("should reuse the playerId for a player even for new matches", function(done){
+            matchStore.createMatch({size: 7}, function (err, match) {
+
+                request(app)
+                    .post('/matches/' + match.matchId + '/login')
+                    .send({name: 'Bob'})
+                    .set('Cookie', [matches.PLAYER_COOKIE_NAME + '=13']) // this time I send a playerId
+                    .expect(200)
+                    .expect(function (res) {
+                        assert.equal(res.body.name, 'Bob');
+                        assert.isDefined(13);
+                        assert.equal(res.body.color, model.Color.BLACK);
+                    })
+                    .end(function(err, res){
+                        if(err) throw err;
+
+                        matchStore.getMatch(match.matchId, function(err, match){
+                            if(err) throw err;
+
+                            assert.deepEqual(match.playerBlack, {playerId: '13', name: "Bob"});
+                            assert.notOk(match.playerWhite);
+                            done();
+                        });
+                    });
+            });
         });
 
 
@@ -187,7 +252,17 @@ describe('Mock REST API test /matches', function () {
                         assert.equal(res.body.color, model.Color.WHITE);
 
                     })
-                    .end(done);
+                    .end(function(err, res){
+                        if(err) throw err;
+
+                        matchStore.getMatch(match.matchId, function(err, match){
+                            if(err) throw err;
+
+                            assert.deepEqual(match.playerBlack, {playerId: 1, name: "Bob"});
+                            assert.deepEqual(match.playerWhite, {playerId: res.body.playerId, name: "Jane"});
+                            done();
+                        });
+                    });
 
             });
         });
@@ -641,7 +716,7 @@ describe('Mock REST API test /matches', function () {
 
         before(function(){
             sse.sendMessage = sseSpy;
-        })
+        });
 
         beforeEach(function (done) {
             matchStore.createMatch({
@@ -660,10 +735,6 @@ describe('Mock REST API test /matches', function () {
         });
 
         it("should add a draw", function (done) {
-
-
-
-
             request(app)
                 .put(url)
                 .send({"draw": "offered"})

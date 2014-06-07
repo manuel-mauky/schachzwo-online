@@ -3,8 +3,8 @@
 define(['angular', 'jquery', 'angular-growl'], function (angular, $) {
 
     angular.module('match', []).
-        controller('matchCtrl', ['$scope', '$routeParams', '$http', '$location', 'growl', 'endpoint', 'sse', 'matchLink',
-            function ($scope, $routeParams, $http, $location, growl, endpoint, sse, matchLink) {
+        controller('matchCtrl', ['$scope', '$routeParams', '$http', '$location', 'growl', 'endpoint', 'sse', 'matchLink', 'endMessages',
+            function ($scope, $routeParams, $http, $location, growl, endpoint, sse, matchLink, endMessages) {
 
                 var matchId = $routeParams.matchId;
                 var selectedField = {};
@@ -29,6 +29,7 @@ define(['angular', 'jquery', 'angular-growl'], function (angular, $) {
                     }
                     if (event.data == "match-started") {
                         growl.addSuccessMessage("Die Partie kann beginnen");
+                        $('#link-modal').modal('hide');
                         initMatch();
                     }
                     if (event.data == "draw-offered") {
@@ -44,6 +45,10 @@ define(['angular', 'jquery', 'angular-growl'], function (angular, $) {
 
                     if (event.data == "draw-rejected") {
                         growl.addWarnMessage("Remis wurde abgelehnt");
+                    }
+
+                    if (event.data == "check") {
+                        growl.addWarnMessage("Du stehst im Schach!");
                     }
 
                 }, false);
@@ -130,6 +135,33 @@ define(['angular', 'jquery', 'angular-growl'], function (angular, $) {
                     }
                 };
 
+                $scope.getBottomPlayerName = function () {
+                    try {
+                        return $scope.self.color === 'black' ? $scope.match.playerBlack.name : $scope.match.playerWhite.name;
+                    } catch (e) {
+                        return $scope.onlooker ? "Schwarzer Spieler" : "Du";
+                    }
+                };
+
+                $scope.getTopPlayerName = function () {
+                    try {
+                        return $scope.self.color === 'black' ? $scope.match.playerWhite.name : $scope.match.playerBlack.name;
+                    } catch (e) {
+                        return $scope.onlooker ? "Weißer Spieler" : "Dein Gegner";
+                    }
+                };
+
+                $scope.isItTopPlayersTurn = function () {
+                    return $scope.match.state == "playing" && !$scope.isItBottomPlayersTurn();
+                };
+
+                $scope.isItBottomPlayersTurn = function () {
+                    return $scope.match.state == "playing" && ($scope.moves.length + ($scope.self.color == 'white' ? 1 : 0)) % 2 == 0;
+                };
+
+                $scope.getEndMessage = function() {
+                    return endMessages($scope.endCause);
+                };
 
                 var initMatch = function () {
 
@@ -171,7 +203,10 @@ define(['angular', 'jquery', 'angular-growl'], function (angular, $) {
                         $http.get(endpoint + "/" + matchId + "/captured-pieces").success(function (pieces) {
 
                             $scope.availablePieces = pieces.filter(function (entry) {
-                                return entry.number > 0 && entry.piece && entry.piece.color == $scope.self.color;
+                                return entry.number > 0 &&
+                                    entry.piece &&
+                                    entry.piece.color == $scope.self.color &&
+                                    entry.piece.type != "rocks";
                             }).map(function (entry) {
                                 return entry.piece;
                             });
@@ -217,10 +252,12 @@ define(['angular', 'jquery', 'angular-growl'], function (angular, $) {
                 };
 
                 var getValidMoves = function (field) {
-                    for (var i in validMoves) {
-                        var entry = validMoves[i]
-                        if (entry.field.position.row == field.position.row && entry.field.position.column == field.position.column) {
-                            return entry.fields;
+                    if (field && field.position) {
+                        for (var i in validMoves) {
+                            var entry = validMoves[i];
+                            if (entry.field.position.row == field.position.row && entry.field.position.column == field.position.column) {
+                                return entry.fields;
+                            }
                         }
                     }
                     return [];
@@ -261,7 +298,7 @@ define(['angular', 'jquery', 'angular-growl'], function (angular, $) {
                 };
 
                 var isPromotionPossible = function (move) {
-                    if (move.figure.type != "rocks") {
+                    if (move.figure.type != "rocks" || $scope.availablePieces.length == 0) {
                         return false;
                     }
                     var lastRow = $scope.self.color == 'white' ? $scope.match.size - 1 : 0;

@@ -184,7 +184,27 @@ describe ("BoardAcessor",function(){
                 assert.include(range, {column: 0, row: 3});
             });
 
-            it("should not include include the Origin if the Rocks stands on side beforee the origin", function () {
+            it("should be empty even on big boards when directly in front of the rocks is an enemy or own piece", function(){
+                var match = modelFactory.createMatch(model.BoardSize.BIG);
+                var board = match.getCurrentSnapshot();
+                var accessor = new BoardAccessor(match);
+
+                board.getField(0, 3).figure = new Figure({type: FigureType.ROCKS, color: Color.WHITE});
+
+                var range = accessor.getRangeFor(0,1);
+
+                assert.equal(range.length, 1);
+                assert.include(range, {column: 0, row: 2});
+
+                board.getField(0, 2).figure = board.getField(0, 3).figure;
+                board.getField(0, 3).figure = undefined;
+
+                range = accessor.getRangeFor(0, 1);
+
+                assert.equal(range.length, 0);
+            });
+
+            it("should not include include the Origin if the Rocks stands on side before the origin", function () {
 
                 board.getField(2, 4).figure = new Figure({type: FigureType.ROCKS, color: Color.BLACK});
 

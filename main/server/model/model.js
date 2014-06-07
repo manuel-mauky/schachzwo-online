@@ -1,4 +1,4 @@
-"use strict"
+"use strict";
 
 
 var assert = require("assert");
@@ -11,7 +11,7 @@ var assert = require("assert");
 var BoardSize = {
     SMALL: 7,
     BIG: 9
-}
+};
 
 /**
  * The possible color of a figure.
@@ -21,7 +21,7 @@ var BoardSize = {
 var Color = {
     BLACK: "black",
     WHITE: "white"
-}
+};
 
 /**
  * The types of figures that are possible.
@@ -36,7 +36,7 @@ var FigureType = {
     KNOWLEDGE: "knowledge",
     FAITH: "faith",
     ZENITH: "zenith"
-}
+};
 
 /**
  * The states that the match can have.
@@ -47,7 +47,7 @@ var State = {
     PREPARING: "preparing",
     FINISHED: "finished",
     PLAYING: "playing"
-}
+};
 
 /**
  * The Figure constructor. This the figures of the game.
@@ -67,7 +67,7 @@ var Figure = function (json) {
     this.type = json.type;
 
     return this;
-}
+};
 
 /**
  * The Field constructor. This represents a single field of the chess board.
@@ -89,7 +89,7 @@ var Field = function (json) {
     this.position = new Position(json.position);
 
     return this;
-}
+};
 
 /**
  * The Position Constructor. This represents a Position on the Board
@@ -105,7 +105,7 @@ var Position = function(json){
     this.column = json.column;
     this.row = json.row;
     return this;
-}
+};
 
 /**
  * The Move constructor. This represents a Move on the Board in the History
@@ -130,7 +130,7 @@ var Move = function(json){
 
 
     return this;
-}
+};
 
 var Draw = function (json) {
     assert.ok(json);
@@ -238,7 +238,7 @@ var Snapshot = function (json) {
     };
 
     return this;
-}
+};
 
 /**
  * The player constructor.
@@ -256,7 +256,7 @@ var Player = function (json) {
     this.name = json.name;
 
     return this;
-}
+};
 
 /**
  * The match constructor. A match represents the whole game with
@@ -397,7 +397,7 @@ var Match = function (json) {
             }
             return false;
         }
-    }
+    };
 
     this.addMove = function(move){
 
@@ -585,6 +585,24 @@ var Match = function (json) {
     };
 
     /**
+     * Returns <code>true</code> when the player with the given id is the black player of this match,
+     * otherwise <code>false</code>
+     * @param playerId
+     */
+    this.isBlackPlayer = function(playerId) {
+        return this.getBlackPlayerId() == playerId;
+    };
+
+    /**
+     * Returns <code>true</code> when the player with the given id is the white player of this match,
+     * otherwise <code>false</code>
+     * @param playerId
+     */
+    this.isWhitePlayer = function(playerId) {
+        return this.getWhitePlayerId() == playerId;
+    };
+
+    /**
      * returns <code>true</code> when the player with the given id is the active player,
      * otherwise <code>false</code>
      *
@@ -593,9 +611,9 @@ var Match = function (json) {
      */
     this.isPlayersTurn = function(playerId){
         var colorOfPlayer;
-        if(this.playerBlack && this.playerBlack.playerId == playerId){
+        if(this.isBlackPlayer(playerId)){
             colorOfPlayer = Color.BLACK;
-        } else if(this.playerWhite && this.playerWhite.playerId == playerId) {
+        } else if(this.isWhitePlayer(playerId)) {
             colorOfPlayer = Color.WHITE;
         }
 
@@ -609,19 +627,41 @@ var Match = function (json) {
      * @returns {*}
      */
     this.getOpponentPlayerId = function(playerId){
-        if(this.playerBlack && this.playerWhite){
-            if(this.playerBlack.playerId == playerId){
-                return this.playerWhite.playerId;
-            } else{
-                return this.playerBlack.playerId;
-            }
-        }else{
-            return undefined;
+        if(this.isBlackPlayer(playerId)){
+            return this.getWhitePlayerId();
+        }else if(this.isWhitePlayer(playerId)){
+            return this.getBlackPlayerId();
         }
+
+        return undefined;
+    };
+
+    /**
+     * If there is a black player currently participating this method returns its playerId.
+     * When no black player is participating this method returns <code>undefined</code>.
+     *
+     */
+    this.getBlackPlayerId = function(){
+        if(this.playerBlack){
+            return this.playerBlack.playerId;
+        }
+        return undefined;
+    };
+
+    /**
+     * If there is a white player currently participating this method returns its playerId.
+     * When no white player is participating this method returns <code>undefined</code>.
+     *
+     */
+    this.getWhitePlayerId = function(){
+        if(this.playerWhite){
+            return this.playerWhite.playerId;
+        }
+        return undefined;
     };
 
     return this;
-}
+};
 
 
 module.exports.BoardSize = BoardSize;

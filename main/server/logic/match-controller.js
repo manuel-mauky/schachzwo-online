@@ -106,22 +106,35 @@ module.exports.getPlayer = function(matchId, playerId, isOpponent, callbacks){
     });
 };
 
-module.exports.login = function(id, name, callbacks){
+module.exports.login = function(matchId, playerId, name, callbacks){
 
     var store = storeProvider.getStore();
-    store.getMatch(id, function(err, match){
+    store.getMatch(matchId, function(err, match){
         if(err || !match){
             callWhenDefined(callbacks.onMatchNotFound);
             return;
         }
 
+        if(playerId){
+            if(match.isBlackPlayer(playerId)){
+                var existingPlayer = match.playerBlack;
+                existingPlayer.color = model.Color.BLACK;
+                callWhenDefined(callbacks.onSuccess, existingPlayer);
+                return;
+            } else if(match.isWhitePlayer(playerId)){
+                var existingPlayer = match.playerBlack;
+                existingPlayer.color = model.Color.WHITE;
+                callWhenDefined(callbacks.onSuccess, existingPlayer);
+                return;
+            }
+        }
 
         if(match.isMatchFullyOccupied()){
             callWhenDefined(callbacks.onLoginFailed, "No more free places.");
             return;
         }
 
-        var player = new model.Player({playerId: uuid.v4(), name: name});
+        var player = new model.Player({playerId: (playerId ? playerId : uuid.v4()), name: name});
         var successfullyAdded = match.addPlayer(player);
 
         if (successfullyAdded) {
@@ -131,9 +144,11 @@ module.exports.login = function(id, name, callbacks){
                     return;
                 }
 
-                player.color = (player.playerId == match.playerBlack.playerId
-                    ? model.Color.BLACK :
-                    model.Color.WHITE);
+                if(match.isBlackPlayer(player.playerId)){
+                    player.color = model.Color.BLACK;
+                }else{
+                    player.color = model.Color.WHITE;
+                }
 
                 if (match.isMatchFullyOccupied()) {
                     sse.sendMessage(message.MATCH_STARTED, match.matchId);

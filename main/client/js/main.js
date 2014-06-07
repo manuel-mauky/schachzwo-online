@@ -7,10 +7,12 @@ requirejs.config({
         angular: 'libs/angular/angular.min',
         'angular-route': 'libs/angular/angular-route.min',
         'angular-growl': 'libs/angular/angular-growl.min',
+        'angular-cookies': 'libs/angular/angular-cookies.min',
 
         //jQuery
         jquery: 'libs/jquery/jquery-2.1.0.min',
         'jquery-ui': 'libs/jquery/jquery-ui.min',
+        'jquery-validate': 'libs/jquery/jquery.validate.min',
         'schachzwo-board.ui': 'app/match/directives/schachzwo-board.ui',
 
         //other
@@ -25,7 +27,9 @@ requirejs.config({
         },
         'angular-route': ['angular'],
         'angular-growl': ['angular'],
+        'angular-cookies': ['angular'],
         bootstrap: ['jquery'],
+        'jquery-validate': ['jquery'],
         'jquery-ui': ['jquery'],
         'schachzwo-board.ui': ['jquery-ui']
     }
@@ -41,7 +45,8 @@ require([
         'app/login/login',
         'app/match/directives/schachzwo-board',
         'app/match/services/sse',
-        'app/match/services/match-link'],
+        'app/match/services/match-link',
+        'app/match/services/end-messages'],
     function (angular) {
         require(['domReady!'], function (document) {
 

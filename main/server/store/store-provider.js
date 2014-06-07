@@ -11,7 +11,7 @@ var StoreType = {
 
     INMEMORY: 1,
     MONGODB: 2
-}
+};
 
 module.exports.activeStoreType = StoreType.MONGODB;
 

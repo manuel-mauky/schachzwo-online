@@ -2,18 +2,22 @@
 
 define([
     'angular',
+    'jquery',
     'angular-route',
-    'angular-growl'], function (angular) {
+    'angular-cookies',
+    'angular-growl'], function (angular, $) {
 
     angular.module('schachzwoApp', [
         'ngRoute',
+        'ngCookies',
         'angular-growl',
         'match',
         'landing',
         'login',
         'schachzwoBoard',
         'sse',
-        'matchLink']).
+        'matchLink',
+        'endMessages']).
         config(['$routeProvider', function ($routeProvider) {
 
             $routeProvider.when("/match/:matchId/login",
@@ -37,7 +41,7 @@ define([
             $routeProvider.otherwise({redirectTo: '/'});
 
         }]).
-        config(['growlProvider', function(growlProvider) {
+        config(['growlProvider', function (growlProvider) {
             growlProvider.globalTimeToLive(5000);
         }]).
         value('version', '0.1').
@@ -45,6 +49,20 @@ define([
         controller('appCtrl', ['$scope', 'version',
             function ($scope, version) {
                 $scope.version = version;
+
+                $scope.$on('$routeChangeStart', function () {
+
+                    //Close Bootstrap Modals
+                    var modal = $(".modal");
+                    if (typeof modal.modal === 'function') {
+                        console.log('bootstrap close modals');
+                        modal.modal('hide');
+                        modal.modal('hide');
+                        $('body').removeClass('modal-open');
+                        $('.modal-backdrop').remove();
+                    }
+                });
+
             } ]);
 
 });

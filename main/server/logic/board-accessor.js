@@ -253,8 +253,8 @@ module.exports = function BoardAccessor(match) {
         }
 
 
-        // for Big boards there is the special rule of walking two fields from the start
-        if (match.size == model.BoardSize.BIG) {
+        // for Big boards there is the special rule of walking two fields from the start (only when the first field is free too)
+        if (match.size == model.BoardSize.BIG && result.length == 1) {
             if (current.color == Color.WHITE && row == 1) {
                 rowTmp = row + 2;
             } else if (current.color == Color.BLACK && row == (match.size - 2)) {
