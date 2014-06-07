@@ -38,6 +38,11 @@ define([
                     controller: 'landingCtrl'
                 });
 
+            $routeProvider.when('/about',
+                {
+                    templateUrl: 'js/app/about/about.html'
+                });
+
             $routeProvider.when('/404',
                 {
                     templateUrl: 'js/app/error-pages/404.html'
