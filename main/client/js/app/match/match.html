@@ -115,20 +115,22 @@
 
 <!-- Piece Exchange Modal -->
 <div class="modal fade" id="promotion-modal" tabindex="-1" role="dialog"
-     aria-labelledby="exchange-modal-label"
-     aria-hidden="true" data-backdrop="static">
+     aria-labelledby="exchange-modal-label" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">&times;</button>
                 <h4 class="modal-title" id="exchange-modal-label">Figur wechseln</h4>
             </div>
             <div class="modal-body">
 
                 <div class="row">
 
-                    <div class="col-xs-6 col-md-3"  ng-repeat="piece in availablePieces">
+                    <div class="col-xs-6 col-md-3" ng-repeat="piece in availablePieces">
                         <a ng-click="promoteRocks(piece)" class="thumbnail">
-                            <img src="../img/pieces/{{piece.type}}-{{piece.color}}.svg" style="width: 80px; height: 80px;">
+                            <img src="../img/pieces/{{piece.type}}-{{piece.color}}.svg"
+                                 style="width: 80px; height: 80px;">
                         </a>
                     </div>
 
