@@ -56,12 +56,17 @@ describe("gamelogic", function () {
             match.historyPop();
             match.historyPop();
         });
-        it("should return CheckType.CHECK if Zenit is threaden from Rocks and Knight", function () {
+        it("should return CheckType.CHECK if Zenit is threaden from Rocks and Knight on White Player", function () {
             match.historyPush(new model.Move({figure: board.getField(3,0).figure, from: new Position({column: 3, row: 0}), to: new Position({column: 2, row: 4})}));
-            match.historyPush(new model.Move({figure: board.getField(3,6).figure, from: new Position({column: 3, row: 6}), to: new Position({column: 2, row: 2})}));
-            assert.equal(logic.getCheckType(Color.BLACK), CheckType.CHECK);
             assert.equal(logic.getCheckType(Color.WHITE), CheckType.CHECK);
+            assert.equal(logic.getCheckType(Color.BLACK), CheckType.NONE);
             match.historyPop();
+        });
+
+        it("should return CheckType.CHECK if Zenit is threaden from Rocks and Knight on Black Player", function () {
+            match.historyPush(new model.Move({figure: board.getField(3,6).figure, from: new Position({column: 3, row: 6}), to: new Position({column: 2, row: 2})}));
+            assert.equal(logic.getCheckType(Color.WHITE), CheckType.NONE);
+            assert.equal(logic.getCheckType(Color.BLACK), CheckType.CHECK);
             match.historyPop();
         });
     });
