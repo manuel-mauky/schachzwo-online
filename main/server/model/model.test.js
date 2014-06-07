@@ -363,8 +363,7 @@ describe("Match", function(){
         });
 
         it("should work with addMove2", function(){
-           var result = match.addMove2(2,5,2,4);
-           assert.isTrue(result);
+           assert.isTrue(match.addMove2(2,5,2,4));
            assert.equal(match.history.length, 1);
 
            assert.deepEqual(match.history[0].figure, {color: model.Color.BLACK, type: model.FigureType.ROCKS});
@@ -486,15 +485,15 @@ describe("Match", function(){
            assert.equal(match.rocksPromotion(move),false);
        });
        it("shold return true",function(){
-           match.addMove2(1,5,1,4);
-           match.addMove2(2,1,2,2);
-           match.addMove2(1,4,1,3);
-           match.addMove2(2,2,1,3);
-           match.addMove2(2,5,2,4);
-           match.addMove2(1,3,2,4);
-           match.addMove2(0,5,0,4);
-           match.addMove2(2,4,2,5);
-           match.addMove2(0,4,0,3);
+           assert.isTrue(match.addMove2(1,5,1,4));
+           assert.isTrue(match.addMove2(2,1,2,2));
+           assert.isTrue(match.addMove2(1,4,1,3));
+           assert.isTrue(match.addMove2(2,2,1,3));
+           assert.isTrue(match.addMove2(2,5,2,4));
+           assert.isTrue(match.addMove2(1,3,2,4));
+           assert.isTrue(match.addMove2(0,5,0,4));
+           assert.isTrue(match.addMove2(2,4,2,5));
+           assert.isTrue(match.addMove2(0,4,0,3));
            var move = new Move({figure: {color: Color.WHITE,type: FigureType.WOMAN},from: {column: 2,row: 5},to: {column: 1,row: 6}});
            assert.equal(match.rocksPromotion(move),true);
        });

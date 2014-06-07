@@ -955,13 +955,13 @@ describe ("BoardAcessor",function(){
         });
 
         it("should not be possible to move white rocks, because it would put the white zenith in state: check", function(){
-            match.addMove2(6,5,6,4);
-            match.addMove2(3,1,3,2);
-            match.addMove2(6,4,6,3);
-            match.addMove2(0,1,0,2);
-            match.addMove2(6,6,6,4);
-            match.addMove2(0,2,0,3);
-            match.addMove2(6,4,3,4);
+            assert.isTrue(match.addMove2(6,5,6,4));
+            assert.isTrue(match.addMove2(3,1,3,2));
+            assert.isTrue(match.addMove2(6,4,6,3));
+            assert.isTrue(match.addMove2(0,1,0,2));
+            assert.isTrue(match.addMove2(6,6,6,4));
+            assert.isTrue(match.addMove2(0,2,0,3));
+            assert.isTrue(match.addMove2(6,4,3,4));
 
             var list = accessor.getValidMoves(Color.WHITE);
             assert.isArray(list);
@@ -971,13 +971,13 @@ describe ("BoardAcessor",function(){
         });
 
         it("should be possible to move the zenith to origin", function(){
-            match.addMove2(2,5,2,4);
-            match.addMove2(3,1,3,2);
-            match.addMove2(0,5,0,4);
-            match.addMove2(3,0,3,1);
-            match.addMove2(0,4,0,3);
-            match.addMove2(3,1,2,2);
-            match.addMove2(0,3,0,2);
+            assert.isTrue(match.addMove2(2,5,2,4));
+            assert.isTrue(match.addMove2(3,1,3,2));
+            assert.isTrue(match.addMove2(0,5,0,4));
+            assert.isTrue(match.addMove2(3,0,3,1));
+            assert.isTrue(match.addMove2(0,4,0,3));
+            assert.isTrue(match.addMove2(3,1,2,2));
+            assert.isTrue(match.addMove2(0,3,0,2));
 
             var list = accessor.getValidMoves(Color.WHITE);
             assert.isArray(list);
@@ -1004,9 +1004,9 @@ describe ("BoardAcessor",function(){
         });
 
         it("should return one piece on a history with one captures Piece",function(){
-            match.addMove2(1,6,0,4);
-            match.addMove2(1,1,1,2);
-            match.addMove2(0,4,1,2);
+            assert.isTrue(match.addMove2(1,6,0,4));
+            assert.isTrue(match.addMove2(1,1,1,2));
+            assert.isTrue(match.addMove2(0,4,1,2));
             var pieces = accessor.getCapturedPieces();
 
             assert.equal(pieces.length,1);
@@ -1015,11 +1015,11 @@ describe ("BoardAcessor",function(){
         });
 
         it("should return 2 pieces on a history with 2 captures Piece",function(){
-            match.addMove2(1,6,0,4);
-            match.addMove2(1,1,1,2);
-            match.addMove2(0,4,1,2);
-            match.addMove2(6,1,6,2);
-            match.addMove2(1,2,3,1);
+            assert.isTrue(match.addMove2(1,6,0,4));
+            assert.isTrue(match.addMove2(1,1,1,2));
+            assert.isTrue(match.addMove2(0,4,1,2));
+            assert.isTrue(match.addMove2(6,1,6,2));
+            assert.isTrue(match.addMove2(1,2,3,1));
             var pieces = accessor.getCapturedPieces();
 
             assert.equal(pieces.length,1);
@@ -1028,13 +1028,13 @@ describe ("BoardAcessor",function(){
         });
 
         it("should return 3 pieces on a history with three captures Piece",function(){
-            match.addMove2(1,6,0,4);
-            match.addMove2(1,1,1,2);
-            match.addMove2(0,4,1,2);
-            match.addMove2(6,1,6,2);
-            match.addMove2(1,2,3,1);
-            match.addMove2(6,2,6,3);
-            match.addMove2(3,1,1,0);
+            assert.isTrue(match.addMove2(1,6,0,4));
+            assert.isTrue(match.addMove2(1,1,1,2));
+            assert.isTrue(match.addMove2(0,4,1,2));
+            assert.isTrue(match.addMove2(6,1,6,2));
+            assert.isTrue(match.addMove2(1,2,3,1));
+            assert.isTrue(match.addMove2(6,2,6,3));
+            assert.isTrue(match.addMove2(3,1,1,0));
             var pieces = accessor.getCapturedPieces();
 
             assert.equal(pieces.length,2);
@@ -1045,14 +1045,14 @@ describe ("BoardAcessor",function(){
         });
 
         it("should return 4 pieces on a history with 4 captures Piece after storage",function(done){
-            match.addMove2(1,6,0,4);
-            match.addMove2(1,1,1,2);
-            match.addMove2(0,4,1,2);
-            match.addMove2(6,1,6,2);
-            match.addMove2(1,2,3,1);
-            match.addMove2(6,2,6,3);
-            match.addMove2(3,1,1,0);
-            match.addMove2(0,0,1,0);
+            assert.isTrue(match.addMove2(1,6,0,4));
+            assert.isTrue(match.addMove2(1,1,1,2));
+            assert.isTrue(match.addMove2(0,4,1,2));
+            assert.isTrue(match.addMove2(6,1,6,2));
+            assert.isTrue(match.addMove2(1,2,3,1));
+            assert.isTrue(match.addMove2(6,2,6,3));
+            assert.isTrue(match.addMove2(3,1,1,0));
+            assert.isTrue(match.addMove2(0,0,1,0));
 
             var store = new StoreProvider.getStore();
             store.createMatch(match,function(err,result){
