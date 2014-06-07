@@ -40,6 +40,7 @@ define(['angular', 'jquery', 'angular-growl'], function (angular, $) {
                         $scope.itsMyTurn = false;
                         $scope.endCause = event.data == "draw-accepted" ? "draw" : event.data;
                         $scope.$apply();
+                        initMatch();
                         $('#end-modal').modal('show');
                     }
 

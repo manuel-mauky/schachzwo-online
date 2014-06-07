@@ -70,7 +70,6 @@ define([
                     //Close Bootstrap Modals
                     var modal = $(".modal");
                     if (typeof modal.modal === 'function') {
-                        console.log('bootstrap close modals');
                         modal.modal('hide');
                         modal.modal('hide');
                         $('body').removeClass('modal-open');

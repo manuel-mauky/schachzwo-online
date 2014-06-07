@@ -11,7 +11,7 @@ define(['angular'], function (angular) {
                 } else {
                     port = ":" + port;
                 }
-                return $location.protocol() + "://" + $location.host() + port + "/match/" + matchId;
+                return $location.protocol() + "://" + $location.host() + port + "/" + matchId;
             };
         }]);
 });

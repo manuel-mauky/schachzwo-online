@@ -11,18 +11,18 @@ var GameLogic = require("../logic/gamelogic").GameLogic;
 var storeProvider = require("../store/store-provider");
 
 route.get("/:matchId", function (req, res) {
-
+    console.log("link");
     var matchId = req.params.matchId;
 
     if(!matchId){
-        return res.status(404).redirect('/index.html#/404');
+        return res.status(404).redirect('/#/404');
     }
 
     var store = storeProvider.getStore();
 
     store.getMatch(matchId, function(err, match){
         if (err || !match) {
-            return res.status(404).redirect('/index.html#/404');
+            return res.status(404).redirect('/#/404');
         }
 
         var playerId = restUtils.findPlayerId(req);
@@ -47,7 +47,7 @@ route.get("/:matchId", function (req, res) {
 
 
 route.get("/", function (req, res) {
-    return res.status(404).redirect('/index.html#/404');
+    return res.status(404).redirect('/#/404');
 });
 
 module.exports.route = route;
