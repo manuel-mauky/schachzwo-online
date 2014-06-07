@@ -378,8 +378,8 @@ var callWhenDefined = function(callback){
 
 var verifyCheckType = function (match,checkType,color) {
 
-    var self = color == model.Color.WHITE ? match.playerBlack : match.playerWhite;
-    var opponent = color == model.Color.WHITE ? match.playerWhite : match.playerBlack;
+    var self = color == model.Color.BLACK ? match.playerBlack : match.playerWhite;
+    var opponent = color == model.Color.BLACK ? match.playerWhite : match.playerBlack;
 
     sse.sendMessage(message.UPDATE, match.matchId);
 
