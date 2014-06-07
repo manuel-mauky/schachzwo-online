@@ -24,7 +24,17 @@ app.use("/match", require("./server/routes/incoming-link").route);
 
 app.use(express.static(__dirname + "/client"));
 
-app.use("*", require("./server/routes/404").route);
+app.get("*", function(req, res){
+    // respond with html page
+    if (req.accepts('html')) {
+        return res.status(404).redirect('/index.html#/404');
+    }
+    // respond with json
+    if (req.accepts('json')) {
+        return res.status(404).send({ error: 'Not found' });
+    }
+    return res.status(404).send('Not found');
+});
 
 
 var server = app.listen(1337, function() {
