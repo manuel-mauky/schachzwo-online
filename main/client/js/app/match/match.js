@@ -178,6 +178,8 @@ define(['angular', 'jquery', 'angular-growl'], function (angular, $) {
                             $scope.onlooker = true;
                             update();
                         });
+                    }).error(function() {
+                        $location.path("/404");
                     });
 
                 };

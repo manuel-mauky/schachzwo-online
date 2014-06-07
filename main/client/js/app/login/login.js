@@ -49,10 +49,11 @@ define(['angular', 'jquery', 'jquery-validate'], function (angular, $) {
                     console.log("login : " + matchId);
                     $http.post(endpoint + "/" + matchId + "/login", {name: $scope.playerName})
                         .success(function (player) {
-                            $location.path("match/" + matchId);
+                            $location.path("/match/" + matchId);
                         })
                         .error(function (data, status, headers, config) {
                             console.log("error:" + status);
+                            $location.path("/500");
                         });
 
                 };

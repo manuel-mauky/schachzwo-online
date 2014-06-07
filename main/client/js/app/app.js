@@ -38,6 +38,16 @@ define([
                     controller: 'landingCtrl'
                 });
 
+            $routeProvider.when('/404',
+                {
+                    templateUrl: 'js/app/error-pages/404.html'
+                });
+
+            $routeProvider.when('/500',
+                {
+                    templateUrl: 'js/app/error-pages/500.html'
+                });
+
             $routeProvider.otherwise({redirectTo: '/'});
 
         }]).
