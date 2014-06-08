@@ -236,7 +236,7 @@ module.exports.addMove = function(matchId, playerId, moveJson, callbacks){
 
             var checkType = gameLogic.getCheckType(color);
 
-            if(checkType == CheckType.CHECK_MATE ||checkType == CheckType.CHECK_TARGET || checkType == CheckType.CHECK_TARGET_BOTH){
+            if(checkType == CheckType.CHECK_MATE ||checkType == CheckType.CHECK_TARGET || checkType == CheckType.CHECK_TARGET_BOTH || checkType == CheckType.STATE_MATE){
                 match.state = model.State.FINISHED;
             }
 
