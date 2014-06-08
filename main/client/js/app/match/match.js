@@ -52,6 +52,10 @@ define(['angular', 'jquery', 'angular-growl'], function (angular, $) {
                         growl.addWarnMessage("Du stehst im Schach!");
                     }
 
+                    if(event.data == "stale_mate") {
+                        growl.addWarnMessage("Leider endete das Spiel im Patt");
+                    }
+
                 }, false);
 
 

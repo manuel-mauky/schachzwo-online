@@ -387,6 +387,10 @@ var verifyCheckType = function (match,checkType,color) {
         sse.sendMessage(message.IS_IN_CHECK, match.matchId, self.playerId);
     }
 
+    if(checkType == CheckType.STATE_MATE){
+        sse.sendMessage(message.STALE_MATE, match.matchId);
+    }
+
     if (checkType == CheckType.CHECK_MATE) {
         match.state = model.State.FINISHED;
         sse.sendMessage(message.HAS_WON_BY_CHECK_MATE, match.matchId, self.playerId);

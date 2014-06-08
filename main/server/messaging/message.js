@@ -32,5 +32,6 @@ module.exports = {
     HAS_LOST_BY_CHECK_MATE: "lost-check-mate",
     HAS_LOST_BY_GIVEN_UP: "lost-given-up",
     HAS_LOST_BUT_CAN_FOLLOW_UP: "lost-can-follow-up",
-    IS_IN_CHECK: "check"
+    IS_IN_CHECK: "check",
+    STALE_MATE: "stale_mate"
 };

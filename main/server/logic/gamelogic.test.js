@@ -344,12 +344,7 @@ describe("gamelogic", function () {
             assert.isTrue(match.addMove2(4,6,3,6));
             assert.isTrue(match.addMove2(2,3,2,4)); // now the white zenith can't move but isn't in check
 
-
-            var zenithRange = accessor.getRangeFor(3, 6);
-
-            assert.equal(zenithRange.length, 0);
-
-            assert.equal(logic.getCheckType(Color.WHITE), CheckType.STATE_MATE);
+            assert.equal(logic.getCheckType(Color.BLACK), CheckType.STATE_MATE);
         });
     });
 

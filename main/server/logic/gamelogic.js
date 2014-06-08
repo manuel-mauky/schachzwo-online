@@ -33,9 +33,6 @@ module.exports.GameLogic = function GameLogic(match) {
         var board = match.getCurrentSnapshot();
         var zenithField = getZenithPosition(color, board);
 
-
-        console.log("1>");
-
         //Schach Ziel
         if (accessor.isOrigin(zenithField.position.column, zenithField.position.row)) {
             var enemyZenithField;
@@ -65,8 +62,11 @@ module.exports.GameLogic = function GameLogic(match) {
 
             if (zenithThreatenPositions.length == 0) {
                 var validMoves = accessor.getValidMoves(color);
-                if(validMoves.length == 0){
-                    return CheckType.STATE_MATE;
+
+                if(validMoves.length == 1 && validMoves[0].field.figure.type == "zenith"){
+                    if(validMoves[0].fields.length == 0){
+                        return CheckType.STATE_MATE;
+                    }
                 }else{
                     return CheckType.NONE;
                 }
