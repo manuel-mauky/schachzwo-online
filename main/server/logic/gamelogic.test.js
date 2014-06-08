@@ -2,10 +2,11 @@
  * Created by erik Jähne on 09.05.2014.
  */
 
+"use strict";
 
 var assert = require("chai").assert;
 
-var accessor = require("./board-accessor");
+var BoardAccessor = require("./board-accessor");
 var model = require("./../model/model");
 var gameLogic = require("./gamelogic");
 
@@ -254,6 +255,102 @@ describe("gamelogic", function () {
             assert.equal(logic.getCheckType(Color.WHITE), CheckType.CHECK_MATE);
         });
 
+    });
+
+    describe("isStateMate", function(){
+
+        var accessor;
+
+        beforeEach(function(){
+            match = modelFactory.createEmptyMatch(BoardSize.SMALL);
+            match.playerBlack = {playerId: 1, name: 'player1'};
+            match.playerWhite=  {playerId: 2, name: 'player2'};
+            logic = new GameLogic(match);
+
+            accessor = new BoardAccessor(match);
+        });
+
+        it("should work", function(){
+            assert.isTrue(match.addMove2(3,5,3,4));
+            assert.isTrue(match.addMove2(4,1,4,2));
+
+            assert.isTrue(match.addMove2(4,5,4,4));
+            assert.isTrue(match.addMove2(4,2,4,3));
+
+            assert.isTrue(match.addMove2(5,6,6,4));
+            assert.isTrue(match.addMove2(4,3,3,4)); // capture black rocks
+
+            assert.isTrue(match.addMove2(6,4,5,2));
+            assert.isTrue(match.addMove2(6,1,5,2)); // capture black knight
+
+            assert.isTrue(match.addMove2(4,4,4,3));
+            assert.isTrue(match.addMove2(5,2,4,3)); // capture black rocks
+
+            assert.isTrue(match.addMove2(5,5,5,4));
+            assert.isTrue(match.addMove2(4,3,5,4)); // capture black rocks
+
+            assert.isTrue(match.addMove2(4,6,4,5));
+            assert.isTrue(match.addMove2(3,4,4,5)); // capture black woman
+
+            assert.isTrue(match.addMove2(3,6,4,6));
+            assert.isTrue(match.addMove2(5,4,6,5)); // capture black rocks
+
+            assert.isTrue(match.addMove2(6,6,6,5)); // capture white rocks
+            assert.isTrue(match.addMove2(1,0,0,2));
+
+            assert.isTrue(match.addMove2(6,5,6,2));
+            assert.isTrue(match.addMove2(5,1,6,2)); // capture black man
+
+            assert.isTrue(match.addMove2(1,5,1,4));
+            assert.isTrue(match.addMove2(0,2,1,4)); // capture black rocks
+
+
+            assert.isTrue(match.addMove2(1,6,0,4));
+            assert.isTrue(match.addMove2(1,4,2,6)); // capture black woman
+
+            assert.isTrue(match.addMove2(0,6,1,4));
+            assert.isTrue(match.addMove2(2,6,1,4)); // capture black man
+
+            assert.isTrue(match.addMove2(2,5,2,4));
+            assert.isTrue(match.addMove2(5,0,4,2));
+
+            assert.isTrue(match.addMove2(2,4,2,3));
+            assert.isTrue(match.addMove2(4,2,2,3)); // capture black rocks
+
+            assert.isTrue(match.addMove2(0,5,1,4)); // capture white knight
+            assert.isTrue(match.addMove2(2,3,0,4)); // capture black knight
+
+            assert.isTrue(match.addMove2(4,6,4,5)); // capture white rocks
+            assert.isTrue(match.addMove2(4,0,4,1));
+
+            assert.isTrue(match.addMove2(1,4,1,3));
+            assert.isTrue(match.addMove2(2,1,2,2));
+
+            assert.isTrue(match.addMove2(4,5,4,6));
+            assert.isTrue(match.addMove2(2,2,1,3)); // now white has only the zenith
+
+            assert.isTrue(match.addMove2(4,6,3,6));
+            assert.isTrue(match.addMove2(2,0,2,1));
+
+            assert.isTrue(match.addMove2(3,6,4,6));
+            assert.isTrue(match.addMove2(2,1,4,3));
+
+            assert.isTrue(match.addMove2(4,6,3,6));
+            assert.isTrue(match.addMove2(4,3,4,4));
+
+            assert.isTrue(match.addMove2(3,6,4,6));
+            assert.isTrue(match.addMove2(4,1,2,3));
+
+            assert.isTrue(match.addMove2(4,6,3,6));
+            assert.isTrue(match.addMove2(2,3,2,4)); // now the white zenith can't move but isn't in check
+
+
+            var zenithRange = accessor.getRangeFor(3, 6);
+
+            assert.equal(zenithRange.length, 0);
+
+            assert.equal(logic.getCheckType(Color.WHITE), CheckType.STATE_MATE);
+        });
     });
 
     describe("isCheckFinish",function() {

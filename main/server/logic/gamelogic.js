@@ -15,7 +15,8 @@ var CheckType = {
     CHECK: "check",
     CHECK_MATE: "check_mate",
     CHECK_TARGET: "check_target",
-    CHECK_TARGET_BOTH: "check:target_both"
+    CHECK_TARGET_BOTH: "check:target_both",
+    STATE_MATE: "stale_mate"
 };
 
 module.exports.CheckType = CheckType;
@@ -31,6 +32,9 @@ module.exports.GameLogic = function GameLogic(match) {
         if (!color) color = match.getColorOfActivePlayer();
         var board = match.getCurrentSnapshot();
         var zenithField = getZenithPosition(color, board);
+
+
+        console.log("1>");
 
         //Schach Ziel
         if (accessor.isOrigin(zenithField.position.column, zenithField.position.row)) {
@@ -52,14 +56,21 @@ module.exports.GameLogic = function GameLogic(match) {
             return checkType;
         }
 
-        //Schach / Schachmatt
+        //Schach / Schachmatt / Patt
         else {
             var zenithThreatenPositions = accessor.getThreatenPositions(zenithField.position.column, zenithField.position.row);
             var zenithRange = accessor.getRangeFor(zenithField.position.column, zenithField.position.row);
             var isCheckMate = true;
             var isCheck = true;
 
-            if (zenithThreatenPositions.length == 0) return CheckType.NONE;
+            if (zenithThreatenPositions.length == 0) {
+                var validMoves = accessor.getValidMoves(color);
+                if(validMoves.length == 0){
+                    return CheckType.STATE_MATE;
+                }else{
+                    return CheckType.NONE;
+                }
+            }
 
             //zenith bewegen
             zenithRange.forEach(function (element) {
