@@ -20,7 +20,8 @@ define([
         'schachzwoBoard',
         'sse',
         'matchLink',
-        'endMessages']).
+        'endMessages',
+        'error']).
         config(['$routeProvider', function ($routeProvider) {
 
             $routeProvider.when("/match/:matchId/login",
@@ -48,12 +49,14 @@ define([
 
             $routeProvider.when('/404',
                 {
-                    templateUrl: 'js/app/error-pages/404.html'
+                    templateUrl: 'js/app/error-pages/404.html',
+                    controller: 'errorCtrl'
                 });
 
             $routeProvider.when('/500',
                 {
-                    templateUrl: 'js/app/error-pages/500.html'
+                    templateUrl: 'js/app/error-pages/500.html',
+                    controller: 'errorCtrl'
                 });
 
             $routeProvider.otherwise({redirectTo: '/'});

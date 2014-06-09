@@ -45,6 +45,7 @@ require([
         'bootstrap',
         'app/app',
         'app/landing/landing',
+        'app/error-pages/error',
         'app/match/match',
         'app/login/login',
         'app/match/directives/schachzwo-board',
