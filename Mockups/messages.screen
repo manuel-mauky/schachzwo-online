@@ -4,94 +4,95 @@
   <widgets xsi:type="model:Note" id="3" x="32" y="28" text="Spielende" measuredWidth="68" measuredHeight="29" annotation="true">
     <font/>
   </widgets>
-  <widgets xsi:type="model:Master" id="5" x="216" y="190" measuredWidth="97" measuredHeight="30">
+  <widgets xsi:type="model:Master" id="5" x="361" y="190" measuredWidth="108" measuredHeight="30">
     <screen xsi:type="model:WidgetGroup" href="assets/Bootstrap/Bootstrap.screen#Button%20Primary"/>
     <overrides>
-      <widgets ref="3" text="Neue Partie"/>
+      <widgets ref="3" text="Zur Startseite"/>
     </overrides>
   </widgets>
-  <widgets xsi:type="model:Master" id="8" x="179" y="71" measuredWidth="185" measuredHeight="60">
+  <widgets xsi:type="model:Master" id="8" x="48" y="71" measuredWidth="381" measuredHeight="60">
     <screen xsi:type="model:WidgetGroup" href="assets/Bootstrap/Bootstrap.screen#Heading%201"/>
     <overrides>
-      <widgets ref="129" text="Spielende"/>
+      <widgets ref="129" text="Die Partie ist vorbei!"/>
     </overrides>
   </widgets>
-  <widgets xsi:type="model:Master" id="9" x="136" y="143" measuredWidth="273" measuredHeight="30">
+  <widgets xsi:type="model:Master" id="9" x="48" y="143" measuredWidth="382" measuredHeight="15">
     <screen xsi:type="model:WidgetGroup" href="assets/Bootstrap/Bootstrap.screen#Heading%206"/>
     <overrides>
       <widgetChanges xsi:type="o:Insert" newIndex="1">
-        <object xsi:type="model:Text" text="Spieler 1 hat das Spiel durch Schach Ziel gewonnen.&#xD;&#xA;Spieler 1 erhält 2 Punkte." textAlignment="Center">
+        <object xsi:type="model:Text" text="Du hast gewonnen! Sieg durch &quot;Schach Matt&quot;, du bekommst 0,5 Punkte!" textAlignment="Center">
           <font/>
         </object>
       </widgetChanges>
       <widgetChanges xsi:type="o:Delete" ref="134"/>
     </overrides>
   </widgets>
-  <widgets xsi:type="model:Panel" id="10" x="32" y="320" width="524" height="305" measuredWidth="524" measuredHeight="305"/>
+  <widgets xsi:type="model:Panel" id="10" x="32" y="320" width="464" height="257" measuredWidth="464" measuredHeight="257"/>
   <widgets xsi:type="model:Note" id="11" x="32" y="292" text="Mitspieler einladen" measuredWidth="117" measuredHeight="29" annotation="true">
     <font/>
   </widgets>
-  <widgets xsi:type="model:Master" id="12" x="120" y="330" measuredWidth="358" measuredHeight="60">
+  <widgets xsi:type="model:Master" id="12" x="56" y="330" measuredWidth="358" measuredHeight="60">
     <screen xsi:type="model:WidgetGroup" href="assets/Bootstrap/Bootstrap.screen#Heading%201"/>
     <overrides>
       <widgets ref="129" text="Mitspieler einladen"/>
     </overrides>
   </widgets>
-  <widgets xsi:type="model:TextArea" id="13" x="83" y="400" width="423" height="137" text="Du wurdest zu einer Partie SchachZWO eingeladen. Klicke einfach auf &#xA;den unten stehenden Link und du gelangst zum Spiel.&#xA;&#xA;Link zum Spiel: *http://www.schachzwo.de/der-link-zum-spiel*&#xA;&#xA;" measuredWidth="423" measuredHeight="137">
+  <widgets xsi:type="model:TextArea" id="13" x="56" y="464" width="413" height="33" text="&#xA;&#xA;*http://www.schachzwo.de/der-link-zum-spiel*&#xA;&#xA;" measuredWidth="413" measuredHeight="33">
     <font/>
   </widgets>
-  <widgets xsi:type="model:Master" id="14" x="216" y="577" measuredWidth="148" measuredHeight="30">
+  <widgets xsi:type="model:Master" id="14" x="386" y="520" measuredWidth="83" measuredHeight="30">
     <screen xsi:type="model:WidgetGroup" href="assets/Bootstrap/Bootstrap.screen#Button%20Primary"/>
     <overrides>
-      <widgets ref="3" text="Einladung kopieren"/>
+      <widgets ref="3" text="Schließen"/>
     </overrides>
   </widgets>
-  <widgets xsi:type="model:Panel" id="15" x="592" y="56" width="441" height="217" measuredWidth="441" measuredHeight="217"/>
-  <widgets xsi:type="model:Note" id="16" x="592" y="24" text="Anmeldung" measuredWidth="80" measuredHeight="29" annotation="true">
-    <font/>
-  </widgets>
-  <widgets xsi:type="model:Master" id="17" x="696" y="71" measuredWidth="241" measuredHeight="60">
-    <screen xsi:type="model:WidgetGroup" href="assets/Bootstrap/Bootstrap.screen#Heading%201"/>
-    <overrides>
-      <widgets ref="129" text="Willkommen"/>
-    </overrides>
-  </widgets>
-  <widgets xsi:type="model:TextField" id="19" x="792" y="153" width="177" text="Spielername" measuredWidth="177" measuredHeight="23">
-    <font/>
-  </widgets>
-  <widgets xsi:type="model:Label" id="20" x="656" y="153" text="Spielernamen eingeben:" measuredWidth="133" measuredHeight="23">
-    <font/>
-  </widgets>
-  <widgets xsi:type="model:Master" id="21" x="752" y="197" measuredWidth="132" measuredHeight="30">
-    <screen xsi:type="model:WidgetGroup" href="assets/Bootstrap/Bootstrap.screen#Button%20Primary"/>
-    <overrides>
-      <widgets ref="3" text="Zum Schachbrett"/>
-    </overrides>
-  </widgets>
-  <widgets xsi:type="model:Panel" id="22" x="592" y="320" width="441" height="233" measuredWidth="441" measuredHeight="233"/>
-  <widgets xsi:type="model:Master" id="23" x="671" y="341" measuredWidth="286" measuredHeight="60">
+  <widgets xsi:type="model:Panel" id="22" x="592" y="41" width="441" height="192" measuredWidth="441" measuredHeight="192"/>
+  <widgets xsi:type="model:Master" id="23" x="621" y="56" measuredWidth="286" measuredHeight="60">
     <screen xsi:type="model:WidgetGroup" href="assets/Bootstrap/Bootstrap.screen#Heading%201"/>
     <overrides>
       <widgets ref="129" text="Remis Angebot"/>
     </overrides>
   </widgets>
-  <widgets xsi:type="model:Text" id="24" x="671" y="413" width="282" height="48" text="Dein Mitspieler hat dir Remis angeboten. &#xD;&#xA;Möchtest du das Remis annehmen?" measuredWidth="282" measuredHeight="48" textAlignment="Center">
+  <widgets xsi:type="model:Text" id="24" x="621" y="128" width="282" height="48" text="Dein Mitspieler hat dir Remis angeboten. " measuredWidth="282" measuredHeight="48">
     <font/>
   </widgets>
-  <widgets xsi:type="model:Master" id="25" x="720" y="480" measuredWidth="91" measuredHeight="30">
+  <widgets xsi:type="model:Master" id="25" x="912" y="175" measuredWidth="91" measuredHeight="30">
     <screen xsi:type="model:WidgetGroup" href="assets/Bootstrap/Bootstrap.screen#Button"/>
     <overrides>
       <widgets ref="2" text="Annehmen"/>
     </overrides>
   </widgets>
-  <widgets xsi:type="model:Master" id="26" x="824" y="480" measuredWidth="83" measuredHeight="30">
+  <widgets xsi:type="model:Master" id="26" x="816" y="175" measuredWidth="83" measuredHeight="30">
     <screen xsi:type="model:WidgetGroup" href="assets/Bootstrap/Bootstrap.screen#Button"/>
     <overrides>
       <widgets ref="2" text="Ablehnen"/>
     </overrides>
   </widgets>
-  <widgets xsi:type="model:Note" id="27" x="592" y="292" text="Remis Angebot" measuredWidth="98" measuredHeight="29" annotation="true">
+  <widgets xsi:type="model:Note" id="27" x="592" y="13" text="Remis Angebot" measuredWidth="98" measuredHeight="29" annotation="true">
     <font/>
+  </widgets>
+  <widgets xsi:type="model:Text" id="29" x="56" y="416" width="413" text="Schicke den unten stehenden Link anderen Leuten, damit sie mitspielen oder &#xD;&#xA;zuschauen können. " measuredWidth="413" measuredHeight="30">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Panel" id="30" x="592" y="320" width="441" height="192" measuredWidth="441" measuredHeight="192"/>
+  <widgets xsi:type="model:Master" id="31" x="613" y="344" measuredWidth="279" measuredHeight="60">
+    <screen xsi:type="model:WidgetGroup" href="assets/Bootstrap/Bootstrap.screen#Heading%201"/>
+    <overrides>
+      <widgets ref="129" text="Figur wechseln"/>
+    </overrides>
+  </widgets>
+  <widgets xsi:type="model:Shape" id="32" x="632" y="413" width="73" height="71" measuredWidth="73" measuredHeight="71">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Panel" id="33" x="768" y="414" width="70" height="69" measuredWidth="70" measuredHeight="69"/>
+  <widgets xsi:type="model:Note" id="34" x="592" y="288" text="Figur wechseln" measuredWidth="96" measuredHeight="29" annotation="true">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Master" id="35" x="192" y="190" measuredWidth="159" measuredHeight="30">
+    <screen xsi:type="model:WidgetGroup" href="assets/Bootstrap/Bootstrap.screen#Button"/>
+    <overrides>
+      <widgets ref="2" text="Zurück zum Spielfeld"/>
+    </overrides>
   </widgets>
   <hRuler/>
   <vRuler/>

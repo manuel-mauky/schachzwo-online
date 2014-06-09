@@ -288,12 +288,34 @@ var Match = function (json) {
 
     this.history = [];
 
+    /**
+     * This method returns <code>true</code> when the given element is of type 'draw', otherwise <code>false</code>
+     * @param entry
+     */
+    var isHistoryEntryADraw = function(entry){
+        if(entry){
+            return (typeof entry.type != 'undefined' && typeof entry.color != 'undefined');
+        }
+        return false;
+    };
+
+    /**
+     * This method returns <code>true</code> when the given element is of type 'move', otherwise <code>false</code>
+     * @param entry
+     */
+    var isHistoryEntryAMove = function(entry){
+        if(entry){
+            return (typeof entry.figure != 'undefined' && typeof entry.from != 'undefined' && typeof entry.to != 'undefined');
+        }
+        return false;
+    };
+
     // for every json-entry create a move instance.
     if (Array.isArray(json.history)) {
         json.history.forEach(function (entry) {
-            if (entry.type && entry.color) {
+            if (isHistoryEntryADraw(entry)) {
                 this.history.push(new Draw(entry));
-            } else if (entry.figure && entry.from && entry.to) {
+            } else if (isHistoryEntryAMove(entry)) {
                 this.history.push(new Move(entry));
             }
         }, this);
@@ -304,6 +326,9 @@ var Match = function (json) {
     }else{
         this.size = BoardSize.SMALL;
     }
+
+
+
 
     /**
      * return the Color of the active Player who is on turn
@@ -332,7 +357,7 @@ var Match = function (json) {
 
         for(var i = 0; i < number; i++){
             var move = this.history[i];
-            if(move.from && move.to){
+            if(isHistoryEntryAMove(move)){
                 var fieldFrom = snapshot.getFieldFromPosition(move.from);
                 var fieldTo = snapshot.getFieldFromPosition(move.to);
                 fieldTo.figure = move.figure;
@@ -353,7 +378,7 @@ var Match = function (json) {
             i--;
         }
         var move = this.history[i];
-        if (move.from && move.to) {
+        if (isHistoryEntryAMove(move)) {
             var fieldFrom = currentSnapshot.getFieldFromPosition(move.from);
             var fieldTo = currentSnapshot.getFieldFromPosition(move.to);
             fieldFrom.figure = fieldTo.figure;
@@ -367,7 +392,7 @@ var Match = function (json) {
      * @param move
      */
     this.historyPush = function(move){
-         if(move.from && move.to){
+         if(isHistoryEntryAMove(move)){
             currentSnapshot = this.getCurrentSnapshot();
              var fieldFrom = currentSnapshot.getFieldFromPosition(move.from);
              var fieldTo = currentSnapshot.getFieldFromPosition(move.to);
@@ -534,6 +559,24 @@ var Match = function (json) {
 
         return undefined;
     };
+
+
+    /**
+     * This method returns <code>true</code> when there is a draw request currently pending on this match,
+     * otherwise <code>false</code>.
+     */
+    this.isDrawPending = function(){
+        if(this.history.length > 0){
+            var lastHistoryEntry = this.history[this.history.length - 1];
+
+            if(isHistoryEntryADraw(lastHistoryEntry)){
+                return lastHistoryEntry.type == Draw.Types.Offered;
+            }
+        }
+
+        return false;
+    };
+
 
     /**
      * Adds new player to the match.

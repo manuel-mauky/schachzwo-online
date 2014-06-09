@@ -460,6 +460,24 @@ describe("Match", function(){
             assert.equal(match.history.length, 2);
         });
 
+        it("should be possible to ask for whether there is a draw request pending", function(){
+
+            console.log("1")
+            assert.isFalse(match.isDrawPending());
+            console.log("2")
+
+            match.offerDraw();
+            console.log("3")
+            assert.isTrue(match.isDrawPending());
+            console.log("4")
+
+            match.rejectDraw();
+            console.log("5")
+            assert.isFalse(match.isDrawPending());
+            console.log("6")
+
+        });
+
     });
 
 

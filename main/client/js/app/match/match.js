@@ -18,6 +18,7 @@ define(['angular', 'jquery', 'angular-growl'], function (angular, $) {
                 $scope.moves = [];
                 $scope.itsMyTurn = false;
                 $scope.onlooker = false;
+                $scope.check = false;
                 $scope.availablePieces = [];
 
                 sse(matchId).addEventListener("message", function (event) {
@@ -50,6 +51,7 @@ define(['angular', 'jquery', 'angular-growl'], function (angular, $) {
                     }
 
                     if (event.data == "check") {
+                        $scope.check = true;
                         growl.addWarnMessage("Du stehst im Schach!");
                     }
 
@@ -161,7 +163,7 @@ define(['angular', 'jquery', 'angular-growl'], function (angular, $) {
                     return $scope.match.state == "playing" && ($scope.moves.length + ($scope.self.color == 'white' ? 1 : 0)) % 2 == 0;
                 };
 
-                $scope.getEndMessage = function() {
+                $scope.getEndMessage = function () {
                     return endMessages($scope.endCause);
                 };
 
@@ -177,10 +179,14 @@ define(['angular', 'jquery', 'angular-growl'], function (angular, $) {
                             }
                             update();
                         }).error(function () {
-                            $scope.onlooker = true;
-                            update();
+                            if (match.playerWhite) {
+                                $scope.onlooker = true;
+                                update();
+                            } else {
+                               window.location = matchLink(matchId);
+                            }
                         });
-                    }).error(function() {
+                    }).error(function () {
                         $location.path("/404");
                     });
 
@@ -224,6 +230,7 @@ define(['angular', 'jquery', 'angular-growl'], function (angular, $) {
                     if (move || currentMove) {
                         $http.post(endpoint + "/" + matchId + "/moves", move || currentMove).success(function () {
                             $scope.itsMyTurn = false;
+                            $scope.check = false;
                             update();
                         });
                     }
