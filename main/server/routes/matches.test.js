@@ -300,6 +300,34 @@ describe('Mock REST API test /matches', function () {
             });
         });
 
+
+        it("should not work when the name was empty", function(done){
+           matchStore.createMatch({size:7}, function(err, match){
+               request(app)
+                   .post('/matches/' + match.matchId + '/login')
+                   .send({name: ""})
+                   .expect(400, done);
+           })
+        });
+
+        it("should not work when the name contains only whitespaces", function(done){
+           matchStore.createMatch({size:7}, function(err, match){
+               request(app)
+                   .post('/matches/' + match.matchId + '/login')
+                   .send({name: "       "})
+                   .expect(400, done);
+           })
+        });
+
+        it("should not work when the name is to long", function(done){
+            matchStore.createMatch({size:7}, function(err, match){
+                request(app)
+                    .post('/matches/' + match.matchId + '/login')
+                    .send({name: "abcdefghijklnmopqrstuv"})
+                    .expect(400, done);
+            })
+        });
+
     });
 
     describe('GET /matches/:matchId/self', function () {
