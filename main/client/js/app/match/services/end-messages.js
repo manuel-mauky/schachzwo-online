@@ -8,21 +8,21 @@ define(['angular'], function (angular) {
 
                 switch (endCause) {
                     case "won-check-mate":
-                        return "Du hast gewonnen! – Sieg durch „Schach Matt“, du bekommst 0,5 Punkte!";
+                        return "Du hast gewonnen! - „Schach Matt“, du bekommst 0,5 Punkte!";
                     case "won-check-target":
-                        return "Du hast gewonnen! – Sieg durch „Schach Ziel“, du bekommst 2 Punkte!";
+                        return "Du hast gewonnen! – „Schach Ziel“, du bekommst 2 Punkte.";
                     case "won-check-target-and-opponent-follow-up":
-                        return "Du hast gewonnen! – Sieg durch „Schach Ziel mit Nachrücken“, du bekommst 2 Punkte!";
+                        return "Du hast gewonnen! – „Schach Ziel“, dein Gegner konnte Nachrücken, du bekommst 2 Punkte.";
                     case "won-given-up":
-                        return "Du hast gewonnen! – Dein Mitspieler hat aufgegeben, du bekommst 2 Punkte!";
+                        return "Du hast gewonnen! – Dein Mitspieler hat aufgegeben, du bekommst 2 Punkte.";
                     case "lost-check-mate":
-                        return "Du hast verloren! – Verlust durch „Schach Matt“!";
+                        return "Du hast verloren! – „Schach Matt“.";
                     case "lost-check-target":
-                        return "Du hast verloren! – Verlust durch „Schach Ziel“!";
+                        return "Du hast verloren! – „Schach Ziel“.";
                     case "lost-given-up":
-                        return "Du hast verloren! – Verlust durch Aufgeben!";
+                        return "Du hast verloren! – Du hast aufgegeben.";
                     case "lost-can-follow-up":
-                        return "Du hast verloren! – Verlust durch „Schach Ziel mit Nachrücken“, du bekommst 1 Punkt!";
+                        return "Du hast verloren! – „Schach Ziel“, du konntest deinen Zenit nachrücken und bekommst 1 Punkt.";
                     case "draw":
                         return "Remis! – Du bekommst 0,5 Punkte.";
                     case "stale-mate":
