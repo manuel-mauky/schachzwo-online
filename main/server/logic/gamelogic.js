@@ -16,7 +16,7 @@ var CheckType = {
     CHECK_MATE: "check_mate",
     CHECK_TARGET: "check_target",
     CHECK_TARGET_BOTH: "check:target_both",
-    STATE_MATE: "stale_mate"
+    STALE_MATE: "stale_mate"
 };
 
 module.exports.CheckType = CheckType;
@@ -32,13 +32,13 @@ module.exports.GameLogic = function GameLogic(match) {
         if (!color) color = match.getColorOfActivePlayer();
         var board = match.getCurrentSnapshot();
         var zenithField = getZenithPosition(color, board);
+        var enemyZenithField = color == Color.BLACK ? getZenithPosition(Color.WHITE, board) : getZenithPosition(Color.BLACK, board);
 
-        //Schach Ziel
-        if (accessor.isOrigin(zenithField.position.column, zenithField.position.row)) {
+        //Gegner Schach Ziel
+        if (accessor.isOrigin(enemyZenithField.position.column, enemyZenithField.position.row)) {
             var checkType = CheckType.CHECK_TARGET;
-            var enemyZenithField = color == Color.BLACK ? getZenithPosition(Color.WHITE, board) : getZenithPosition(Color.BLACK, board);
-            var enemyZenithRange = accessor.getRangeForPosition(enemyZenithField.position);
-            enemyZenithRange.some(function (element) {
+            var zenithRange = accessor.getRangeForPosition(zenithField.position);
+            zenithRange.some(function (element) {
                 if (accessor.isOrigin(element.column, element.row)) {
                     checkType = CheckType.CHECK_TARGET_BOTH;
                     return true;
@@ -53,7 +53,7 @@ module.exports.GameLogic = function GameLogic(match) {
             if (zenithThreatenPositions.length == 0) {
                 var validMoves = accessor.getValidMoves(color);
                 if(validMoves.length == 1 && validMoves[0].field.figure.type == FigureType.ZENITH){
-                    return CheckType.STATE_MATE;
+                    return CheckType.STALE_MATE;
                 }else{
                     return CheckType.NONE;
                 }
@@ -79,7 +79,11 @@ module.exports.GameLogic = function GameLogic(match) {
                 var enemyThreatenPositions = accessor.getThreatenPositions(enemyField.column, enemyField.row);
                 enemyThreatenPositions.some(function (element) {
                     match.addMoveFromPosition(element,enemyField);
-                    if (accessor.getThreatenPositions(zenithField.position.column, zenithField.position.row).length == 0) {
+                    var position = zenithField.position;
+                    if(zenithField.position.row == element.row && zenithField.position.column == element.column ){
+                        position = enemyField;
+                    }
+                    if (accessor.getThreatenPositions(position.column, position.row).length == 0) {
                         isCheckMate = false;
                     }
                     match.historyPop();

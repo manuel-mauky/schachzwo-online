@@ -344,7 +344,7 @@ describe("gamelogic", function () {
             assert.isTrue(match.addMove2(4,6,3,6));
             assert.isTrue(match.addMove2(2,3,2,4)); // now the white zenith can't move but isn't in check
 
-            assert.equal(logic.getCheckType(Color.BLACK), CheckType.STATE_MATE);
+            assert.equal(logic.getCheckType(Color.BLACK), CheckType.STALE_MATE);
         });
     });
 
@@ -370,11 +370,11 @@ describe("gamelogic", function () {
             assert.isTrue(match.addMove2(5,5,4,4));
             //assert.isTrue(match.addMove2(4,3,4,4)); //weiß
 
-            assert.equal(logic.getCheckType(Color.BLACK), CheckType.CHECK_TARGET_BOTH);
+            assert.equal(logic.getCheckType(Color.WHITE), CheckType.CHECK_TARGET_BOTH);
             //assert.equal(logic.getCheckType(Color.WHITE), CheckType.CHECK_TARGET_BOTH);
         });
 
-        it("should result in Check Finish for player black", function(){
+        it("should result in Check TARGET for player WHITE", function(){
 
             assert.isTrue(match.addMove2(4,7,4,5));
             assert.isTrue(match.addMove2(3,1,3,3));
@@ -386,7 +386,7 @@ describe("gamelogic", function () {
             assert.isTrue(match.addMove2(2,3,2,4));
             assert.isTrue(match.addMove2(5,5,4,4));
 
-            assert.equal(logic.getCheckType(Color.BLACK), CheckType.CHECK_TARGET);
+            assert.equal(logic.getCheckType(Color.WHITE), CheckType.CHECK_TARGET);
         });
     });
 });
