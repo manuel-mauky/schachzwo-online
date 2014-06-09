@@ -7,7 +7,7 @@ var model = require("./../model/model");
 var BoardAccessor = require("./board-accessor");
 
 var FigureType = model.FigureType;
-var Color = model.Color;
+var Color = require("../model/color")
 var Figure = model.Figure;
 
 var CheckType = {

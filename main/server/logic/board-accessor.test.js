@@ -12,21 +12,22 @@ var StoreProvider = require("../store/store-provider");
 
 var model = require("./../model/model");
 
-var Color = model.Color;
+var Color = require("../model/color");
+var BoardSize = require("../model/boardsize");
 var FigureType = model.FigureType;
 var Figure = model.Figure;
 var Position = model.Position;
 
 var modelFactory = require("./../model/model-factory.js");
 
-describe ("BoardAcessor",function(){
+describe ("BoardAccessor",function(){
     describe("getRangeFor", function () {
         var accessor;
         var match;
         var board;
 
         it("should return an empty array when there is no figure on this position", function () {
-            match = modelFactory.createMatch(model.BoardSize.SMALL);
+            match = modelFactory.createMatch(BoardSize.SMALL);
             accessor = new BoardAccessor(match);
 
             var range = accessor.getRangeFor(2, 2); // empty field
@@ -38,7 +39,7 @@ describe ("BoardAcessor",function(){
         describe("Rocks", function () {
 
             beforeEach(function () {
-                match = modelFactory.createEmptyMatch(model.BoardSize.SMALL);
+                match = modelFactory.createEmptyMatch(BoardSize.SMALL);
                 board = match.getCurrentSnapshot();
 
                 // mocking the getCurrentSnapshot
@@ -171,7 +172,7 @@ describe ("BoardAcessor",function(){
             it("should include two fields in front when its the big board size and the rocks is on the start position", function () {
 
                 // we need to redefine the match for big size.
-                var match = modelFactory.createMatch(model.BoardSize.BIG);
+                var match = modelFactory.createMatch(BoardSize.BIG);
                 var board = match.getCurrentSnapshot();
                 var accessor = new BoardAccessor(match);
 
@@ -185,7 +186,7 @@ describe ("BoardAcessor",function(){
             });
 
             it("should be empty even on big boards when directly in front of the rocks is an enemy or own piece", function(){
-                var match = modelFactory.createMatch(model.BoardSize.BIG);
+                var match = modelFactory.createMatch(BoardSize.BIG);
                 var board = match.getCurrentSnapshot();
                 var accessor = new BoardAccessor(match);
 
@@ -220,8 +221,8 @@ describe ("BoardAcessor",function(){
         describe("Man", function (){
 
             beforeEach(function () {
-                match = modelFactory.createEmptyMatch(model.BoardSize.SMALL);
-                board = modelFactory.createEmptySnapshot(model.BoardSize.SMALL);
+                match = modelFactory.createEmptyMatch(BoardSize.SMALL);
+                board = modelFactory.createEmptySnapshot(BoardSize.SMALL);
                 // mocking the getCurrentSnapshot
                 match.getCurrentSnapshot = function(){
                     return board;
@@ -232,7 +233,7 @@ describe ("BoardAcessor",function(){
 
             it("should be empty at the begin as there are figures around the man", function(){
                 // we create a match with the start lineup for this test.
-                match = modelFactory.createMatch(model.BoardSize.SMALL);
+                match = modelFactory.createMatch(BoardSize.SMALL);
                 accessor = new BoardAccessor(match);
 
                 var range = accessor.getRangeFor(0,6); // right black man.
@@ -348,8 +349,8 @@ describe ("BoardAcessor",function(){
 
 
                 // we create a big board for this test.
-                match = modelFactory.createEmptyMatch(model.BoardSize.BIG);
-                board = modelFactory.createEmptySnapshot(model.BoardSize.BIG);
+                match = modelFactory.createEmptyMatch(BoardSize.BIG);
+                board = modelFactory.createEmptySnapshot(BoardSize.BIG);
                 // mocking the getCurrentSnapshot
                 match.getCurrentSnapshot = function(){
                     return board;
@@ -382,8 +383,8 @@ describe ("BoardAcessor",function(){
 
         describe("Woman", function() {
             beforeEach(function () {
-                match = modelFactory.createEmptyMatch(model.BoardSize.SMALL);
-                board = modelFactory.createEmptySnapshot(model.BoardSize.SMALL);
+                match = modelFactory.createEmptyMatch(BoardSize.SMALL);
+                board = modelFactory.createEmptySnapshot(BoardSize.SMALL);
                 // mocking the getCurrentSnapshot
                 match.getCurrentSnapshot = function(){
                     return board;
@@ -392,7 +393,7 @@ describe ("BoardAcessor",function(){
             });
 
             it("should be empty at the begin as there are figures around the woman", function(){
-                match = modelFactory.createMatch(model.BoardSize.SMALL);
+                match = modelFactory.createMatch(BoardSize.SMALL);
                 accessor = new BoardAccessor(match);
 
                 board = match.getCurrentSnapshot();
@@ -487,8 +488,8 @@ describe ("BoardAcessor",function(){
 
         describe("Knight", function() {
             beforeEach(function () {
-                match = modelFactory.createEmptyMatch(model.BoardSize.SMALL);
-                board = modelFactory.createEmptySnapshot(model.BoardSize.SMALL);
+                match = modelFactory.createEmptyMatch(BoardSize.SMALL);
+                board = modelFactory.createEmptySnapshot(BoardSize.SMALL);
 
                 // mocking the getCurrentSnapshot
                 match.getCurrentSnapshot = function(){
@@ -558,8 +559,8 @@ describe ("BoardAcessor",function(){
 
         describe("Zenith", function() {
             beforeEach(function () {
-                match = modelFactory.createEmptyMatch(model.BoardSize.SMALL);
-                board = modelFactory.createEmptySnapshot(model.BoardSize.SMALL);
+                match = modelFactory.createEmptyMatch(BoardSize.SMALL);
+                board = modelFactory.createEmptySnapshot(BoardSize.SMALL);
 
                 // mocking the getCurrentSnapshot
                 match.getCurrentSnapshot = function(){
@@ -653,8 +654,8 @@ describe ("BoardAcessor",function(){
 
         describe("Knowledge", function() {
             beforeEach(function () {
-                match = modelFactory.createEmptyMatch(model.BoardSize.BIG);
-                board = modelFactory.createEmptySnapshot(model.BoardSize.BIG);
+                match = modelFactory.createEmptyMatch(BoardSize.BIG);
+                board = modelFactory.createEmptySnapshot(BoardSize.BIG);
                 // mocking the getCurrentSnapshot
                 match.getCurrentSnapshot = function(){
                     return board;
@@ -764,8 +765,8 @@ describe ("BoardAcessor",function(){
 
         describe("Faith", function() {
             beforeEach(function () {
-                match = modelFactory.createEmptyMatch(model.BoardSize.BIG);
-                board = modelFactory.createEmptySnapshot(model.BoardSize.BIG);
+                match = modelFactory.createEmptyMatch(BoardSize.BIG);
+                board = modelFactory.createEmptySnapshot(BoardSize.BIG);
                 // mocking the getCurrentSnapshot
                 match.getCurrentSnapshot = function(){
                     return board;
@@ -856,7 +857,7 @@ describe ("BoardAcessor",function(){
 
         it("should use a Match as param", function () {
 
-            var board = modelFactory.createStartSnapshot(model.BoardSize.SMALL);
+            var board = modelFactory.createStartSnapshot(BoardSize.SMALL);
 
             var accessor = new BoardAccessor(board);
 
@@ -879,8 +880,8 @@ describe ("BoardAcessor",function(){
         var board;
 
         beforeEach(function () {
-            match = modelFactory.createMatch(model.BoardSize.SMALL);
-            board = modelFactory.createStartSnapshot(model.BoardSize.SMALL);
+            match = modelFactory.createMatch(BoardSize.SMALL);
+            board = modelFactory.createStartSnapshot(BoardSize.SMALL);
             match.getCurrentSnapshot = function(){
                 return board;
             }
@@ -889,8 +890,8 @@ describe ("BoardAcessor",function(){
 
 
         it("should return empty List on empty Field",function(){
-            match = modelFactory.createEmptyMatch(model.BoardSize.SMALL);
-            board = modelFactory.createEmptySnapshot(model.BoardSize.SMALL);
+            match = modelFactory.createEmptyMatch(BoardSize.SMALL);
+            board = modelFactory.createEmptySnapshot(BoardSize.SMALL);
             // mocking the getCurrentSnapshot
             match.getCurrentSnapshot = function(){
                 return board;
@@ -932,7 +933,7 @@ describe ("BoardAcessor",function(){
 
         it("should return one rocks and one Faith",function(){
 
-            board = modelFactory.createEmptySnapshot(model.BoardSize.BIG);
+            board = modelFactory.createEmptySnapshot(BoardSize.BIG);
             board.getField(4,5).figure = new Figure({type: FigureType.ZENITH, color: Color.WHITE});
             board.getField(3,3).figure = new Figure({type: FigureType.MAN, color: Color.BLACK});
             board.getField(5,3).figure = new Figure({type: FigureType.FAITH, color: Color.BLACK});
@@ -951,7 +952,7 @@ describe ("BoardAcessor",function(){
         var accessor;
         var match;
         beforeEach(function () {
-            match = modelFactory.createMatch(model.BoardSize.SMALL);
+            match = modelFactory.createMatch(BoardSize.SMALL);
             accessor = new BoardAccessor(match);
         });
 
@@ -996,7 +997,7 @@ describe ("BoardAcessor",function(){
         var board;
 
         beforeEach(function () {
-            match = modelFactory.createMatch(model.BoardSize.SMALL);
+            match = modelFactory.createMatch(BoardSize.SMALL);
             accessor = new BoardAccessor(match);
         });
         it("should return empty List if history is empty",function(){

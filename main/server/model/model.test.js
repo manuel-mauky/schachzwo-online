@@ -5,8 +5,8 @@ var assert = require("chai").assert;
 var model = require("./model");
 
 
-var BoardSize = model.BoardSize;
-var Color = model.Color;
+var BoardSize = require("./boardsize");
+var Color = require("./color");
 var FigureType = model.FigureType;
 var Figure = model.Figure;
 var Field = model.Field;
@@ -301,8 +301,8 @@ describe("Match", function(){
 
         var match;
 
-        var validMove1 = {figure: {color: model.Color.BLACK, type: model.FigureType.ROCKS},from: {column: 2, row: 5},to: {column: 2, row: 4}};
-        var validMove2 = {figure: {color: model.Color.BLACK, type: model.FigureType.ROCKS},from: {column: 2, row: 4},to: {column: 2, row: 3}};
+        var validMove1 = {figure: {color: Color.BLACK, type: model.FigureType.ROCKS},from: {column: 2, row: 5},to: {column: 2, row: 4}};
+        var validMove2 = {figure: {color: Color.BLACK, type: model.FigureType.ROCKS},from: {column: 2, row: 4},to: {column: 2, row: 3}};
        it("should add and remove moves",function(){
            match  = modelFactory.createMatch(BoardSize.SMALL);
            match.historyPush(validMove1);
@@ -330,7 +330,7 @@ describe("Match", function(){
     describe("AddMove function of Match", function () {
         var match;
 
-        var validMove = {figure: {color: model.Color.BLACK, type: model.FigureType.ROCKS},
+        var validMove = {figure: {color: Color.BLACK, type: model.FigureType.ROCKS},
             from: {column: 2, row: 5},
             to: {column: 2, row: 4}};
 
@@ -366,7 +366,7 @@ describe("Match", function(){
            assert.isTrue(match.addMove2(2,5,2,4));
            assert.equal(match.history.length, 1);
 
-           assert.deepEqual(match.history[0].figure, {color: model.Color.BLACK, type: model.FigureType.ROCKS});
+           assert.deepEqual(match.history[0].figure, {color: Color.BLACK, type: model.FigureType.ROCKS});
         });
     });
 
@@ -462,20 +462,13 @@ describe("Match", function(){
 
         it("should be possible to ask for whether there is a draw request pending", function(){
 
-            console.log("1")
             assert.isFalse(match.isDrawPending());
-            console.log("2")
 
             match.offerDraw();
-            console.log("3")
             assert.isTrue(match.isDrawPending());
-            console.log("4")
 
             match.rejectDraw();
-            console.log("5")
             assert.isFalse(match.isDrawPending());
-            console.log("6")
-
         });
 
     });

@@ -10,7 +10,8 @@
 var model = require("./../model/model");
 
 var FigureType = model.FigureType;
-var Color = model.Color;
+var Color = require("../model/color");
+var BoardSize = require("../model/boardsize");
 
 module.exports = function BoardAccessor(match) {
     if (!match) {
@@ -146,7 +147,7 @@ module.exports = function BoardAccessor(match) {
             {number: 2,piece: new model.Figure({color: color, type: model.FigureType.WOMAN})},
             {number: 2,piece: new model.Figure({color: color, type: model.FigureType.KNIGHT})},
             {number: 1,piece: new model.Figure({color: color, type: model.FigureType.ZENITH})}];
-        if(size == model.BoardSize.BIG){
+        if(size == BoardSize.BIG){
             result.concat([
                 {number: 1,piece: new model.Figure({color: color, type: model.FigureType.KNOWLEDGE})},
                 {number: 1,piece: new model.Figure({color: color, type: model.FigureType.FAITH})}]);
@@ -270,7 +271,7 @@ module.exports = function BoardAccessor(match) {
 
 
         // for Big boards there is the special rule of walking two fields from the start (only when the first field is free too)
-        if (match.size == model.BoardSize.BIG && result.length == 1) {
+        if (match.size == BoardSize.BIG && result.length == 1) {
             if (current.color == Color.WHITE && row == 1) {
                 rowTmp = row + 2;
             } else if (current.color == Color.BLACK && row == (match.size - 2)) {
@@ -446,7 +447,7 @@ module.exports = function BoardAccessor(match) {
         ];
         var tmpResult = findTargets(ownFigure, column, row, possiblePositions);
 
-        var originCoordinate = match.size == model.BoardSize.BIG ? 4 : 3;
+        var originCoordinate = match.size == BoardSize.BIG ? 4 : 3;
         if ((Math.abs(column - originCoordinate) <= 1 ) && ( Math.abs(row - originCoordinate) <= 1) ) {
             var threatenFields = getThreatenPositions(column, row);
 
@@ -624,8 +625,8 @@ module.exports = function BoardAccessor(match) {
     var isOrigin = this.isOrigin = function (x, y) {
         var size = match.size;
 
-        var isBigOrigin = (size == model.BoardSize.BIG && (x == 4 && y == 4));
-        var isSmallOrigin = (size == model.BoardSize.SMALL && (x == 3 && y == 3));
+        var isBigOrigin = (size == BoardSize.BIG && (x == 4 && y == 4));
+        var isSmallOrigin = (size == BoardSize.SMALL && (x == 3 && y == 3));
 
         return isBigOrigin || isSmallOrigin;
     };

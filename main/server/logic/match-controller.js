@@ -18,6 +18,7 @@ var CheckType = require("../logic/gamelogic").CheckType;
 
 var modelFactory = require("../model/model-factory.js");
 var model = require("../model/model");
+var Color = require("../model/color");
 
 
 var shortId = require('shortid');
@@ -86,19 +87,19 @@ module.exports.getPlayer = function(matchId, playerId, isOpponent, callbacks){
 
             if(playerId == match.playerWhite.playerId){
                 player = new model.Player(match.playerBlack);
-                player.color = model.Color.BLACK;
+                player.color = Color.BLACK;
             } else {
                 player = new model.Player(match.playerWhite);
-                player.color = model.Color.WHITE;
+                player.color = Color.WHITE;
             }
             delete player.playerId;
         }else{
             if(playerId == match.playerBlack.playerId){
                 player = new model.Player(match.playerBlack);
-                player.color = model.Color.BLACK;
+                player.color = Color.BLACK;
             } else {
                 player = new model.Player(match.playerWhite);
-                player.color = model.Color.WHITE;
+                player.color = Color.WHITE;
             }
         }
 
@@ -118,12 +119,12 @@ module.exports.login = function(matchId, playerId, name, callbacks){
         if(playerId){
             if(match.isBlackPlayer(playerId)){
                 var existingPlayer = match.playerBlack;
-                existingPlayer.color = model.Color.BLACK;
+                existingPlayer.color = Color.BLACK;
                 callWhenDefined(callbacks.onSuccess, existingPlayer);
                 return;
             } else if(match.isWhitePlayer(playerId)){
                 var existingPlayer = match.playerBlack;
-                existingPlayer.color = model.Color.WHITE;
+                existingPlayer.color = Color.WHITE;
                 callWhenDefined(callbacks.onSuccess, existingPlayer);
                 return;
             }
@@ -145,9 +146,9 @@ module.exports.login = function(matchId, playerId, name, callbacks){
                 }
 
                 if(match.isBlackPlayer(player.playerId)){
-                    player.color = model.Color.BLACK;
+                    player.color = Color.BLACK;
                 }else{
-                    player.color = model.Color.WHITE;
+                    player.color = Color.WHITE;
                 }
 
                 if (match.isMatchFullyOccupied()) {
@@ -380,8 +381,8 @@ var callWhenDefined = function(callback){
 
 var verifyCheckType = function (match,checkType,activePlayerColor) {
 
-    var activePlayer = activePlayerColor == model.Color.BLACK ? match.playerBlack : match.playerWhite;
-    var nextActivePlayer = activePlayerColor == model.Color.BLACK ? match.playerWhite : match.playerBlack;
+    var activePlayer = activePlayerColor == Color.BLACK ? match.playerBlack : match.playerWhite;
+    var nextActivePlayer = activePlayerColor == Color.BLACK ? match.playerWhite : match.playerBlack;
 
     sse.sendMessage(message.UPDATE, match.matchId);
 

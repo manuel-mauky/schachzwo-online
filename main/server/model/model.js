@@ -4,25 +4,19 @@
 var assert = require("assert");
 var shortId = require('shortid');
 
-/**
- * The size that the board can have.
- *
- * @type {{SMALL: number, BIG: number}}
- */
-var BoardSize = {
-    SMALL: 7,
-    BIG: 9
-};
+var Color = require("./color");
+var BoardSize = require("./boardsize");
 
-/**
- * The possible color of a figure.
- *
- * @type {{BLACK: string, WHITE: string}}
- */
-var Color = {
-    BLACK: "black",
-    WHITE: "white"
-};
+///**
+// * The size that the board can have.
+// *
+// * @type {{SMALL: number, BIG: number}}
+// */
+//var BoardSize = {
+//    SMALL: 7,
+//    BIG: 9
+//};
+
 
 /**
  * The types of figures that are possible.
@@ -716,8 +710,6 @@ var Match = function (json) {
 };
 
 
-module.exports.BoardSize = BoardSize;
-module.exports.Color = Color;
 module.exports.FigureType = FigureType;
 module.exports.State = State;
 module.exports.Figure = Figure;
