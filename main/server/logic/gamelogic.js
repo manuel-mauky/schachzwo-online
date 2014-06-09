@@ -52,7 +52,7 @@ module.exports.GameLogic = function GameLogic(match) {
             var zenithThreatenPositions = accessor.getThreatenPositions(zenithField.position.column, zenithField.position.row);
             if (zenithThreatenPositions.length == 0) {
                 var validMoves = accessor.getValidMoves(color);
-                if(validMoves.length == 1 && validMoves[0].field.figure.type == FigureType.ZENITH){
+                if(validMoves.length == 1 && validMoves[0].field.figure.type == FigureType.ZENITH &&  validMoves[0].fields.length == 0){
                     return CheckType.STALE_MATE;
                 }else{
                     return CheckType.NONE;

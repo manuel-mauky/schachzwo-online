@@ -381,7 +381,7 @@ var verifyCheckType = function (match,checkType,activePlayerColor) {
     sse.sendMessage(message.UPDATE, match.matchId);
 
     if (checkType == CheckType.CHECK) {
-        sse.sendMessage(message.IS_IN_CHECK, match.matchId, nextActivePlayer.playerId);
+        sse.sendMessage(message.IS_IN_CHECK, match.matchId, activePlayer.playerId);
     }
 
     if(checkType == CheckType.STALE_MATE){
