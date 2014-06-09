@@ -12,6 +12,8 @@ var model = require("../model/model");
 var PieceType = require("../model/piece-type");
 var Color = require("../model/color");
 var BoardSize = require("../model/boardsize");
+var Figure = require("../model/figure");
+
 
 module.exports = function BoardAccessor(match) {
     if (!match) {
@@ -142,15 +144,15 @@ module.exports = function BoardAccessor(match) {
 
     var getAllPieces = function(size,color){
         var result = [
-            {number: size,piece: new model.Figure({color: color, type: PieceType.ROCKS})},
-            {number: 2,piece: new model.Figure({color: color, type: PieceType.MAN})},
-            {number: 2,piece: new model.Figure({color: color, type: PieceType.WOMAN})},
-            {number: 2,piece: new model.Figure({color: color, type: PieceType.KNIGHT})},
-            {number: 1,piece: new model.Figure({color: color, type: PieceType.ZENITH})}];
+            {number: size,piece: new Figure({color: color, type: PieceType.ROCKS})},
+            {number: 2,piece: new Figure({color: color, type: PieceType.MAN})},
+            {number: 2,piece: new Figure({color: color, type: PieceType.WOMAN})},
+            {number: 2,piece: new Figure({color: color, type: PieceType.KNIGHT})},
+            {number: 1,piece: new Figure({color: color, type: PieceType.ZENITH})}];
         if(size == BoardSize.BIG){
             result.concat([
-                {number: 1,piece: new model.Figure({color: color, type: PieceType.KNOWLEDGE})},
-                {number: 1,piece: new model.Figure({color: color, type: PieceType.FAITH})}]);
+                {number: 1,piece: new Figure({color: color, type: PieceType.KNOWLEDGE})},
+                {number: 1,piece: new Figure({color: color, type: PieceType.FAITH})}]);
         }
         return result;
     };

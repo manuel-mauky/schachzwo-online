@@ -8,7 +8,7 @@ var BoardAccessor = require("./board-accessor");
 
 var PieceType = require("../model/piece-type");
 var Color = require("../model/color");
-var Figure = model.Figure;
+var Figure = require("../model/figure");
 
 var CheckType = {
     NONE: "none",

@@ -8,7 +8,7 @@ var model = require("./model");
 var BoardSize = require("./boardsize");
 var Color = require("./color");
 var PieceType = require("../model/piece-type");
-var Figure = model.Figure;
+var Figure = require("../model/figure");
 var Field = model.Field;
 var Player = model.Player;
 var State = require("../model/state");
@@ -30,7 +30,7 @@ describe("Creation of Figure", function () {
 
     it("should be possible with constructor params", function () {
 
-        var man = new model.Figure({color: Color.BLACK, type: PieceType.MAN});
+        var man = new Figure({color: Color.BLACK, type: PieceType.MAN});
 
         assert.ok(man);
         assert.equal(man.color, Color.BLACK);

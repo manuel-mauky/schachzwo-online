@@ -15,7 +15,7 @@ var model = require("./../model/model");
 var Color = require("../model/color");
 var BoardSize = require("../model/boardsize");
 var PieceType = require("../model/piece-type");
-var Figure = model.Figure;
+var Figure = require("../model/figure");
 var Position = model.Position;
 
 var modelFactory = require("./../model/model-factory.js");
