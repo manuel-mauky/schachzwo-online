@@ -111,10 +111,17 @@ body, h1, h2, h3, h4, h5, h6 {
 	float: left;
 }
 
-.banner {
+.banner7 {
     padding: 100px 0;
     color: #f8f8f8;
-    background: url(../img/pieces.jpg) no-repeat center center;
+    background: url(../img/pieces7.jpg) no-repeat center center;
+    background-size: cover;
+}
+
+.banner9 {
+    padding: 100px 0;
+    color: #f8f8f8;
+    background: url(../img/pieces9.jpg) no-repeat center center;
     background-size: cover;
 }
 

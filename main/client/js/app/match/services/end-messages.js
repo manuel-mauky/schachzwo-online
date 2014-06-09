@@ -25,6 +25,8 @@ define(['angular'], function (angular) {
                         return "Du hast verloren! – Verlust durch „Schach Ziel mit Nachrücken“, du bekommst 1 Punkt!";
                     case "draw":
                         return "Remis! – Du bekommst 0,5 Punkte.";
+                    case "stale-mate":
+                        return "Patt! - Du bekommst 0,5 Punkte.";
                     default:
                         return "";
                 }
