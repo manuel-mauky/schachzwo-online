@@ -5,16 +5,17 @@ var assert = require("assert");
 var shortId = require('shortid');
 
 var Color = require("./color");
+var BoardSize = require("./boardsize");
 
-/**
- * The size that the board can have.
- *
- * @type {{SMALL: number, BIG: number}}
- */
-var BoardSize = {
-    SMALL: 7,
-    BIG: 9
-};
+///**
+// * The size that the board can have.
+// *
+// * @type {{SMALL: number, BIG: number}}
+// */
+//var BoardSize = {
+//    SMALL: 7,
+//    BIG: 9
+//};
 
 
 /**
@@ -709,7 +710,6 @@ var Match = function (json) {
 };
 
 
-module.exports.BoardSize = BoardSize;
 module.exports.FigureType = FigureType;
 module.exports.State = State;
 module.exports.Figure = Figure;

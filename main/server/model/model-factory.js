@@ -5,14 +5,16 @@ var model = require("./model");
 var Color = require("./color");
 var FigureType = model.FigureType;
 
+var BoardSize = require("../model/boardsize");
+
 /**
  * Create a match instance with the given size.
  * @param size
  */
 module.exports.createMatch = function (size) {
-    if (size == model.BoardSize.SMALL) {
+    if (size == BoardSize.SMALL) {
         return createSmallMatch();
-    } else if (size == model.BoardSize.BIG) {
+    } else if (size == BoardSize.BIG) {
         return createBigMatch();
     } else {
         throw new Error("The size param was wrong. Size needs to be either 7 (small) or 9 (big)");
@@ -20,10 +22,10 @@ module.exports.createMatch = function (size) {
 };
 
 module.exports.createEmptyMatch = function(size) {
-    if(size == model.BoardSize.SMALL){
-        return helper_createEmptyMatch(model.BoardSize.SMALL);
-    }else if(size == model.BoardSize.BIG){
-        return helper_createEmptyMatch(model.BoardSize.BIG);
+    if(size == BoardSize.SMALL){
+        return helper_createEmptyMatch(BoardSize.SMALL);
+    }else if(size == BoardSize.BIG){
+        return helper_createEmptyMatch(BoardSize.BIG);
     }else{
         throw new Error("The size param was wrong. Size needs to be either 7 (small) or 9 (big)");
     }
@@ -36,9 +38,9 @@ module.exports.createEmptyMatch = function(size) {
  * @param size
  */
 module.exports.createStartSnapshot = function (size) {
-    if (size == model.BoardSize.SMALL) {
+    if (size == BoardSize.SMALL) {
         return createSmallStartSnapshot();
-    } else if (size == model.BoardSize.BIG) {
+    } else if (size == BoardSize.BIG) {
         return createBigStartSnapshot();
     } else {
         throw new Error("The size param was wrong. Size needs to be either 7 (small) or 9 (big)");
@@ -48,7 +50,7 @@ module.exports.createStartSnapshot = function (size) {
 
 module.exports.createEmptySnapshot = function(size){
 
-    if( size != model.BoardSize.SMALL && size != model.BoardSize.BIG ){
+    if( size != BoardSize.SMALL && size != BoardSize.BIG ){
         throw new Error("The size param was wrong. Size needs to be either 7 (small) or 9 (big)");
     }
 
@@ -59,12 +61,12 @@ module.exports.createEmptySnapshot = function(size){
 };
 
 var createSmallMatch = function () {
-    var match = helper_createEmptyMatch(model.BoardSize.SMALL);
+    var match = helper_createEmptyMatch(BoardSize.SMALL);
     return match;
 };
 
 var createBigMatch = function () {
-    var match = helper_createEmptyMatch(model.BoardSize.BIG);
+    var match = helper_createEmptyMatch(BoardSize.BIG);
     return match;
 };
 

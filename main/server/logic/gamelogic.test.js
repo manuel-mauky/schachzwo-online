@@ -10,11 +10,12 @@ var BoardAccessor = require("./board-accessor");
 var model = require("./../model/model");
 var gameLogic = require("./gamelogic");
 
-var Color = require("../model/color")
+var Color = require("../model/color");
+var BoardSize = require("../model/boardsize");
 var FigureType = model.FigureType;
 var Position = model.Position;
 var Figure = model.Figure;
-var BoardSize = model.BoardSize;
+var BoardSize = require("../model/boardsize");
 var CheckType = gameLogic.CheckType;
 var GameLogic = gameLogic.GameLogic;
 
@@ -27,7 +28,7 @@ describe("gamelogic", function () {
     var logic;
 
     beforeEach(function () {
-        match = modelFactory.createMatch(model.BoardSize.SMALL);
+        match = modelFactory.createMatch(BoardSize.SMALL);
         board = match.getCurrentSnapshot();
         logic = new GameLogic(match);
     });

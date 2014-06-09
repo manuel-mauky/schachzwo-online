@@ -5,7 +5,7 @@ var assert = require("chai").assert;
 var model = require("./model");
 
 
-var BoardSize = model.BoardSize;
+var BoardSize = require("./boardsize");
 var Color = require("./color");
 var FigureType = model.FigureType;
 var Figure = model.Figure;

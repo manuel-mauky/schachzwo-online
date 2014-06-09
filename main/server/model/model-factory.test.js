@@ -7,11 +7,12 @@ var modelFactory = require("./model-factory.js");
 
 var FigureType = model.FigureType;
 var Color = require("./color");
+var BoardSize = require("../model/boardsize");
 
 
 describe("modelFactory.createMatch", function () {
     it("should create a valid match with a start snapshot", function () {
-        var match = modelFactory.createMatch(model.BoardSize.SMALL);
+        var match = modelFactory.createMatch(BoardSize.SMALL);
 
         assert.ok(match);
 
@@ -19,7 +20,7 @@ describe("modelFactory.createMatch", function () {
 
         assert.isArray(match.history);
 
-        assert.equal(match.size, model.BoardSize.SMALL);
+        assert.equal(match.size, BoardSize.SMALL);
 
     });
 
@@ -40,7 +41,7 @@ describe("modelFactory.createStartSnapshot", function () {
 
     it("should create a valid empty small board snapshot", function () {
 
-        var snapshot = modelFactory.createStartSnapshot(model.BoardSize.SMALL);
+        var snapshot = modelFactory.createStartSnapshot(BoardSize.SMALL);
 
         assert.ok(snapshot);
         assert.equal(snapshot.board.length, 49); // 7*7 fields
@@ -83,7 +84,7 @@ describe("modelFactory.createStartSnapshot", function () {
 
     it("should create a valid empty big board snapshot", function () {
 
-        var snapshot = modelFactory.createStartSnapshot(model.BoardSize.BIG);
+        var snapshot = modelFactory.createStartSnapshot(BoardSize.BIG);
         assert.ok(snapshot);
 
         assert.equal(snapshot.board.length, 81); // 9*9 fields

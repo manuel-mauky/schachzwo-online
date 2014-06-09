@@ -7,6 +7,7 @@ var sinon = require("sinon");
 var app = require('../../app').app;
 var model = require('../model/model');
 var Color = require("../model/color");
+var BoardSize = require("../model/boardsize");
 var modelFactory = require('../model/model-factory');
 
 var sse = require("../messaging/sse");
@@ -715,7 +716,7 @@ describe('Mock REST API test /matches', function () {
 
         it("should return all valid moves", function (done) {
 
-            var match = modelFactory.createMatch(model.BoardSize.SMALL);
+            var match = modelFactory.createMatch(BoardSize.SMALL);
             match.state = model.State.PLAYING;
 
             matchStore.createMatch(match, function (err, match) {
@@ -745,9 +746,9 @@ describe('Mock REST API test /matches', function () {
 
         it("should return all threats", function (done) {
 
-            var match = modelFactory.createMatch(model.BoardSize.SMALL);
+            var match = modelFactory.createMatch(BoardSize.SMALL);
 
-            matchStore.createMatch(modelFactory.createMatch(model.BoardSize.SMALL), function (err, match) {
+            matchStore.createMatch(modelFactory.createMatch(BoardSize.SMALL), function (err, match) {
 
                 request(app)
                     .get('/matches/' + match.matchId + '/threats')
