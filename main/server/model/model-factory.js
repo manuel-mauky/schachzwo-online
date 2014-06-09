@@ -2,7 +2,7 @@
 
 var model = require("./model");
 
-var Color = model.Color;
+var Color = require("./color");
 var FigureType = model.FigureType;
 
 /**
@@ -17,7 +17,7 @@ module.exports.createMatch = function (size) {
     } else {
         throw new Error("The size param was wrong. Size needs to be either 7 (small) or 9 (big)");
     }
-}
+};
 
 module.exports.createEmptyMatch = function(size) {
     if(size == model.BoardSize.SMALL){
@@ -28,7 +28,7 @@ module.exports.createEmptyMatch = function(size) {
         throw new Error("The size param was wrong. Size needs to be either 7 (small) or 9 (big)");
     }
 
-}
+};
 
 
 /**
@@ -52,36 +52,36 @@ module.exports.createEmptySnapshot = function(size){
         throw new Error("The size param was wrong. Size needs to be either 7 (small) or 9 (big)");
     }
 
-    var start = new model.Snapshot();
+    var start = new model.Snapshot({});
     helper_fillWithEmptyFields(start.board, size);
 
     return start;
-}
+};
 
 var createSmallMatch = function () {
     var match = helper_createEmptyMatch(model.BoardSize.SMALL);
     return match;
-}
+};
 
 var createBigMatch = function () {
     var match = helper_createEmptyMatch(model.BoardSize.BIG);
     return match;
-}
+};
 
 var helper_createEmptyMatch = function(size){
-    var match = new model.Match();
+    var match = new model.Match({});
 
     match.size = size;
     match.state = model.State.PREPARING;
 
     return match;
-}
+};
 
 
 
 
 var createSmallStartSnapshot = function () {
-    var start = new model.Snapshot();
+    var start = new model.Snapshot({});
 
     helper_fillWithEmptyFields(start.board, 7);
 
@@ -94,10 +94,10 @@ var createSmallStartSnapshot = function () {
 
 
     return start;
-}
+};
 
 var createBigStartSnapshot = function () {
-    var start = new model.Snapshot();
+    var start = new model.Snapshot({});
 
     helper_fillWithEmptyFields(start.board, 9);
 
@@ -116,7 +116,7 @@ var createBigStartSnapshot = function () {
     helper_fillWithRocks(start, 9);
 
     return start;
-}
+};
 
 
 /**
@@ -128,7 +128,7 @@ var helper_fillWithEmptyFields = function (board, size) {
             board.push(new model.Field({position:{column: i, row: j}}));
         }
     }
-}
+};
 
 /**
  * This helper is used to place the figures man, woman and knight on the given row.
@@ -143,13 +143,13 @@ var helper_fillWithSpecialFigures = function (board, color, row, size) {
     board.getField(size - 3, row).figure = new model.Figure({color: color, type: FigureType.WOMAN});
     board.getField(size - 2, row).figure = new model.Figure({color: color, type: FigureType.KNIGHT});
     board.getField(size - 1, row).figure = new model.Figure({color: color, type: FigureType.MAN});
-}
+};
 
 var helper_fillWithRocks = function (board, size) {
     for (var i = 0; i < size; i++) {
         board.getField(i, 1).figure = new model.Figure({color: Color.WHITE, type: FigureType.ROCKS});
         board.getField(i, size - 2).figure = new model.Figure({color: Color.BLACK, type: FigureType.ROCKS});
     }
-}
+};
 
 

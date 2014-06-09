@@ -10,7 +10,7 @@
 var model = require("./../model/model");
 
 var FigureType = model.FigureType;
-var Color = model.Color;
+var Color = require("../model/color");
 
 module.exports = function BoardAccessor(match) {
     if (!match) {

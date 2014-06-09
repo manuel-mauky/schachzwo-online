@@ -6,7 +6,7 @@ var model = require("./model");
 var modelFactory = require("./model-factory.js");
 
 var FigureType = model.FigureType;
-var Color = model.Color;
+var Color = require("./color");
 
 
 describe("modelFactory.createMatch", function () {

@@ -6,6 +6,7 @@ var sinon = require("sinon");
 
 var app = require('../../app').app;
 var model = require('../model/model');
+var Color = require("../model/color");
 var modelFactory = require('../model/model-factory');
 
 var sse = require("../messaging/sse");
@@ -159,7 +160,7 @@ describe('Mock REST API test /matches', function () {
                     .expect(function (res) {
                         assert.equal(res.body.name, 'Bob');
                         assert.isDefined(res.body.playerId);
-                        assert.equal(res.body.color, model.Color.BLACK);
+                        assert.equal(res.body.color, Color.BLACK);
                     })
                     .end(function(err, res){
                         if(err) throw err;
@@ -189,7 +190,7 @@ describe('Mock REST API test /matches', function () {
                     .expect(function(res) {
                         assert.equal(res.body.name, "Bob");
                         assert.isDefined(res.body.playerId);
-                        assert.equal(res.body.color, model.Color.BLACK);
+                        assert.equal(res.body.color, Color.BLACK);
                     }).end(function(err){
                         if(err) throw err;
 
@@ -216,7 +217,7 @@ describe('Mock REST API test /matches', function () {
                     .expect(function (res) {
                         assert.equal(res.body.name, 'Bob');
                         assert.isDefined(13);
-                        assert.equal(res.body.color, model.Color.BLACK);
+                        assert.equal(res.body.color, Color.BLACK);
                     })
                     .end(function(err, res){
                         if(err) throw err;
@@ -249,7 +250,7 @@ describe('Mock REST API test /matches', function () {
                         assert.equal(res.body.name, 'Jane');
                         assert.isDefined(res.body.playerId);
                         assert.notEqual(res.body.playerId, 1);
-                        assert.equal(res.body.color, model.Color.WHITE);
+                        assert.equal(res.body.color, Color.WHITE);
 
                     })
                     .end(function(err, res){
@@ -352,7 +353,7 @@ describe('Mock REST API test /matches', function () {
                 .set('Cookie', [matches.PLAYER_COOKIE_NAME + '=1'])
                 .expect(function (res) {
                     assert.equal(res.body.name, 'player1');
-                    assert.equal(res.body.color, model.Color.BLACK);
+                    assert.equal(res.body.color, Color.BLACK);
                     assert.isDefined(res.body.playerId);
                 })
                 .end(done);
@@ -399,7 +400,7 @@ describe('Mock REST API test /matches', function () {
                 .set('Cookie', [matches.PLAYER_COOKIE_NAME + '=1'])
                 .expect(function (res) {
                     assert.equal(res.body.name, 'player2');
-                    assert.equal(res.body.color, model.Color.WHITE);
+                    assert.equal(res.body.color, Color.WHITE);
                     assert.isUndefined(res.body.playerId);
                 })
                 .end(done);
@@ -440,7 +441,7 @@ describe('Mock REST API test /matches', function () {
                 match.addMove(new model.Move(
                     {
                         figure: {
-                            color: model.Color.BLACK,
+                            color: Color.BLACK,
                             type: model.FigureType.ROCKS
                         },
                         from: {column: 0, row: 5},
@@ -485,7 +486,7 @@ describe('Mock REST API test /matches', function () {
         });
 
 
-        var move = {figure: {color: model.Color.BLACK, type: model.FigureType.ROCKS},
+        var move = {figure: {color: Color.BLACK, type: model.FigureType.ROCKS},
             from: {column: 2, row: 5},
             to: {column: 2, row: 4}};
 
@@ -539,7 +540,7 @@ describe('Mock REST API test /matches', function () {
 
         it("should not add move when it's not the players turn", function (done) {
 
-            var secondMove = {figure: {color: model.Color.WHITE, type: model.FigureType.ROCKS},
+            var secondMove = {figure: {color: Color.WHITE, type: model.FigureType.ROCKS},
                 from: {column: 0, row: 1},
                 to: {column: 0, row: 2}};
 
@@ -563,7 +564,7 @@ describe('Mock REST API test /matches', function () {
                             .end(function (err) {
                                 if (err) throw err;
 
-                                var thirdMove = {figure: {color: model.Color.BLACK, type: model.FigureType.ROCKS},
+                                var thirdMove = {figure: {color: Color.BLACK, type: model.FigureType.ROCKS},
                                     from: {column: 2, row: 4},
                                     to: {column: 2, row: 3}};
 
@@ -592,7 +593,7 @@ describe('Mock REST API test /matches', function () {
 
 
         it("should not add move when the player tries to move an enemy figure", function (done) {
-            var enemyMove = {figure: {color: model.Color.WHITE, type: model.FigureType.ROCKS},
+            var enemyMove = {figure: {color: Color.WHITE, type: model.FigureType.ROCKS},
                 from: {column: 0, row: 1},
                 to: {column: 0, row: 2}};
 
@@ -616,7 +617,7 @@ describe('Mock REST API test /matches', function () {
 
         it("should not add invalid move", function (done) {
 
-            var move = {figure: {color: model.Color.BLACK, type: model.FigureType.ROCKS},
+            var move = {figure: {color: Color.BLACK, type: model.FigureType.ROCKS},
                 from: {column: 2, row: 5},
                 to: {column: 2, row: 3}};
 
@@ -629,7 +630,7 @@ describe('Mock REST API test /matches', function () {
 
         it("should accept a 'surrender' move", function(done) {
 
-            var move = {figure: {color: model.Color.BLACK, type: model.FigureType.ZENITH},
+            var move = {figure: {color: Color.BLACK, type: model.FigureType.ZENITH},
                 from: {column: 3, row: 6},
                 to: {column: 3, row: 3}};
 
@@ -643,7 +644,7 @@ describe('Mock REST API test /matches', function () {
 
         it("should not accept a invalid 'surrender' move", function(done) {
 
-            var move = {figure: {color: model.Color.BLACK, type: model.FigureType.ROCKS},
+            var move = {figure: {color: Color.BLACK, type: model.FigureType.ROCKS},
                 from: {column: 3, row: 5},
                 to: {column: 3, row: 3}};
 
@@ -657,7 +658,7 @@ describe('Mock REST API test /matches', function () {
 
         it("should support HTTP Auth", function (done) {
 
-            var move = {figure: {color: model.Color.BLACK, type: model.FigureType.ROCKS},
+            var move = {figure: {color: Color.BLACK, type: model.FigureType.ROCKS},
                 from: {column: 2, row: 5},
                 to: {column: 2, row: 4}};
 
@@ -676,7 +677,7 @@ describe('Mock REST API test /matches', function () {
 
         it("should not add a move when there is a draw to be answered", function(done){
 
-            var move = {figure: {color: model.Color.BLACK, type: model.FigureType.ROCKS},
+            var move = {figure: {color: Color.BLACK, type: model.FigureType.ROCKS},
                 from: {column: 2, row: 5},
                 to: {column: 2, row: 4 }};
 
@@ -694,7 +695,7 @@ describe('Mock REST API test /matches', function () {
                         .expect(201, function(err){
                             if(err) throw err;
 
-                            var secondMove = {figure: {color: model.Color.BLACK, type: model.FigureType.ROCKS},
+                            var secondMove = {figure: {color: Color.BLACK, type: model.FigureType.ROCKS},
                                 from: {column: 2, row: 4},
                                 to: {column: 2, row: 3}};
 
@@ -814,7 +815,7 @@ describe('Mock REST API test /matches', function () {
                         assert.equal(match.history.length, 1);
                         var last = match.history[match.history.length - 1];
 
-                        assert.equal(last.color, model.Color.BLACK);
+                        assert.equal(last.color, Color.BLACK);
                         assert.equal(last.type, model.Draw.Types.Offered);
 
                         done();
@@ -851,7 +852,7 @@ describe('Mock REST API test /matches', function () {
                                 assert.equal(match.history.length, 2);
                                 var last = match.history[match.history.length - 1];
 
-                                assert.equal(last.color, model.Color.WHITE);
+                                assert.equal(last.color, Color.WHITE);
                                 assert.equal(last.type, model.Draw.Types.Accepted);
 
                                 done();
@@ -888,7 +889,7 @@ describe('Mock REST API test /matches', function () {
                                 assert.equal(match.history.length, 2);
                                 var last = match.history[match.history.length - 1];
 
-                                assert.equal(last.color, model.Color.WHITE);
+                                assert.equal(last.color, Color.WHITE);
                                 assert.equal(last.type, model.Draw.Types.Rejected);
 
                                 done();

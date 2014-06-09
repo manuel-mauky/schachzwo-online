@@ -12,7 +12,7 @@ var StoreProvider = require("../store/store-provider");
 
 var model = require("./../model/model");
 
-var Color = model.Color;
+var Color = require("../model/color")
 var FigureType = model.FigureType;
 var Figure = model.Figure;
 var Position = model.Position;

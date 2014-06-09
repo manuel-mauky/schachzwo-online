@@ -10,7 +10,7 @@ var BoardAccessor = require("./board-accessor");
 var model = require("./../model/model");
 var gameLogic = require("./gamelogic");
 
-var Color = model.Color;
+var Color = require("../model/color")
 var FigureType = model.FigureType;
 var Position = model.Position;
 var Figure = model.Figure;
