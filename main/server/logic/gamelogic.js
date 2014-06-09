@@ -6,8 +6,8 @@
 var model = require("./../model/model");
 var BoardAccessor = require("./board-accessor");
 
-var FigureType = model.FigureType;
-var Color = require("../model/color")
+var PieceType = require("../model/piece-type");
+var Color = require("../model/color");
 var Figure = model.Figure;
 
 var CheckType = {
@@ -52,7 +52,7 @@ module.exports.GameLogic = function GameLogic(match) {
             var zenithThreatenPositions = accessor.getThreatenPositions(zenithField.position.column, zenithField.position.row);
             if (zenithThreatenPositions.length == 0) {
                 var validMoves = accessor.getValidMoves(color);
-                if(validMoves.length == 1 && validMoves[0].field.figure.type == FigureType.ZENITH &&  validMoves[0].fields.length == 0){
+                if(validMoves.length == 1 && validMoves[0].field.figure.type == PieceType.ZENITH &&  validMoves[0].fields.length == 0){
                     return CheckType.STALE_MATE;
                 }else{
                     return CheckType.NONE;
@@ -111,7 +111,7 @@ module.exports.GameLogic = function GameLogic(match) {
                 rangeList.some(function (element) {
                     match.addMoveFromPosition(element.from,element.to);
                     if (accessor.getThreatenPositions(zenithField.position.column, zenithField.position.row).length == 0) {
-                        if(element.figure.type != FigureType.ZENITH){
+                        if(element.figure.type != PieceType.ZENITH){
                             isCheckMate = false;
                         }
                     }
@@ -134,7 +134,7 @@ module.exports.GameLogic = function GameLogic(match) {
         for (var i = 0; i < match.size; i++) {
             for (var j = 0; j < match.size; j++) {
                 var field = board.getField(i, j);
-                if (field.figure && field.figure.type == FigureType.ZENITH && field.figure.color == color) {
+                if (field.figure && field.figure.type == PieceType.ZENITH && field.figure.color == color) {
                     return board.getField(i, j);
                 }
             }

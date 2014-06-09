@@ -8,6 +8,7 @@ var app = require('../../app').app;
 var model = require('../model/model');
 var Color = require("../model/color");
 var BoardSize = require("../model/boardsize");
+var PieceType = require("../model/piece-type");
 var modelFactory = require('../model/model-factory');
 
 var sse = require("../messaging/sse");
@@ -443,7 +444,7 @@ describe('Mock REST API test /matches', function () {
                     {
                         figure: {
                             color: Color.BLACK,
-                            type: model.FigureType.ROCKS
+                            type: PieceType.ROCKS
                         },
                         from: {column: 0, row: 5},
                         to: {column: 0, row: 4}
@@ -487,7 +488,7 @@ describe('Mock REST API test /matches', function () {
         });
 
 
-        var move = {figure: {color: Color.BLACK, type: model.FigureType.ROCKS},
+        var move = {figure: {color: Color.BLACK, type: PieceType.ROCKS},
             from: {column: 2, row: 5},
             to: {column: 2, row: 4}};
 
@@ -541,7 +542,7 @@ describe('Mock REST API test /matches', function () {
 
         it("should not add move when it's not the players turn", function (done) {
 
-            var secondMove = {figure: {color: Color.WHITE, type: model.FigureType.ROCKS},
+            var secondMove = {figure: {color: Color.WHITE, type: PieceType.ROCKS},
                 from: {column: 0, row: 1},
                 to: {column: 0, row: 2}};
 
@@ -565,7 +566,7 @@ describe('Mock REST API test /matches', function () {
                             .end(function (err) {
                                 if (err) throw err;
 
-                                var thirdMove = {figure: {color: Color.BLACK, type: model.FigureType.ROCKS},
+                                var thirdMove = {figure: {color: Color.BLACK, type: PieceType.ROCKS},
                                     from: {column: 2, row: 4},
                                     to: {column: 2, row: 3}};
 
@@ -594,7 +595,7 @@ describe('Mock REST API test /matches', function () {
 
 
         it("should not add move when the player tries to move an enemy figure", function (done) {
-            var enemyMove = {figure: {color: Color.WHITE, type: model.FigureType.ROCKS},
+            var enemyMove = {figure: {color: Color.WHITE, type: PieceType.ROCKS},
                 from: {column: 0, row: 1},
                 to: {column: 0, row: 2}};
 
@@ -618,7 +619,7 @@ describe('Mock REST API test /matches', function () {
 
         it("should not add invalid move", function (done) {
 
-            var move = {figure: {color: Color.BLACK, type: model.FigureType.ROCKS},
+            var move = {figure: {color: Color.BLACK, type: PieceType.ROCKS},
                 from: {column: 2, row: 5},
                 to: {column: 2, row: 3}};
 
@@ -631,7 +632,7 @@ describe('Mock REST API test /matches', function () {
 
         it("should accept a 'surrender' move", function(done) {
 
-            var move = {figure: {color: Color.BLACK, type: model.FigureType.ZENITH},
+            var move = {figure: {color: Color.BLACK, type: PieceType.ZENITH},
                 from: {column: 3, row: 6},
                 to: {column: 3, row: 3}};
 
@@ -645,7 +646,7 @@ describe('Mock REST API test /matches', function () {
 
         it("should not accept a invalid 'surrender' move", function(done) {
 
-            var move = {figure: {color: Color.BLACK, type: model.FigureType.ROCKS},
+            var move = {figure: {color: Color.BLACK, type: PieceType.ROCKS},
                 from: {column: 3, row: 5},
                 to: {column: 3, row: 3}};
 
@@ -659,7 +660,7 @@ describe('Mock REST API test /matches', function () {
 
         it("should support HTTP Auth", function (done) {
 
-            var move = {figure: {color: Color.BLACK, type: model.FigureType.ROCKS},
+            var move = {figure: {color: Color.BLACK, type: PieceType.ROCKS},
                 from: {column: 2, row: 5},
                 to: {column: 2, row: 4}};
 
@@ -678,7 +679,7 @@ describe('Mock REST API test /matches', function () {
 
         it("should not add a move when there is a draw to be answered", function(done){
 
-            var move = {figure: {color: Color.BLACK, type: model.FigureType.ROCKS},
+            var move = {figure: {color: Color.BLACK, type: PieceType.ROCKS},
                 from: {column: 2, row: 5},
                 to: {column: 2, row: 4 }};
 
@@ -696,7 +697,7 @@ describe('Mock REST API test /matches', function () {
                         .expect(201, function(err){
                             if(err) throw err;
 
-                            var secondMove = {figure: {color: Color.BLACK, type: model.FigureType.ROCKS},
+                            var secondMove = {figure: {color: Color.BLACK, type: PieceType.ROCKS},
                                 from: {column: 2, row: 4},
                                 to: {column: 2, row: 3}};
 

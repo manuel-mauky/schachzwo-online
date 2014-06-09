@@ -6,32 +6,7 @@ var shortId = require('shortid');
 
 var Color = require("./color");
 var BoardSize = require("./boardsize");
-
-///**
-// * The size that the board can have.
-// *
-// * @type {{SMALL: number, BIG: number}}
-// */
-//var BoardSize = {
-//    SMALL: 7,
-//    BIG: 9
-//};
-
-
-/**
- * The types of figures that are possible.
- *
- * @type {{ROCKS: string, MAN: string, WOMAN: string, KNIGHT: string, KNOWLEDGE: string, FAITH: string, ZENITH: string}}
- */
-var FigureType = {
-    ROCKS: "rocks",
-    MAN: "man",
-    WOMAN: "woman",
-    KNIGHT: "knight",
-    KNOWLEDGE: "knowledge",
-    FAITH: "faith",
-    ZENITH: "zenith"
-};
+var PieceType = require("./piece-type");
 
 /**
  * The states that the match can have.
@@ -202,25 +177,25 @@ var Snapshot = function (json) {
 
                 if (field.figure) {
                     switch (field.figure.type) {
-                        case FigureType.ROCKS:
+                        case PieceType.ROCKS:
                             s += "r ";
                             break;
-                        case FigureType.MAN:
+                        case PieceType.MAN:
                             s += "m ";
                             break;
-                        case FigureType.WOMAN:
+                        case PieceType.WOMAN:
                             s += "w ";
                             break;
-                        case FigureType.KNIGHT:
+                        case PieceType.KNIGHT:
                             s += "s ";
                             break;
-                        case FigureType.KNOWLEDGE:
+                        case PieceType.KNOWLEDGE:
                             s += "k ";
                             break;
-                        case FigureType.FAITH:
+                        case PieceType.FAITH:
                             s += "f ";
                             break;
-                        case FigureType.ZENITH:
+                        case PieceType.ZENITH:
                             s += "z ";
                             break;
                     }
@@ -410,7 +385,7 @@ var Match = function (json) {
      */
     this.rocksPromotion = function(move) {
         var fieldFrom = this.getCurrentSnapshot().getFieldFromPosition(move.from);
-        if (fieldFrom.figure.type == FigureType.ROCKS) {
+        if (fieldFrom.figure.type == PieceType.ROCKS) {
             if (move.figure.color == Color.BLACK) {
                 if (move.from.row == 1 && move.to.row == 0) {
                     return true;
@@ -611,10 +586,10 @@ var Match = function (json) {
         return false;
     };
 
-    this.historyContainsMoveToPositionWithFigureType = function(column,row,figureType){
+    this.historyContainsMoveToPositionWithPieceType = function(column,row,pieceType){
         var contains = false;
         this.history.forEach(function(move){
-            if(move.to && move.to.column == column && move.to.row == row && move.figure.type == figureType){
+            if(move.to && move.to.column == column && move.to.row == row && move.figure.type == pieceType){
                 contains = true;
                 return;
             }
@@ -710,7 +685,6 @@ var Match = function (json) {
 };
 
 
-module.exports.FigureType = FigureType;
 module.exports.State = State;
 module.exports.Figure = Figure;
 module.exports.Field = Field;

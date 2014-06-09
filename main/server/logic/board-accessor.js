@@ -7,9 +7,9 @@
 
 
 
-var model = require("./../model/model");
+var model = require("../model/model");
 
-var FigureType = model.FigureType;
+var PieceType = require("../model/piece-type");
 var Color = require("../model/color");
 var BoardSize = require("../model/boardsize");
 
@@ -59,25 +59,25 @@ module.exports = function BoardAccessor(match) {
         }
 
         switch (figure.type) {
-            case FigureType.ROCKS:
+            case PieceType.ROCKS:
                 return getRangeForRocks(column, row);
 
-            case FigureType.MAN:
+            case PieceType.MAN:
                 return getRangeForMan(column, row);
 
-            case FigureType.KNIGHT:
+            case PieceType.KNIGHT:
                 return getRangeForKnight(column, row);
 
-            case FigureType.WOMAN:
+            case PieceType.WOMAN:
                 return getRangeForWoman(column, row);
 
-            case FigureType.ZENITH:
+            case PieceType.ZENITH:
                 return getRangeForZenith(column, row);
 
-            case FigureType.KNOWLEDGE:
+            case PieceType.KNOWLEDGE:
                 return getRangeForKnowledge(column, row);
 
-            case FigureType.FAITH:
+            case PieceType.FAITH:
                 return getRangeForFaith(column, row);
 
             default:
@@ -122,7 +122,7 @@ module.exports = function BoardAccessor(match) {
              var zenithPosition = logic.getZenithPosition(color,match.getCurrentSnapshot()).position;
              var tail = [];
              element.fields.forEach(function(position){
-                if(element.field.figure.type == FigureType.ZENITH){
+                if(element.field.figure.type == PieceType.ZENITH){
                     zenithPosition = position;
                     if(isOrigin(zenithPosition.column,zenithPosition.row)){
                         tail.push(position);
@@ -142,15 +142,15 @@ module.exports = function BoardAccessor(match) {
 
     var getAllPieces = function(size,color){
         var result = [
-            {number: size,piece: new model.Figure({color: color, type: model.FigureType.ROCKS})},
-            {number: 2,piece: new model.Figure({color: color, type: model.FigureType.MAN})},
-            {number: 2,piece: new model.Figure({color: color, type: model.FigureType.WOMAN})},
-            {number: 2,piece: new model.Figure({color: color, type: model.FigureType.KNIGHT})},
-            {number: 1,piece: new model.Figure({color: color, type: model.FigureType.ZENITH})}];
+            {number: size,piece: new model.Figure({color: color, type: PieceType.ROCKS})},
+            {number: 2,piece: new model.Figure({color: color, type: PieceType.MAN})},
+            {number: 2,piece: new model.Figure({color: color, type: PieceType.WOMAN})},
+            {number: 2,piece: new model.Figure({color: color, type: PieceType.KNIGHT})},
+            {number: 1,piece: new model.Figure({color: color, type: PieceType.ZENITH})}];
         if(size == BoardSize.BIG){
             result.concat([
-                {number: 1,piece: new model.Figure({color: color, type: model.FigureType.KNOWLEDGE})},
-                {number: 1,piece: new model.Figure({color: color, type: model.FigureType.FAITH})}]);
+                {number: 1,piece: new model.Figure({color: color, type: PieceType.KNOWLEDGE})},
+                {number: 1,piece: new model.Figure({color: color, type: PieceType.FAITH})}]);
         }
         return result;
     };
@@ -195,7 +195,7 @@ module.exports = function BoardAccessor(match) {
                     continue;
                 }
 
-                if (figure.type == FigureType.ZENITH) { // enemy zenith
+                if (figure.type == PieceType.ZENITH) { // enemy zenith
                     if (Math.abs(column - i) <= 1 && Math.abs(row - j) <= 1) {
                         result.push({column: i, row: j});
                     }
@@ -315,7 +315,7 @@ module.exports = function BoardAccessor(match) {
         var straightResult = findTargetsInDirections(currentFigure.color, column, row, straightDirections);
         result = result.concat(straightResult);
 
-        if (!match.historyContainsMoveToPositionWithFigureType(column,row,FigureType.MAN)) {
+        if (!match.historyContainsMoveToPositionWithPieceType(column,row,PieceType.MAN)) {
             var tmp = findTargetsInRange(column, row, 2);
             tmp.forEach(function(e){
                 var contains = false;

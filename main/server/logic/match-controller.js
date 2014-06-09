@@ -19,7 +19,7 @@ var CheckType = require("../logic/gamelogic").CheckType;
 var modelFactory = require("../model/model-factory.js");
 var model = require("../model/model");
 var Color = require("../model/color");
-
+var PieceType = require("../model/piece-type");
 
 var shortId = require('shortid');
 
@@ -256,7 +256,7 @@ module.exports.addMove = function(matchId, playerId, moveJson, callbacks){
 
         } else {
 
-                if (new BoardAccessor(match).isOrigin(move.to.column, move.to.row) && model.FigureType.ZENITH == move.figure.type) {
+                if (new BoardAccessor(match).isOrigin(move.to.column, move.to.row) && PieceType.ZENITH == move.figure.type) {
                     match.state = model.State.FINISHED;
                     store.updateMatch(match, function (err, match) {
                         if (err) {
