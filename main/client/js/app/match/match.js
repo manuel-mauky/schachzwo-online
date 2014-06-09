@@ -183,7 +183,7 @@ define(['angular', 'jquery', 'angular-growl'], function (angular, $) {
                                 $scope.onlooker = true;
                                 update();
                             } else {
-                               window.location = matchLink(matchId);
+                                window.location = matchLink(matchId);
                             }
                         });
                     }).error(function () {
@@ -194,31 +194,36 @@ define(['angular', 'jquery', 'angular-growl'], function (angular, $) {
 
                 var update = function () {
 
-                    currentMove = null;
-                    $http.get(endpoint + "/" + matchId + "/board").success(function (board) {
+                    $http.get(endpoint + "/" + matchId).success(function (match) {
+                        $scope.match = match;
 
-                        $scope.board = board;
-                        $http.get(endpoint + "/" + matchId + "/moves").success(function (moves) {
-                            $scope.moves = moves;
-                            $scope.itsMyTurn = !$scope.onlooker
-                                && $scope.match.state == 'playing'
-                                && (moves.length + ($scope.self.color == 'white' ? 1 : 0)) % 2 == 0;
-                            markThreateningFields();
-                        });
+                        currentMove = null;
+                        $http.get(endpoint + "/" + matchId + "/board").success(function (board) {
 
-                        $http.get(endpoint + "/" + matchId + "/valid-moves").success(function (moves) {
-                            validMoves = moves;
-                        });
+                            $scope.board = board;
+                            $http.get(endpoint + "/" + matchId + "/moves").success(function (moves) {
+                                $scope.moves = moves;
+                                $scope.itsMyTurn = !$scope.onlooker
+                                    && $scope.match.state == 'playing'
+                                    && (moves.length + ($scope.self.color == 'white' ? 1 : 0)) % 2 == 0;
+                                markThreateningFields();
+                            });
 
-                        $http.get(endpoint + "/" + matchId + "/captured-pieces").success(function (pieces) {
+                            $http.get(endpoint + "/" + matchId + "/valid-moves").success(function (moves) {
+                                validMoves = moves;
+                            });
 
-                            $scope.availablePieces = pieces.filter(function (entry) {
-                                return entry.number > 0 &&
-                                    entry.piece &&
-                                    entry.piece.color == $scope.self.color &&
-                                    entry.piece.type != "rocks";
-                            }).map(function (entry) {
-                                return entry.piece;
+                            $http.get(endpoint + "/" + matchId + "/captured-pieces").success(function (pieces) {
+
+                                $scope.availablePieces = pieces.filter(function (entry) {
+                                    return entry.number > 0 &&
+                                        entry.piece &&
+                                        entry.piece.color == $scope.self.color &&
+                                        entry.piece.type != "rocks";
+                                }).map(function (entry) {
+                                    return entry.piece;
+                                });
+
                             });
 
                         });
