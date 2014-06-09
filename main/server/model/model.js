@@ -2,6 +2,7 @@
 
 
 var assert = require("assert");
+var shortId = require('shortid');
 
 /**
  * The size that the board can have.
@@ -277,7 +278,12 @@ var Match = function (json) {
     }
 
     var currentSnapshot;
-    this.matchId = json.matchId;
+
+    if (json.matchId) {
+        this.matchId = json.matchId;
+    } else {
+        this.matchId = shortId.generate();
+    }
     this.state = json.state || State.PREPARING;
 
     this.history = [];
