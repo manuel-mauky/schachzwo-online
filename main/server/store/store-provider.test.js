@@ -2,6 +2,7 @@
 
 var storeProvider = require("./store-provider");
 var model = require("../model/model")
+var State = require("../model/state");
 var modelFactory = require('../model/model-factory');
 var assert = require("chai").assert;
 
@@ -66,17 +67,17 @@ describe("store provider", function () {
                     assert.instanceOf(loadedMatch, model.Match);
 
 
-                    loadedMatch.state = model.State.FINISHED;
+                    loadedMatch.state = State.FINISHED;
 
 
                     store.updateMatch(loadedMatch, function (err, updatedMatch) {
                         assert.notOk(err);
                         assert.ok(updatedMatch);
                         assert.instanceOf(updatedMatch, model.Match);
-                        assert.equal(updatedMatch.state, model.State.FINISHED);
+                        assert.equal(updatedMatch.state, State.FINISHED);
 
                         store.getMatch(matchId, function (err, newLoadedMatch) {
-                            assert.equal(newLoadedMatch.state, model.State.FINISHED);
+                            assert.equal(newLoadedMatch.state, State.FINISHED);
 
                             //Delete Match test
                             store.deleteMatch(matchId, function (err) {

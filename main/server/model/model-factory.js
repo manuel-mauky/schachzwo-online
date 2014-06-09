@@ -3,9 +3,12 @@
 var model = require("./model");
 
 var Color = require("./color");
-var FigureType = model.FigureType;
+var PieceType = require("../model/piece-type");
 
 var BoardSize = require("../model/boardsize");
+var State = require("./state");
+var Figure = require("../model/figure");
+
 
 /**
  * Create a match instance with the given size.
@@ -74,7 +77,7 @@ var helper_createEmptyMatch = function(size){
     var match = new model.Match({});
 
     match.size = size;
-    match.state = model.State.PREPARING;
+    match.state = State.PREPARING;
 
     return match;
 };
@@ -89,8 +92,8 @@ var createSmallStartSnapshot = function () {
 
     helper_fillWithSpecialFigures(start, Color.WHITE, 0, 7);
     helper_fillWithSpecialFigures(start, Color.BLACK, 6, 7);
-    start.getField(3, 0).figure = new model.Figure({color: Color.WHITE, type: FigureType.ZENITH});
-    start.getField(3, 6).figure = new model.Figure({color: Color.BLACK, type: FigureType.ZENITH});
+    start.getField(3, 0).figure = new Figure({color: Color.WHITE, type: PieceType.ZENITH});
+    start.getField(3, 6).figure = new Figure({color: Color.BLACK, type: PieceType.ZENITH});
 
     helper_fillWithRocks(start, 7);
 
@@ -104,15 +107,15 @@ var createBigStartSnapshot = function () {
     helper_fillWithEmptyFields(start.board, 9);
 
     helper_fillWithSpecialFigures(start, Color.WHITE, 0, 9);
-    start.getField(3, 0).figure = new model.Figure({color: Color.WHITE, type: FigureType.KNOWLEDGE});
-    start.getField(4, 0).figure = new model.Figure({color: Color.WHITE, type: FigureType.ZENITH});
-    start.getField(5, 0).figure = new model.Figure({color: Color.WHITE, type: FigureType.FAITH});
+    start.getField(3, 0).figure = new Figure({color: Color.WHITE, type: PieceType.KNOWLEDGE});
+    start.getField(4, 0).figure = new Figure({color: Color.WHITE, type: PieceType.ZENITH});
+    start.getField(5, 0).figure = new Figure({color: Color.WHITE, type: PieceType.FAITH});
 
 
     helper_fillWithSpecialFigures(start, Color.BLACK, 8, 9);
-    start.getField(3, 8).figure = new model.Figure({color: Color.BLACK, type: FigureType.KNOWLEDGE});
-    start.getField(4, 8).figure = new model.Figure({color: Color.BLACK, type: FigureType.ZENITH});
-    start.getField(5, 8).figure = new model.Figure({color: Color.BLACK, type: FigureType.FAITH});
+    start.getField(3, 8).figure = new Figure({color: Color.BLACK, type: PieceType.KNOWLEDGE});
+    start.getField(4, 8).figure = new Figure({color: Color.BLACK, type: PieceType.ZENITH});
+    start.getField(5, 8).figure = new Figure({color: Color.BLACK, type: PieceType.FAITH});
 
 
     helper_fillWithRocks(start, 9);
@@ -138,19 +141,19 @@ var helper_fillWithEmptyFields = function (board, size) {
  */
 // todo: Implement the start position with two zeniths on the origin.
 var helper_fillWithSpecialFigures = function (board, color, row, size) {
-    board.getField(0, row).figure = new model.Figure({color: color, type: FigureType.MAN});
-    board.getField(1, row).figure = new model.Figure({color: color, type: FigureType.KNIGHT});
-    board.getField(2, row).figure = new model.Figure({color: color, type: FigureType.WOMAN});
+    board.getField(0, row).figure = new Figure({color: color, type: PieceType.MAN});
+    board.getField(1, row).figure = new Figure({color: color, type: PieceType.KNIGHT});
+    board.getField(2, row).figure = new Figure({color: color, type: PieceType.WOMAN});
 
-    board.getField(size - 3, row).figure = new model.Figure({color: color, type: FigureType.WOMAN});
-    board.getField(size - 2, row).figure = new model.Figure({color: color, type: FigureType.KNIGHT});
-    board.getField(size - 1, row).figure = new model.Figure({color: color, type: FigureType.MAN});
+    board.getField(size - 3, row).figure = new Figure({color: color, type: PieceType.WOMAN});
+    board.getField(size - 2, row).figure = new Figure({color: color, type: PieceType.KNIGHT});
+    board.getField(size - 1, row).figure = new Figure({color: color, type: PieceType.MAN});
 };
 
 var helper_fillWithRocks = function (board, size) {
     for (var i = 0; i < size; i++) {
-        board.getField(i, 1).figure = new model.Figure({color: Color.WHITE, type: FigureType.ROCKS});
-        board.getField(i, size - 2).figure = new model.Figure({color: Color.BLACK, type: FigureType.ROCKS});
+        board.getField(i, 1).figure = new Figure({color: Color.WHITE, type: PieceType.ROCKS});
+        board.getField(i, size - 2).figure = new Figure({color: Color.BLACK, type: PieceType.ROCKS});
     }
 };
 

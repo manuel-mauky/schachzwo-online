@@ -4,7 +4,7 @@
 
         <div class="row">
             <div class="col-lg-6">
-                <h2>Willkommen zu einer neuen Partie<br>SchachZWO <span ng-bind="match.size + 'x' + match.size"></span></h2>
+                <h2 translate="WELCOME" translate-value-name="{{match.size}}x{{match.size}}"></h2>
             </div>
 
         </div>
@@ -24,16 +24,16 @@
                 <form id="login-form" class="form-horizontal" role="form" ng-submit="login()">
 
                     <div class="form-group">
-                        <label class="col-sm-4 control-label" for="playerName">Bitte gib deinen Namen ein:</label>
+                        <label class="col-sm-4 control-label" for="playerName" translate="ENTER_NAME_LABEL"></label>
 
                         <div class="col-sm-4">
-                            <input type="text" id="playerName" name="playerName" class="form-control" placeholder="Dein Spielername"
+                            <input type="text" id="playerName" name="playerName" class="form-control" placeholder="{{ 'YOUR_PLAYER_NAME' | translate }}"
                                    ng-model="playerName"/>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-sm-offset-4 col-sm-4">
-                            <button type="submit" class="btn btn-primary btn-lg">Zum Schachbrett</button>
+                            <button type="submit" class="btn btn-primary btn-lg" translate="TO_THE_BOARD"></button>
                         </div>
                     </div>
                 </form>

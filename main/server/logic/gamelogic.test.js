@@ -11,10 +11,8 @@ var model = require("./../model/model");
 var gameLogic = require("./gamelogic");
 
 var Color = require("../model/color");
-var BoardSize = require("../model/boardsize");
-var FigureType = model.FigureType;
 var Position = model.Position;
-var Figure = model.Figure;
+var Figure = require("../model/figure");
 var BoardSize = require("../model/boardsize");
 var CheckType = gameLogic.CheckType;
 var GameLogic = gameLogic.GameLogic;
