@@ -3,8 +3,11 @@
 define(['angular', 'jquery', 'jquery-validate'], function (angular, $) {
 
     angular.module("login", [])
-        .controller("loginCtrl", ["$scope", "$http", "$routeParams", "endpoint", "$location", "$cookies",
-            function ($scope, $http, $routeParams, endpoint, $location, $cookies) {
+        .controller("loginCtrl", ["$scope", "$http", "$routeParams", "endpoint", "$location", "$cookies",'$translatePartialLoader', '$translate',
+            function ($scope, $http, $routeParams, endpoint, $location, $cookies, $translatePartialLoader, $translate) {
+
+                $translatePartialLoader.addPart('login');
+                $translate.refresh();
 
                 var matchId = $routeParams.matchId;
 
