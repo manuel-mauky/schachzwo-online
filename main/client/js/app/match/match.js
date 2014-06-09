@@ -18,6 +18,7 @@ define(['angular', 'jquery', 'angular-growl'], function (angular, $) {
                 $scope.moves = [];
                 $scope.itsMyTurn = false;
                 $scope.onlooker = false;
+                $scope.check = false;
                 $scope.availablePieces = [];
 
                 sse(matchId).addEventListener("message", function (event) {
@@ -50,6 +51,7 @@ define(['angular', 'jquery', 'angular-growl'], function (angular, $) {
                     }
 
                     if (event.data == "check") {
+                        $scope.check = true;
                         growl.addWarnMessage("Du stehst im Schach!");
                     }
 
@@ -228,6 +230,7 @@ define(['angular', 'jquery', 'angular-growl'], function (angular, $) {
                     if (move || currentMove) {
                         $http.post(endpoint + "/" + matchId + "/moves", move || currentMove).success(function () {
                             $scope.itsMyTurn = false;
+                            $scope.check = false;
                             update();
                         });
                     }
