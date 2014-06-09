@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore" xmlns:o="http://wireframesketcher.com/1.0/model/overrides">
-  <widgets xsi:type="model:Master" id="4" x="10" y="8" measuredWidth="830" measuredHeight="41">
+  <widgets xsi:type="model:Master" id="1" x="10" y="8" measuredWidth="830" measuredHeight="41">
     <screen xsi:type="model:WidgetGroup" href="assets/Bootstrap/Bootstrap.screen#Navbar"/>
     <overrides>
       <widgetChanges xsi:type="o:Insert" newIndex="9">
@@ -23,52 +23,18 @@
       <widgets ref="183" text="SchachZwo"/>
     </overrides>
   </widgets>
-  <widgets xsi:type="model:Master" id="5" x="10" y="56" height="401" measuredWidth="833" measuredHeight="401">
+  <widgets xsi:type="model:Master" id="2" x="10" y="56" height="401" measuredWidth="833" measuredHeight="401">
     <screen xsi:type="model:WidgetGroup" href="assets/Bootstrap/Bootstrap.screen#Hero%20Unit"/>
     <overrides>
       <widgetChanges xsi:type="o:Delete" ref="61"/>
-      <widgets ref="58" height="401"/>
-      <widgets ref="59" x="222" y="41" text="SchachZWO"/>
-      <widgets ref="60" x="262" y="120" width="249" height="32" text="Spiele jetzt mit einem Freund"/>
+      <widgetChanges xsi:type="o:Delete" ref="59"/>
+      <widgets ref="58" height="225"/>
+      <widgets ref="60" x="30" y="44" width="329" height="137" text="Willkommen zu einer&#xD;&#xA;neuen Partie &#xD;&#xA;SchachZWO 7x7">
+        <font size="28px"/>
+      </widgets>
     </overrides>
   </widgets>
-  <widgets xsi:type="model:Master" id="11" x="344" y="264" measuredWidth="94" measuredHeight="30">
-    <screen xsi:type="model:WidgetGroup" href="assets/Bootstrap/Bootstrap.screen#Button"/>
-    <overrides>
-      <widgets ref="2" text="7x7 PARTIE"/>
-    </overrides>
-  </widgets>
-  <widgets xsi:type="model:Master" id="12" x="344" y="313" measuredWidth="94" measuredHeight="30">
-    <screen xsi:type="model:WidgetGroup" href="assets/Bootstrap/Bootstrap.screen#Button"/>
-    <overrides>
-      <widgets ref="2" text="9x9 PARTIE"/>
-    </overrides>
-  </widgets>
-  <widgets xsi:type="model:Master" id="14" x="30" y="472" measuredWidth="719" measuredHeight="230">
-    <screen xsi:type="model:WidgetGroup" href="assets/Bootstrap/Bootstrap.screen#Thumbnail%20Content"/>
-    <overrides>
-      <widgetChanges xsi:type="o:Insert" newIndex="5">
-        <object xsi:type="model:Label" x="448" text="SchachZWO spielen -">
-          <font size="25px" bold="true"/>
-        </object>
-      </widgetChanges>
-      <widgetChanges xsi:type="o:Delete" ref="154"/>
-      <widgetChanges xsi:type="o:Delete" ref="152"/>
-      <widgets ref="147" y="16"/>
-      <widgets ref="149" x="448" y="42" text="immer und überall!"/>
-      <widgets ref="150" x="448" y="114" text="SchachZWO kannst du online an deinem Computer, Tablet und Smartphone spielen! Wähle eine 7x7 oder 9x9 Partie und lade einen Freund zum mitspielen ein."/>
-    </overrides>
-  </widgets>
-  <widgets xsi:type="model:Rectangle" id="15" x="478" y="760" width="300" height="200" text="~300x200~" measuredWidth="300" measuredHeight="200" background="#eeeeee" foreground="#999999">
-    <font size="14px" bold="true"/>
-  </widgets>
-  <widgets xsi:type="model:Text" id="17" x="30" y="784" width="271" height="209" text="SchachZWO Online ist im Rahmen der Lehrveranstaltung &quot;XML-basierte Anwendungen&quot; unter der Leitung von Prof. Dr. Christian Wagenknecht im Masterstudiengang Informatik an der Hochschule Zittau/Görlitz entstanden.&#xD;&#xA;&#xD;&#xA;Das Team: Erik Jähne, Marlene Knoche, Manuel Mauky und Paul Weinhold." measuredWidth="271" measuredHeight="209">
-    <font size="14px"/>
-  </widgets>
-  <widgets xsi:type="model:Label" id="18" x="30" y="726" text="Über das Projekt" measuredWidth="202" measuredHeight="43">
-    <font size="25px" bold="true"/>
-  </widgets>
-  <widgets xsi:type="model:Master" id="19" x="10" y="984" width="829" measuredWidth="829" measuredHeight="80">
+  <widgets xsi:type="model:Master" id="9" x="10" y="544" measuredWidth="829" measuredHeight="80">
     <screen xsi:type="model:WidgetGroup" href="assets/Bootstrap/Bootstrap.screen#Navbar"/>
     <overrides>
       <widgetChanges xsi:type="o:Insert" newIndex="9">
@@ -101,6 +67,18 @@
       <widgetChanges xsi:type="o:Delete" ref="183"/>
       <widgets ref="181" width="829" height="80"/>
     </overrides>
+  </widgets>
+  <widgets xsi:type="model:Master" id="11" x="238" y="398" measuredWidth="132" measuredHeight="30">
+    <screen xsi:type="model:WidgetGroup" href="assets/Bootstrap/Bootstrap.screen#Button%20Primary"/>
+    <overrides>
+      <widgets ref="3" text="Zum Schachbrett"/>
+    </overrides>
+  </widgets>
+  <widgets xsi:type="model:Label" id="12" x="40" y="360" text="Bitte gib deinen Namen ein:" measuredWidth="153" measuredHeight="23">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:TextField" id="13" x="237" y="360" width="236" text="Dein Spielername" measuredWidth="236" measuredHeight="23">
+    <font/>
   </widgets>
   <hRuler/>
   <vRuler/>

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore">
-  <widgets xsi:type="model:Browser" id="1" x="16" y="16" width="1000" height="600" text="Browser&#xA;http://..." measuredWidth="1000" measuredHeight="600"/>
-  <widgets xsi:type="model:Master" id="4" x="112" y="135" measuredWidth="396" measuredHeight="400">
+<model:Screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:model="http://wireframesketcher.com/1.0/model.ecore" xmlns:o="http://wireframesketcher.com/1.0/model/overrides">
+  <widgets xsi:type="model:Master" id="4" x="68" y="88" measuredWidth="396" measuredHeight="400">
     <screen xsi:type="model:Screen" href="assets/ownAssets/chessboard.screen#/"/>
     <overrides>
       <widgets ref="84" width="396" height="400"/>
@@ -90,40 +89,97 @@
       <widgets ref="83" x="183" y="186" width="26" height="26"/>
     </overrides>
   </widgets>
-  <widgets xsi:type="model:VLine" id="5" x="616" y="68" height="548" measuredWidth="6" measuredHeight="548"/>
-  <widgets xsi:type="model:Panel" id="8" x="640" y="184" width="360" height="89" measuredWidth="360" measuredHeight="89"/>
-  <widgets xsi:type="model:Master" id="15" x="776" y="288" measuredWidth="85" measuredHeight="30">
+  <widgets xsi:type="model:Panel" id="8" x="488" y="134" width="378" height="130" measuredWidth="378" measuredHeight="130"/>
+  <widgets xsi:type="model:Master" id="15" x="765" y="152" width="90" measuredWidth="90" measuredHeight="30">
     <screen xsi:type="model:WidgetGroup" href="assets/Bootstrap/Bootstrap.screen#Button"/>
     <overrides>
-      <widgets ref="2" text="Aufgeben"/>
+      <widgets ref="2" width="90" text="Aufgeben"/>
     </overrides>
   </widgets>
-  <widgets xsi:type="model:Master" id="16" x="640" y="288" measuredWidth="122" measuredHeight="30">
+  <widgets xsi:type="model:Master" id="16" x="644" y="152" measuredWidth="122" measuredHeight="30">
     <screen xsi:type="model:WidgetGroup" href="assets/Bootstrap/Bootstrap.screen#Button"/>
     <overrides>
       <widgets ref="2" text="Remis anbieten"/>
     </overrides>
   </widgets>
-  <widgets xsi:type="model:Label" id="18" x="650" y="240" text="Spieler 1 am Zug" measuredWidth="94" measuredHeight="23">
+  <widgets xsi:type="model:Label" id="18" x="498" y="208" text="Spieler 1 am Zug" measuredWidth="94" measuredHeight="23">
     <font/>
   </widgets>
   <widgets xsi:type="model:Note" id="20" x="392" y="552" text="Eigene Figuren auf unterer Seite" measuredWidth="184" measuredHeight="29" annotation="true">
     <font/>
   </widgets>
-  <widgets xsi:type="model:TextField" id="21" x="680" y="194" text="Spieler 1" measuredWidth="55" measuredHeight="23">
-    <font/>
-  </widgets>
-  <widgets xsi:type="model:TextField" id="22" x="816" y="194" text="Spieler 2" measuredWidth="55" measuredHeight="23">
-    <font/>
-  </widgets>
-  <widgets xsi:type="model:Master" id="23" x="640" y="134" measuredWidth="147" measuredHeight="30">
-    <screen xsi:type="model:WidgetGroup" href="assets/Bootstrap/Bootstrap.screen#Button"/>
+  <widgets xsi:type="model:Icon" id="26" x="20" y="57" measuredWidth="32" measuredHeight="32" icon="user (large)"/>
+  <widgets xsi:type="model:Icon" id="27" x="20" y="487" measuredWidth="32" measuredHeight="32" icon="user (large)"/>
+  <widgets xsi:type="model:Master" id="28" x="10" y="8" width="856" measuredWidth="856" measuredHeight="41">
+    <screen xsi:type="model:WidgetGroup" href="assets/Bootstrap/Bootstrap.screen#Navbar"/>
     <overrides>
-      <widgets ref="2" text="Mitspieler einladen"/>
+      <widgetChanges xsi:type="o:Insert" newIndex="9">
+        <object xsi:type="model:Label" x="773" y="9" width="67" text="Impressum">
+          <font/>
+        </object>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="9">
+        <object xsi:type="model:Label" x="674" y="10" width="74" text="Produktseite">
+          <font/>
+        </object>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Delete" ref="190"/>
+      <widgetChanges xsi:type="o:Delete" ref="189"/>
+      <widgetChanges xsi:type="o:Delete" ref="188"/>
+      <widgetChanges xsi:type="o:Delete" ref="187"/>
+      <widgetChanges xsi:type="o:Delete" ref="186"/>
+      <widgetChanges xsi:type="o:Delete" ref="185"/>
+      <widgetChanges xsi:type="o:Delete" ref="184"/>
+      <widgets ref="181" width="856"/>
+      <widgets ref="183" width="107" text="SchachZwo"/>
     </overrides>
   </widgets>
-  <widgets xsi:type="model:Icon" id="26" x="650" y="190" measuredWidth="32" measuredHeight="32" icon="user (large)"/>
-  <widgets xsi:type="model:Icon" id="27" x="786" y="190" measuredWidth="32" measuredHeight="32" foreground="#999999" icon="user (large)"/>
+  <widgets xsi:type="model:Master" id="29" x="10" y="544" width="857" measuredWidth="857" measuredHeight="80">
+    <screen xsi:type="model:WidgetGroup" href="assets/Bootstrap/Bootstrap.screen#Navbar"/>
+    <overrides>
+      <widgetChanges xsi:type="o:Insert" newIndex="9">
+        <object xsi:type="model:Label" x="21" y="47" width="264" text="Copyright (c) 2014 by Hochschule Zittau/Görlitz">
+          <font/>
+        </object>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="9">
+        <object xsi:type="model:Label" x="21" y="10" text="Home">
+          <font/>
+        </object>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="9">
+        <object xsi:type="model:Label" x="170" y="10" width="66" text="Impressum">
+          <font/>
+        </object>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Insert" newIndex="9">
+        <object xsi:type="model:Label" x="79" y="10" width="73" text="Produktseite">
+          <font/>
+        </object>
+      </widgetChanges>
+      <widgetChanges xsi:type="o:Delete" ref="190"/>
+      <widgetChanges xsi:type="o:Delete" ref="189"/>
+      <widgetChanges xsi:type="o:Delete" ref="188"/>
+      <widgetChanges xsi:type="o:Delete" ref="187"/>
+      <widgetChanges xsi:type="o:Delete" ref="186"/>
+      <widgetChanges xsi:type="o:Delete" ref="185"/>
+      <widgetChanges xsi:type="o:Delete" ref="184"/>
+      <widgetChanges xsi:type="o:Delete" ref="183"/>
+      <widgets ref="181" width="857" height="80"/>
+    </overrides>
+  </widgets>
+  <widgets xsi:type="model:Label" id="30" x="63" y="61" text="Dein Gegner" measuredWidth="71" measuredHeight="23">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Label" id="31" x="68" y="496" text="Mein Name" measuredWidth="68" measuredHeight="23">
+    <font/>
+  </widgets>
+  <widgets xsi:type="model:Master" id="32" x="498" y="152" measuredWidth="147" measuredHeight="30">
+    <screen xsi:type="model:WidgetGroup" href="assets/Bootstrap/Bootstrap.screen#Button%20Primary"/>
+    <overrides>
+      <widgets ref="3" text="Mitspieler einladen"/>
+    </overrides>
+  </widgets>
   <hRuler/>
   <vRuler/>
   <font size="12px"/>
