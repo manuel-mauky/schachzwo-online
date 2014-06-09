@@ -5,12 +5,15 @@ define([
     'jquery',
     'angular-route',
     'angular-cookies',
-    'angular-growl'], function (angular, $) {
+    'angular-growl',
+    'angular-translate',
+    'angular-translate-partial'], function (angular, $) {
 
     angular.module('schachzwoApp', [
         'ngRoute',
         'ngCookies',
         'angular-growl',
+        'pascalprecht.translate',
         'match',
         'landing',
         'login',
@@ -54,6 +57,17 @@ define([
                 });
 
             $routeProvider.otherwise({redirectTo: '/'});
+
+        }]).
+        config(['$translateProvider', '$translatePartialLoaderProvider', function ($translateProvider, $translatePartialLoaderProvider) {
+
+            $translatePartialLoaderProvider.addPart('index');
+
+            $translateProvider.useLoader('$translatePartialLoader', {
+                urlTemplate: '/i18n/{part}/{lang}.json'
+            });
+
+            $translateProvider.determinePreferredLanguage();
 
         }]).
         config(['growlProvider', function (growlProvider) {

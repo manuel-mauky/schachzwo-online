@@ -8,6 +8,8 @@ requirejs.config({
         'angular-route': 'libs/angular/angular-route.min',
         'angular-growl': 'libs/angular/angular-growl.min',
         'angular-cookies': 'libs/angular/angular-cookies.min',
+        'angular-translate': 'libs/angular/angular-translate.min',
+        'angular-translate-partial': 'libs/angular/angular-translate-loader-partial.min',
 
         //jQuery
         jquery: 'libs/jquery/jquery-2.1.0.min',
@@ -28,6 +30,8 @@ requirejs.config({
         'angular-route': ['angular'],
         'angular-growl': ['angular'],
         'angular-cookies': ['angular'],
+        'angular-translate': ['angular'],
+        'angular-translate-partial': ['angular', 'angular-translate'],
         bootstrap: ['jquery'],
         'jquery-validate': ['jquery'],
         'jquery-ui': ['jquery'],

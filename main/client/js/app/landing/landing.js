@@ -1,9 +1,13 @@
 'use strict';
 
-define(['angular'], function(angular) {
+define(['angular', 'angular-translate-partial'], function(angular) {
 
     angular.module('landing', []).
-        controller('landingCtrl', ['$scope', '$http', 'endpoint', "$location", function($scope, $http, endpoint, $location) {
+        controller('landingCtrl', ['$scope', '$http', '$translatePartialLoader', '$translate', 'endpoint', "$location",
+            function($scope, $http, $translatePartialLoader, $translate, endpoint, $location) {
+
+            $translatePartialLoader.addPart('landing');
+            $translate.refresh();
 
             $scope.createNewGame = function(size){
                 console.log("size:" + size);
