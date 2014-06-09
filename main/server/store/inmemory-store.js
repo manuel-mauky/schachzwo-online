@@ -42,9 +42,7 @@ module.exports.createMatch = function (match, callback) {
         match = new model.Match(match);
     }
 
-    match.matchId = createID();
     store[match.matchId] = match;
-
 
     if(!!callback){
         callback(null, match);
@@ -82,9 +80,5 @@ module.exports.deleteMatch = function(matchId, callback){
 }
 
 
-var _id = 1;
-var createID = function() {
-   return (_id++).toString();
-};
 
 
