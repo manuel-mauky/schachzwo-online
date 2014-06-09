@@ -66,6 +66,7 @@
                             <div class="alert alert-warning" ng-show="match.state == 'preparing'">Auf Gegner warten
                                 ...
                             </div>
+                            <div class="alert alert-warning" ng-show="itsMyTurn && check">Du stehst im Schach</div>
                             </p>
                         </div>
 
@@ -79,36 +80,33 @@
             </div>
         </div>
 
-        <!-- Link Modal -->
-        <div class="modal fade" id="link-modal" tabindex="-1" role="dialog" aria-labelledby="link-modal-label"
-             aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"
-                                aria-hidden="true">&times;</button>
-                        <h4 class="modal-title" id="link-modal-label">Mitspieler einladen</h4>
-                    </div>
-                    <div class="modal-body">
-                        <p>
-                            Schicke den unten stehenden Link deinen Freunden, damit sie mitspielen oder zuschauen
-                            können.
-                        </p>
+    </div>
+</div>
 
-                        <p>
-                            <input onclick="this.select();" class="form-control" readonly type="text"
-                                   ng-model="matchLink" style="cursor: default;"/>
-                        </p>
 
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Schließen</button>
-                    </div>
-                </div>
+<!-- Link Modal -->
+<div class="modal fade" id="link-modal" tabindex="-1" role="dialog" aria-labelledby="link-modal-label"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"
+                        aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="link-modal-label">Mitspieler einladen</h4>
+            </div>
+            <div class="modal-body">
+                <h4>Schicke den Link deinen Freunden, damit sie mitspielen oder zuschauen
+                    können:</h4>
+
+                <p>
+                    <a href="{{matchLink}}">{{matchLink}}</a>
+                </p>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Schließen</button>
             </div>
         </div>
-
-
     </div>
 </div>
 
