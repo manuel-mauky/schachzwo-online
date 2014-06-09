@@ -20,7 +20,7 @@ var modelFactory = require("../model/model-factory.js");
 var model = require("../model/model");
 
 
-var uuid = require("node-uuid");
+var shortId = require('shortid');
 
 
 module.exports.getMatchById = function(id,  callbacks){
@@ -134,7 +134,7 @@ module.exports.login = function(matchId, playerId, name, callbacks){
             return;
         }
 
-        var player = new model.Player({playerId: (playerId ? playerId : uuid.v4()), name: name});
+        var player = new model.Player({playerId: (playerId ? playerId : shortId.generate()), name: name});
         var successfullyAdded = match.addPlayer(player);
 
         if (successfullyAdded) {

@@ -12,8 +12,8 @@
         "request": "latest",
         "body-parser": "latest",
         "cookie-parser": "latest",
-        "node-uuid": "latest",
-        "mongoskin": "latest"
+        "mongoskin": "latest",
+        "shortid": "latest"
     },
     "devDependencies": {
         "request": "latest",
