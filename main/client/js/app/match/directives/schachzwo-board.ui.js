@@ -65,7 +65,7 @@
             var container = this.canvas.parent();
 
             var width = container.width();
-            var height = window.innerHeight * .8;
+            var height = window.innerHeight - 200;
             var boardWidth = Math.min(width, height);
             this.canvas.attr('width', boardWidth);
             this.canvas.attr('height', boardWidth);
