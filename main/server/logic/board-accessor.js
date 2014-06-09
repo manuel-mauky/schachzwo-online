@@ -134,29 +134,40 @@ module.exports = function BoardAccessor(match) {
         return result;
     };
 
-
+    var getAllPieces = function(size,color){
+        var result = [
+            {number: size,piece: new model.Figure({color: color, type: model.FigureType.ROCKS})},
+            {number: 2,piece: new model.Figure({color: color, type: model.FigureType.MAN})},
+            {number: 2,piece: new model.Figure({color: color, type: model.FigureType.WOMAN})},
+            {number: 2,piece: new model.Figure({color: color, type: model.FigureType.KNIGHT})},
+            {number: 1,piece: new model.Figure({color: color, type: model.FigureType.ZENITH})}];
+        if(size == model.BoardSize.BIG){
+            result.concat([
+                {number: 1,piece: new model.Figure({color: color, type: model.FigureType.KNOWLEDGE})},
+                {number: 1,piece: new model.Figure({color: color, type: model.FigureType.FAITH})}]);
+        }
+        return result;
+    };
     /**
      * Giebt die geschlagenen Figuren zurück
      * @type {getCapturedPieces}
      */
     var getCapturedPieces = this.getCapturedPieces = function () {
-        var result = [];
-        for(var i = 0; i < match.history.length; i++){
-            var move = match.history[i];
-            if(move.capturedFigure){
-                var found = false;
-                for(var j = 0; j < result.length; j++){
-                    if(JSON.stringify(result[j].piece) == JSON.stringify(move.capturedFigure)){
-                        result[j].number++;
-                        found = true;
-                        break;
+        var result = getAllPieces(match.size,Color.WHITE);
+        result = result.concat(getAllPieces(match.size,Color.BLACK));
+        match.getCurrentSnapshot().board.forEach(function(element){
+            if(element.figure) {
+                for(var i = 0; i < result.length;i++){
+                    var e = result[i];
+                    if(JSON.stringify(e.piece) == JSON.stringify(element.figure)){
+                        e.number--;
+                        if(e.number == 0){
+                            result.splice(i, 1);
+                        }
                     }
                 }
-                if(!found){
-                    result.push({number: 1,piece: move.capturedFigure});
-                }
             }
-        }
+        });
         return result;
     };
 
