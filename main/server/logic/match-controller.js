@@ -229,14 +229,11 @@ module.exports.addMove = function(matchId, playerId, moveJson, callbacks){
         if (match.addMove(move)) {
 
             var gameLogic = new GameLogic(match);
-            var color = match.getColorOfActivePlayer();
-            if (new BoardAccessor(match).isOrigin(move.to.column, move.to.row) && model.FigureType.ZENITH == move.figure.type){
-                color = match.getColorOfActivePlayer() == model.Color.WHITE ? model.Color.BLACK : model.Color.WHITE;
-            }
+            var activePlayerColor = match.getColorOfActivePlayer();
 
-            var checkType = gameLogic.getCheckType(color);
+            var checkType = gameLogic.getCheckType(activePlayerColor);
 
-            if(checkType == CheckType.CHECK_MATE ||checkType == CheckType.CHECK_TARGET || checkType == CheckType.CHECK_TARGET_BOTH || checkType == CheckType.STATE_MATE){
+            if(checkType == CheckType.CHECK_MATE ||checkType == CheckType.CHECK_TARGET || checkType == CheckType.CHECK_TARGET_BOTH || checkType == CheckType.STALE_MATE){
                 match.state = model.State.FINISHED;
             }
 
@@ -246,7 +243,7 @@ module.exports.addMove = function(matchId, playerId, moveJson, callbacks){
                     return;
                 }
 
-                verifyCheckType(match,checkType,color);
+                verifyCheckType(match,checkType,activePlayerColor);
 
                 callWhenDefined(callbacks.onSuccess, match.history);
             });
@@ -376,37 +373,37 @@ var callWhenDefined = function(callback){
 };
 
 
-var verifyCheckType = function (match,checkType,color) {
+var verifyCheckType = function (match,checkType,activePlayerColor) {
 
-    var self = color == model.Color.BLACK ? match.playerBlack : match.playerWhite;
-    var opponent = color == model.Color.BLACK ? match.playerWhite : match.playerBlack;
+    var activePlayer = activePlayerColor == model.Color.BLACK ? match.playerBlack : match.playerWhite;
+    var nextActivePlayer = activePlayerColor == model.Color.BLACK ? match.playerWhite : match.playerBlack;
 
     sse.sendMessage(message.UPDATE, match.matchId);
 
     if (checkType == CheckType.CHECK) {
-        sse.sendMessage(message.IS_IN_CHECK, match.matchId, self.playerId);
+        sse.sendMessage(message.IS_IN_CHECK, match.matchId, nextActivePlayer.playerId);
     }
 
-    if(checkType == CheckType.STATE_MATE){
+    if(checkType == CheckType.STALE_MATE){
         sse.sendMessage(message.STALE_MATE, match.matchId);
     }
 
     if (checkType == CheckType.CHECK_MATE) {
         match.state = model.State.FINISHED;
-        sse.sendMessage(message.HAS_WON_BY_CHECK_MATE, match.matchId, self.playerId);
-        sse.sendMessage(message.HAS_LOST_BY_CHECK_MATE, match.matchId, opponent.playerId);
+        sse.sendMessage(message.HAS_WON_BY_CHECK_MATE, match.matchId, nextActivePlayer.playerId);
+        sse.sendMessage(message.HAS_LOST_BY_CHECK_MATE, match.matchId, activePlayer.playerId);
     }
 
     if (checkType == CheckType.CHECK_TARGET) {
         match.state = model.State.FINISHED;
-        sse.sendMessage(message.HAS_WON_BY_CHECK_TARGET, match.matchId, self.playerId);
-        sse.sendMessage(message.HAS_LOST_BY_CHECK_TARGET, match.matchId, opponent.playerId);
+        sse.sendMessage(message.HAS_WON_BY_CHECK_TARGET, match.matchId, nextActivePlayer.playerId);
+        sse.sendMessage(message.HAS_LOST_BY_CHECK_TARGET, match.matchId, activePlayer.playerId);
     }
 
     if (checkType == CheckType.CHECK_TARGET_BOTH) {
         match.state = model.State.FINISHED;
-        sse.sendMessage(message.HAS_WON_BY_CHECK_TARGET_AND_OPPONENT_FOLLOW_UP, match.matchId, self.playerId);
-        sse.sendMessage(message.HAS_LOST_BUT_CAN_FOLLOW_UP, match.matchId, opponent.playerId);
+        sse.sendMessage(message.HAS_WON_BY_CHECK_TARGET_AND_OPPONENT_FOLLOW_UP, match.matchId, nextActivePlayer.playerId);
+        sse.sendMessage(message.HAS_LOST_BUT_CAN_FOLLOW_UP, match.matchId, activePlayer.playerId);
     }
 
 };
