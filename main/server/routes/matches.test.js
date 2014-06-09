@@ -674,6 +674,39 @@ describe('Mock REST API test /matches', function () {
                 .expect(404, done);
         });
 
+        it("should not add a move when there is a draw to be answered", function(done){
+
+            var move = {figure: {color: model.Color.BLACK, type: model.FigureType.ROCKS},
+                from: {column: 2, row: 5},
+                to: {column: 2, row: 4 }};
+
+            request(app)
+                .post('/matches/' + match.matchId + '/moves')
+                .send(move)
+                .set('Cookie', [matches.PLAYER_COOKIE_NAME + "=1"])
+                .expect(201, function(err){
+                    if(err) throw err;
+
+                    request(app)
+                        .put('/matches/' + match.matchId + '/draw')
+                        .set('Authorization', matches.HTTP_AUTHORIZATION_METHOD + ' 2')
+                        .send({"draw": "offered"})
+                        .expect(201, function(err){
+                            if(err) throw err;
+
+                            var secondMove = {figure: {color: model.Color.BLACK, type: model.FigureType.ROCKS},
+                                from: {column: 2, row: 4},
+                                to: {column: 2, row: 3}};
+
+                            request(app)
+                                .post('/matches/' + match.matchId + '/moves')
+                                .send(secondMove)
+                                .set('Cookie', [matches.PLAYER_COOKIE_NAME + "=1"])
+                                .expect(400, done);
+                        });
+                });
+        })
+
     });
 
 
