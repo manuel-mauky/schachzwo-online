@@ -7,17 +7,8 @@ var shortId = require('shortid');
 var Color = require("./color");
 var BoardSize = require("./boardsize");
 var PieceType = require("./piece-type");
+var State = require("./state");
 
-/**
- * The states that the match can have.
- *
- * @type {{PREPARING: string, PAUSE: string, FINISHED: string, PLAYING: string}}
- */
-var State = {
-    PREPARING: "preparing",
-    FINISHED: "finished",
-    PLAYING: "playing"
-};
 
 /**
  * The Figure constructor. This the figures of the game.
@@ -685,7 +676,6 @@ var Match = function (json) {
 };
 
 
-module.exports.State = State;
 module.exports.Figure = Figure;
 module.exports.Field = Field;
 module.exports.Snapshot = Snapshot;

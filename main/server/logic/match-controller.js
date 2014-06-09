@@ -20,6 +20,7 @@ var modelFactory = require("../model/model-factory.js");
 var model = require("../model/model");
 var Color = require("../model/color");
 var PieceType = require("../model/piece-type");
+var State = require("../model/state");
 
 var shortId = require('shortid');
 
@@ -240,7 +241,7 @@ module.exports.addMove = function(matchId, playerId, moveJson, callbacks){
             var checkType = gameLogic.getCheckType(activePlayerColor);
 
             if(checkType == CheckType.CHECK_MATE ||checkType == CheckType.CHECK_TARGET || checkType == CheckType.CHECK_TARGET_BOTH || checkType == CheckType.STALE_MATE){
-                match.state = model.State.FINISHED;
+                match.state = State.FINISHED;
             }
 
             store.updateMatch(match, function(err, match){
@@ -257,7 +258,7 @@ module.exports.addMove = function(matchId, playerId, moveJson, callbacks){
         } else {
 
                 if (new BoardAccessor(match).isOrigin(move.to.column, move.to.row) && PieceType.ZENITH == move.figure.type) {
-                    match.state = model.State.FINISHED;
+                    match.state = State.FINISHED;
                     store.updateMatch(match, function (err, match) {
                         if (err) {
                             callWhenDefined(callbacks.onMoveFailed, 'Move can not be applied because the move is invalid.');
@@ -328,7 +329,7 @@ module.exports.createDraw = function (matchId, playerId, drawRequest, callbacks)
             case "accepted":
                 createdDraw = match.acceptDraw();
                 sseMessage = message.DRAW_ACCEPTED;
-                match.state = model.State.FINISHED;
+                match.state = State.FINISHED;
                 break;
             case "rejected":
                 createdDraw = match.rejectDraw();

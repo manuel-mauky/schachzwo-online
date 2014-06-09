@@ -11,7 +11,7 @@ var PieceType = require("../model/piece-type");
 var Figure = model.Figure;
 var Field = model.Field;
 var Player = model.Player;
-var State = model.State;
+var State = require("../model/state");
 var Match = model.Match;
 var Snapshot = model.Snapshot;
 var Position = model.Position;
@@ -250,7 +250,7 @@ describe("Match", function(){
             assert.instanceOf(match.playerBlack, model.Player);
             assert.equal(match.playerBlack.playerId, 1);
             assert.equal(match.playerBlack.name, "bob");
-            assert.equal(match.state, model.State.PREPARING);
+            assert.equal(match.state, State.PREPARING);
 
             assert.isUndefined(match.playerWhite); // white is still undefined.
         });
@@ -264,7 +264,7 @@ describe("Match", function(){
             assert.ok(match.playerBlack);
             assert.equal(match.playerBlack.playerId, 1);
             assert.equal(match.playerBlack.name, "bob");
-            assert.equal(match.state, model.State.PREPARING);
+            assert.equal(match.state, State.PREPARING);
 
             assert.isUndefined(match.playerWhite); // white is still undefined.
         });
@@ -284,7 +284,7 @@ describe("Match", function(){
             assert.equal(match.playerWhite.playerId, 2);
             assert.equal(match.playerWhite.name, "alice");
 
-            assert.equal(match.state, model.State.PLAYING);
+            assert.equal(match.state, State.PLAYING);
         });
 
         it("shouldn't add a third player when two are already added", function(){

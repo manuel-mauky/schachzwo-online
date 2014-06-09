@@ -5,9 +5,10 @@ var assert = require("chai").assert;
 var model = require("./model");
 var modelFactory = require("./model-factory.js");
 
-var PieceType = require("../model/piece-type");
+var PieceType = require("./piece-type");
 var Color = require("./color");
-var BoardSize = require("../model/boardsize");
+var BoardSize = require("./boardsize");
+var State = require("./state");
 
 
 describe("modelFactory.createMatch", function () {
@@ -16,7 +17,7 @@ describe("modelFactory.createMatch", function () {
 
         assert.ok(match);
 
-        assert.equal(match.state, model.State.PREPARING);
+        assert.equal(match.state, State.PREPARING);
 
         assert.isArray(match.history);
 

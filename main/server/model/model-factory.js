@@ -6,6 +6,8 @@ var Color = require("./color");
 var PieceType = require("../model/piece-type");
 
 var BoardSize = require("../model/boardsize");
+var State = require("./state");
+
 
 /**
  * Create a match instance with the given size.
@@ -74,7 +76,7 @@ var helper_createEmptyMatch = function(size){
     var match = new model.Match({});
 
     match.size = size;
-    match.state = model.State.PREPARING;
+    match.state = State.PREPARING;
 
     return match;
 };

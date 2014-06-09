@@ -9,6 +9,7 @@ var model = require('../model/model');
 var Color = require("../model/color");
 var BoardSize = require("../model/boardsize");
 var PieceType = require("../model/piece-type");
+var State = require("../model/state");
 var modelFactory = require('../model/model-factory');
 
 var sse = require("../messaging/sse");
@@ -718,7 +719,7 @@ describe('Mock REST API test /matches', function () {
         it("should return all valid moves", function (done) {
 
             var match = modelFactory.createMatch(BoardSize.SMALL);
-            match.state = model.State.PLAYING;
+            match.state = State.PLAYING;
 
             matchStore.createMatch(match, function (err, match) {
 
