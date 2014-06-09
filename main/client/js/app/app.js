@@ -62,17 +62,20 @@ define([
             $routeProvider.otherwise({redirectTo: '/'});
 
         }]).
-        config(['$translateProvider', '$translatePartialLoaderProvider', function ($translateProvider, $translatePartialLoaderProvider) {
+        config(['$translateProvider', '$translatePartialLoaderProvider',
+            function ($translateProvider, $translatePartialLoaderProvider) {
 
-            $translatePartialLoaderProvider.addPart('index');
+                $translatePartialLoaderProvider.addPart('index');
 
-            $translateProvider.useLoader('$translatePartialLoader', {
-                urlTemplate: '/i18n/{part}/{lang}.json'
-            });
+                $translateProvider.useLoader('$translatePartialLoader', {
+                    urlTemplate: '/i18n/{part}/{lang}.json'
+                });
 
-            $translateProvider.determinePreferredLanguage();
+                var lang = window.navigator.browserLanguage || window.navigator.language;
+                $translateProvider.preferredLanguage(lang.substring(0, 2).toLowerCase());
+                $translateProvider.fallbackLanguage('de');
 
-        }]).
+            }]).
         config(['growlProvider', function (growlProvider) {
             growlProvider.globalTimeToLive(5000);
         }]).
