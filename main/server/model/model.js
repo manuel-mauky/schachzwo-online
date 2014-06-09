@@ -448,6 +448,9 @@ var Match = function (json) {
         }
     };
 
+    this.addMoveFromPosition = function(position1,position2){
+        return this.addMove2(position1.column,position1.row,position2.column,position2.row);
+    };
 
     /**
      * This method is used to offer a draw. The draw is offered by the active player.

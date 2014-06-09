@@ -649,17 +649,6 @@ describe ("BoardAcessor",function(){
                 assert.notInclude(range, {column: 2, row: 4});
             });
 
-            it("bug: Two women of opponent are next near the zenith so that the zeniths range should be empty", function(){
-
-                board.getField(3, 6).figure = new Figure({type: FigureType.ZENITH, color: Color.BLACK});
-                board.getField(2, 4).figure = new Figure({type: FigureType.WOMAN, color: Color.WHITE});
-                board.getField(4, 4).figure = new Figure({type: FigureType.WOMAN, color: Color.WHITE});
-
-                var range = accessor.getRangeFor(3,6);
-
-                // assert.equal(range.length, 0);  TODO: fix
-
-            });
         });
 
         describe("Knowledge", function() {

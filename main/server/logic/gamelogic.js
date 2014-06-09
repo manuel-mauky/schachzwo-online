@@ -35,19 +35,13 @@ module.exports.GameLogic = function GameLogic(match) {
 
         //Schach Ziel
         if (accessor.isOrigin(zenithField.position.column, zenithField.position.row)) {
-            var enemyZenithField;
             var checkType = CheckType.CHECK_TARGET;
-            if (color == Color.BLACK) {
-                enemyZenithField = getZenithPosition(Color.WHITE, board);
-            }
-            else {
-                enemyZenithField = getZenithPosition(Color.BLACK, board);
-            }
-            var enemyZenithRange = accessor.getRangeFor(enemyZenithField.position.column, enemyZenithField.position.row);
-            enemyZenithRange.forEach(function (element) {
+            var enemyZenithField = color == Color.BLACK ? getZenithPosition(Color.WHITE, board) : getZenithPosition(Color.BLACK, board);
+            var enemyZenithRange = accessor.getRangeForPosition(enemyZenithField.position);
+            enemyZenithRange.some(function (element) {
                 if (accessor.isOrigin(element.column, element.row)) {
                     checkType = CheckType.CHECK_TARGET_BOTH;
-                    return;
+                    return true;
                 }
             });
             return checkType;
@@ -56,53 +50,49 @@ module.exports.GameLogic = function GameLogic(match) {
         //Schach / Schachmatt / Patt
         else {
             var zenithThreatenPositions = accessor.getThreatenPositions(zenithField.position.column, zenithField.position.row);
-            var zenithRange = accessor.getRangeFor(zenithField.position.column, zenithField.position.row);
-            var isCheckMate = true;
-            var isCheck = true;
-
             if (zenithThreatenPositions.length == 0) {
                 var validMoves = accessor.getValidMoves(color);
-
-                if(validMoves.length == 1 && validMoves[0].field.figure.type == "zenith"){
-                    if(validMoves[0].fields.length == 0){
-                        return CheckType.STATE_MATE;
-                    }
+                if(validMoves.length == 1 && validMoves[0].field.figure.type == FigureType.ZENITH){
+                    return CheckType.STATE_MATE;
                 }else{
                     return CheckType.NONE;
                 }
             }
 
+            //SCHACH! -> prüfung ob schach Matt durch indirekten Beweis
+            var isCheckMate = true;
             //zenith bewegen
-            zenithRange.forEach(function (element) {
-                if (!isCheckMate) return;
-                match.addMove2(zenithField.position.column,zenithField.position.row,element.column,element.row);
+            var zenithRange = accessor.getRangeForPosition(zenithField.position);
+            zenithRange.some(function (element) {
+                match.addMoveFromPosition(zenithField.position,element);
                 var threaten = accessor.getThreatenPositions(element.column, element.row);
                 if (threaten.length == 0) {
                     isCheckMate = false;
                 }
                 match.historyPop();
+                return (!isCheckMate);
             });
             if (!isCheckMate) return CheckType.CHECK;
 
             //figuren schlagen
-            zenithThreatenPositions.forEach(function (enemyField) {
+            zenithThreatenPositions.some(function (enemyField) {
                 var enemyThreatenPositions = accessor.getThreatenPositions(enemyField.column, enemyField.row);
-                enemyThreatenPositions.forEach(function (element) {
-                    if (!isCheckMate) return;
-                    match.addMove2(element.column,element.row,enemyField.column,enemyField.row);
+                enemyThreatenPositions.some(function (element) {
+                    match.addMoveFromPosition(element,enemyField);
                     if (accessor.getThreatenPositions(zenithField.position.column, zenithField.position.row).length == 0) {
                         isCheckMate = false;
                     }
                     match.historyPop();
+                    return (!isCheckMate);
                 });
-                if (!isCheckMate) return;
+                return (!isCheckMate);
             });
             if (!isCheckMate) return CheckType.CHECK;
 
             //figuren blockieren welche zenith bedrohen
             var validMoves = accessor.getValidMoves(color);
-            zenithThreatenPositions.forEach(function (enemyField) {
-                var enemyRangeList = accessor.getRangeFor(enemyField.column, enemyField.row);
+            zenithThreatenPositions.some(function (enemyField) {
+                var enemyRangeList = accessor.getRangeForPosition(enemyField);
                 var rangeList = [];
                 enemyRangeList.forEach(function(enemyField){
                     validMoves.forEach(function(figure){
@@ -114,17 +104,17 @@ module.exports.GameLogic = function GameLogic(match) {
                     });
                 });
 
-                rangeList.forEach(function (element) {
-                    if (!isCheckMate) return;
-                    match.addMove2(element.from.column,element.from.row,element.to.column,element.to.row);
+                rangeList.some(function (element) {
+                    match.addMoveFromPosition(element.from,element.to);
                     if (accessor.getThreatenPositions(zenithField.position.column, zenithField.position.row).length == 0) {
                         if(element.figure.type != FigureType.ZENITH){
                             isCheckMate = false;
                         }
                     }
                     match.historyPop();
+                    return (!isCheckMate);
                 });
-                if (!isCheckMate) return;
+                return (!isCheckMate);
             });
             if(!isCheckMate) return CheckType.CHECK;
             return CheckType.CHECK_MATE;

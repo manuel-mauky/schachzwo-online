@@ -40,6 +40,11 @@ module.exports = function BoardAccessor(match) {
         return (column < 0 || column >= match.size || row < 0 || row >= match.size);
     };
 
+
+    var getRangeForPosition = this.getRangeForPosition = function (position){
+        return getRangeFor(position.column,position.row);
+    }
+
     /**
      * get the range of fields that the figure on the given position can reach.
      * @param column
@@ -442,7 +447,7 @@ module.exports = function BoardAccessor(match) {
         var tmpResult = findTargets(ownFigure, column, row, possiblePositions);
 
         var originCoordinate = match.size == model.BoardSize.BIG ? 4 : 3;
-        if (Math.abs(column - originCoordinate) <= 1 && Math.abs(row - originCoordinate) <= 1) {
+        if ((Math.abs(column - originCoordinate) <= 1 ) && ( Math.abs(row - originCoordinate) <= 1) ) {
             var threatenFields = getThreatenPositions(column, row);
 
             if (threatenFields.length == 0) {
