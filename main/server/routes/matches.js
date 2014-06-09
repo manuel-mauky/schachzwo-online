@@ -117,7 +117,8 @@ route.get("/:id/opponent", function (req, res) {
 route.post("/:id/login", function (req, res) {
 
     var name;
-    if (req.body && req.body.name) {
+
+    if (req.body && req.body.name && req.body.name.trim() != '' && req.body.name.length <= 20) {
         name = req.body.name;
     } else {
         res.statusCode = 400;
@@ -128,7 +129,6 @@ route.post("/:id/login", function (req, res) {
             }
         );
     }
-
 
     var playerId = restUtils.findPlayerId(req);
 

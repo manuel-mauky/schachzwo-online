@@ -36,7 +36,8 @@ define(['angular', 'jquery', 'angular-growl'], function (angular, $) {
                         $('#draw-modal').modal('show');
                     }
 
-                    if (event.data == "draw-accepted" || event.data.indexOf("lost") == 0 || event.data.indexOf("won") == 0) {
+                    if (event.data == "draw-accepted" || event.data == "stale-mate" ||
+                        event.data.indexOf("lost") == 0 || event.data.indexOf("won") == 0) {
                         $scope.itsMyTurn = false;
                         $scope.endCause = event.data == "draw-accepted" ? "draw" : event.data;
                         $scope.$apply();
@@ -50,10 +51,6 @@ define(['angular', 'jquery', 'angular-growl'], function (angular, $) {
 
                     if (event.data == "check") {
                         growl.addWarnMessage("Du stehst im Schach!");
-                    }
-
-                    if(event.data == "stale_mate") {
-                        growl.addWarnMessage("Leider endete das Spiel im Patt");
                     }
 
                 }, false);
