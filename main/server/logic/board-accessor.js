@@ -7,10 +7,13 @@
 
 
 
-var model = require("./../model/model");
+var model = require("../model/model");
 
-var FigureType = model.FigureType;
-var Color = model.Color;
+var PieceType = require("../model/piece-type");
+var Color = require("../model/color");
+var BoardSize = require("../model/boardsize");
+var Figure = require("../model/figure");
+
 
 module.exports = function BoardAccessor(match) {
     if (!match) {
@@ -58,25 +61,25 @@ module.exports = function BoardAccessor(match) {
         }
 
         switch (figure.type) {
-            case FigureType.ROCKS:
+            case PieceType.ROCKS:
                 return getRangeForRocks(column, row);
 
-            case FigureType.MAN:
+            case PieceType.MAN:
                 return getRangeForMan(column, row);
 
-            case FigureType.KNIGHT:
+            case PieceType.KNIGHT:
                 return getRangeForKnight(column, row);
 
-            case FigureType.WOMAN:
+            case PieceType.WOMAN:
                 return getRangeForWoman(column, row);
 
-            case FigureType.ZENITH:
+            case PieceType.ZENITH:
                 return getRangeForZenith(column, row);
 
-            case FigureType.KNOWLEDGE:
+            case PieceType.KNOWLEDGE:
                 return getRangeForKnowledge(column, row);
 
-            case FigureType.FAITH:
+            case PieceType.FAITH:
                 return getRangeForFaith(column, row);
 
             default:
@@ -121,7 +124,7 @@ module.exports = function BoardAccessor(match) {
              var zenithPosition = logic.getZenithPosition(color,match.getCurrentSnapshot()).position;
              var tail = [];
              element.fields.forEach(function(position){
-                if(element.field.figure.type == FigureType.ZENITH){
+                if(element.field.figure.type == PieceType.ZENITH){
                     zenithPosition = position;
                     if(isOrigin(zenithPosition.column,zenithPosition.row)){
                         tail.push(position);
@@ -141,15 +144,15 @@ module.exports = function BoardAccessor(match) {
 
     var getAllPieces = function(size,color){
         var result = [
-            {number: size,piece: new model.Figure({color: color, type: model.FigureType.ROCKS})},
-            {number: 2,piece: new model.Figure({color: color, type: model.FigureType.MAN})},
-            {number: 2,piece: new model.Figure({color: color, type: model.FigureType.WOMAN})},
-            {number: 2,piece: new model.Figure({color: color, type: model.FigureType.KNIGHT})},
-            {number: 1,piece: new model.Figure({color: color, type: model.FigureType.ZENITH})}];
-        if(size == model.BoardSize.BIG){
+            {number: size,piece: new Figure({color: color, type: PieceType.ROCKS})},
+            {number: 2,piece: new Figure({color: color, type: PieceType.MAN})},
+            {number: 2,piece: new Figure({color: color, type: PieceType.WOMAN})},
+            {number: 2,piece: new Figure({color: color, type: PieceType.KNIGHT})},
+            {number: 1,piece: new Figure({color: color, type: PieceType.ZENITH})}];
+        if(size == BoardSize.BIG){
             result.concat([
-                {number: 1,piece: new model.Figure({color: color, type: model.FigureType.KNOWLEDGE})},
-                {number: 1,piece: new model.Figure({color: color, type: model.FigureType.FAITH})}]);
+                {number: 1,piece: new Figure({color: color, type: PieceType.KNOWLEDGE})},
+                {number: 1,piece: new Figure({color: color, type: PieceType.FAITH})}]);
         }
         return result;
     };
@@ -194,7 +197,7 @@ module.exports = function BoardAccessor(match) {
                     continue;
                 }
 
-                if (figure.type == FigureType.ZENITH) { // enemy zenith
+                if (figure.type == PieceType.ZENITH) { // enemy zenith
                     if (Math.abs(column - i) <= 1 && Math.abs(row - j) <= 1) {
                         result.push({column: i, row: j});
                     }
@@ -270,7 +273,7 @@ module.exports = function BoardAccessor(match) {
 
 
         // for Big boards there is the special rule of walking two fields from the start (only when the first field is free too)
-        if (match.size == model.BoardSize.BIG && result.length == 1) {
+        if (match.size == BoardSize.BIG && result.length == 1) {
             if (current.color == Color.WHITE && row == 1) {
                 rowTmp = row + 2;
             } else if (current.color == Color.BLACK && row == (match.size - 2)) {
@@ -314,7 +317,7 @@ module.exports = function BoardAccessor(match) {
         var straightResult = findTargetsInDirections(currentFigure.color, column, row, straightDirections);
         result = result.concat(straightResult);
 
-        if (!match.historyContainsMoveToPositionWithFigureType(column,row,FigureType.MAN)) {
+        if (!match.historyContainsMoveToPositionWithPieceType(column,row,PieceType.MAN)) {
             var tmp = findTargetsInRange(column, row, 2);
             tmp.forEach(function(e){
                 var contains = false;
@@ -446,7 +449,7 @@ module.exports = function BoardAccessor(match) {
         ];
         var tmpResult = findTargets(ownFigure, column, row, possiblePositions);
 
-        var originCoordinate = match.size == model.BoardSize.BIG ? 4 : 3;
+        var originCoordinate = match.size == BoardSize.BIG ? 4 : 3;
         if ((Math.abs(column - originCoordinate) <= 1 ) && ( Math.abs(row - originCoordinate) <= 1) ) {
             var threatenFields = getThreatenPositions(column, row);
 
@@ -624,8 +627,8 @@ module.exports = function BoardAccessor(match) {
     var isOrigin = this.isOrigin = function (x, y) {
         var size = match.size;
 
-        var isBigOrigin = (size == model.BoardSize.BIG && (x == 4 && y == 4));
-        var isSmallOrigin = (size == model.BoardSize.SMALL && (x == 3 && y == 3));
+        var isBigOrigin = (size == BoardSize.BIG && (x == 4 && y == 4));
+        var isSmallOrigin = (size == BoardSize.SMALL && (x == 3 && y == 3));
 
         return isBigOrigin || isSmallOrigin;
     };

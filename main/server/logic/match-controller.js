@@ -18,7 +18,9 @@ var CheckType = require("../logic/gamelogic").CheckType;
 
 var modelFactory = require("../model/model-factory.js");
 var model = require("../model/model");
-
+var Color = require("../model/color");
+var PieceType = require("../model/piece-type");
+var State = require("../model/state");
 
 var shortId = require('shortid');
 
@@ -86,19 +88,19 @@ module.exports.getPlayer = function(matchId, playerId, isOpponent, callbacks){
 
             if(playerId == match.playerWhite.playerId){
                 player = new model.Player(match.playerBlack);
-                player.color = model.Color.BLACK;
+                player.color = Color.BLACK;
             } else {
                 player = new model.Player(match.playerWhite);
-                player.color = model.Color.WHITE;
+                player.color = Color.WHITE;
             }
             delete player.playerId;
         }else{
             if(playerId == match.playerBlack.playerId){
                 player = new model.Player(match.playerBlack);
-                player.color = model.Color.BLACK;
+                player.color = Color.BLACK;
             } else {
                 player = new model.Player(match.playerWhite);
-                player.color = model.Color.WHITE;
+                player.color = Color.WHITE;
             }
         }
 
@@ -118,12 +120,12 @@ module.exports.login = function(matchId, playerId, name, callbacks){
         if(playerId){
             if(match.isBlackPlayer(playerId)){
                 var existingPlayer = match.playerBlack;
-                existingPlayer.color = model.Color.BLACK;
+                existingPlayer.color = Color.BLACK;
                 callWhenDefined(callbacks.onSuccess, existingPlayer);
                 return;
             } else if(match.isWhitePlayer(playerId)){
                 var existingPlayer = match.playerBlack;
-                existingPlayer.color = model.Color.WHITE;
+                existingPlayer.color = Color.WHITE;
                 callWhenDefined(callbacks.onSuccess, existingPlayer);
                 return;
             }
@@ -145,9 +147,9 @@ module.exports.login = function(matchId, playerId, name, callbacks){
                 }
 
                 if(match.isBlackPlayer(player.playerId)){
-                    player.color = model.Color.BLACK;
+                    player.color = Color.BLACK;
                 }else{
-                    player.color = model.Color.WHITE;
+                    player.color = Color.WHITE;
                 }
 
                 if (match.isMatchFullyOccupied()) {
@@ -239,7 +241,7 @@ module.exports.addMove = function(matchId, playerId, moveJson, callbacks){
             var checkType = gameLogic.getCheckType(activePlayerColor);
 
             if(checkType == CheckType.CHECK_MATE ||checkType == CheckType.CHECK_TARGET || checkType == CheckType.CHECK_TARGET_BOTH || checkType == CheckType.STALE_MATE){
-                match.state = model.State.FINISHED;
+                match.state = State.FINISHED;
             }
 
             store.updateMatch(match, function(err, match){
@@ -255,8 +257,8 @@ module.exports.addMove = function(matchId, playerId, moveJson, callbacks){
 
         } else {
 
-                if (new BoardAccessor(match).isOrigin(move.to.column, move.to.row) && model.FigureType.ZENITH == move.figure.type) {
-                    match.state = model.State.FINISHED;
+                if (new BoardAccessor(match).isOrigin(move.to.column, move.to.row) && PieceType.ZENITH == move.figure.type) {
+                    match.state = State.FINISHED;
                     store.updateMatch(match, function (err, match) {
                         if (err) {
                             callWhenDefined(callbacks.onMoveFailed, 'Move can not be applied because the move is invalid.');
@@ -327,7 +329,7 @@ module.exports.createDraw = function (matchId, playerId, drawRequest, callbacks)
             case "accepted":
                 createdDraw = match.acceptDraw();
                 sseMessage = message.DRAW_ACCEPTED;
-                match.state = model.State.FINISHED;
+                match.state = State.FINISHED;
                 break;
             case "rejected":
                 createdDraw = match.rejectDraw();
@@ -380,8 +382,8 @@ var callWhenDefined = function(callback){
 
 var verifyCheckType = function (match,checkType,activePlayerColor) {
 
-    var activePlayer = activePlayerColor == model.Color.BLACK ? match.playerBlack : match.playerWhite;
-    var nextActivePlayer = activePlayerColor == model.Color.BLACK ? match.playerWhite : match.playerBlack;
+    var activePlayer = activePlayerColor == Color.BLACK ? match.playerBlack : match.playerWhite;
+    var nextActivePlayer = activePlayerColor == Color.BLACK ? match.playerWhite : match.playerBlack;
 
     sse.sendMessage(message.UPDATE, match.matchId);
 
