@@ -394,19 +394,16 @@ var verifyCheckType = function (match,checkType,activePlayerColor) {
     }
 
     if (checkType == CheckType.CHECK_MATE) {
-        match.state = model.State.FINISHED;
         sse.sendMessage(message.HAS_WON_BY_CHECK_MATE, match.matchId, nextActivePlayer.playerId);
         sse.sendMessage(message.HAS_LOST_BY_CHECK_MATE, match.matchId, activePlayer.playerId);
     }
 
     if (checkType == CheckType.CHECK_TARGET) {
-        match.state = model.State.FINISHED;
         sse.sendMessage(message.HAS_WON_BY_CHECK_TARGET, match.matchId, nextActivePlayer.playerId);
         sse.sendMessage(message.HAS_LOST_BY_CHECK_TARGET, match.matchId, activePlayer.playerId);
     }
 
     if (checkType == CheckType.CHECK_TARGET_BOTH) {
-        match.state = model.State.FINISHED;
         sse.sendMessage(message.HAS_WON_BY_CHECK_TARGET_AND_OPPONENT_FOLLOW_UP, match.matchId, nextActivePlayer.playerId);
         sse.sendMessage(message.HAS_LOST_BUT_CAN_FOLLOW_UP, match.matchId, activePlayer.playerId);
     }

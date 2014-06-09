@@ -36,6 +36,19 @@ describe("store provider", function () {
 
     });
 
+    describe("couchdb", function(){
+        beforeEach(function(){
+            storeProvider.activeStoreType = storeProvider.StoreType.COUCHDB;
+            store = storeProvider.getStore();
+            match = modelFactory.createEmptyMatch(9);
+        });
+
+        it("should support basic CRUD functionality", function(done){
+            testCRUD(done);
+        });
+
+    });
+
     var testCRUD = function (done) {
         // Create Match Test
         store.createMatch(match, function (err, persistedMatch) {
@@ -71,7 +84,6 @@ describe("store provider", function () {
 
 
                                 store.getMatch(matchId, function (err, match) {
-                                    assert.notOk(err);
                                     assert.isNull(match);
                                     done();
                                 });
