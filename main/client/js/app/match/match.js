@@ -161,7 +161,7 @@ define(['angular', 'jquery', 'angular-growl'], function (angular, $) {
                     return $scope.match.state == "playing" && ($scope.moves.length + ($scope.self.color == 'white' ? 1 : 0)) % 2 == 0;
                 };
 
-                $scope.getEndMessage = function() {
+                $scope.getEndMessage = function () {
                     return endMessages($scope.endCause);
                 };
 
@@ -177,10 +177,14 @@ define(['angular', 'jquery', 'angular-growl'], function (angular, $) {
                             }
                             update();
                         }).error(function () {
-                            $scope.onlooker = true;
-                            update();
+                            if (match.playerWhite) {
+                                $scope.onlooker = true;
+                                update();
+                            } else {
+                               window.location = matchLink(matchId);
+                            }
                         });
-                    }).error(function() {
+                    }).error(function () {
                         $location.path("/404");
                     });
 
