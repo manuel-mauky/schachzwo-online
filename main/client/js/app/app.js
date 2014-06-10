@@ -19,10 +19,7 @@ define([
         'login',
         'schachzwoBoard',
         'sse',
-        'matchLink',
-        'endMessages',
-        'error',
-        'about']).
+        'matchLink']).
         config(['$routeProvider', function ($routeProvider) {
 
             $routeProvider.when("/match/:matchId/login",
@@ -45,20 +42,17 @@ define([
 
             $routeProvider.when('/about',
                 {
-                    templateUrl: 'js/app/about/about.html',
-                    controller: 'aboutCtrl'
+                    templateUrl: 'js/app/about/about.html'
                 });
 
             $routeProvider.when('/404',
                 {
-                    templateUrl: 'js/app/error-pages/404.html',
-                    controller: 'errorCtrl'
+                    templateUrl: 'js/app/error-pages/404.html'
                 });
 
             $routeProvider.when('/500',
                 {
-                    templateUrl: 'js/app/error-pages/500.html',
-                    controller: 'errorCtrl'
+                    templateUrl: 'js/app/error-pages/500.html'
                 });
 
             $routeProvider.otherwise({redirectTo: '/'});
@@ -67,7 +61,13 @@ define([
         config(['$translateProvider', '$translatePartialLoaderProvider',
             function ($translateProvider, $translatePartialLoaderProvider) {
 
-                $translatePartialLoaderProvider.addPart('index');
+                $translatePartialLoaderProvider.
+                    addPart('index').
+                    addPart('landing').
+                    addPart('about').
+                    addPart('error').
+                    addPart('login').
+                    addPart('match');
 
                 $translateProvider.useLoader('$translatePartialLoader', {
                     urlTemplate: '/i18n/{part}/{lang}.json'

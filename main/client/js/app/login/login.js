@@ -1,13 +1,10 @@
 'use strict';
 
-define(['angular', 'jquery', 'jquery-validate'], function (angular, $) {
+define(['angular', 'jquery', 'jquery-validate', 'angular-translate'], function (angular, $) {
 
     angular.module("login", [])
-        .controller("loginCtrl", ["$scope", "$http", "$routeParams", "endpoint", "$location", "$cookies",'$translatePartialLoader', '$translate',
-            function ($scope, $http, $routeParams, endpoint, $location, $cookies, $translatePartialLoader, $translate) {
-
-                $translatePartialLoader.addPart('login');
-                $translate.refresh();
+        .controller("loginCtrl", ["$scope", "$http", "$routeParams", "endpoint", "$location", "$cookies", "$translate",
+            function ($scope, $http, $routeParams, endpoint, $location, $cookies, $translate) {
 
                 var matchId = $routeParams.matchId;
 
@@ -34,7 +31,7 @@ define(['angular', 'jquery', 'jquery-validate'], function (angular, $) {
                     messages: {
                         playerName: {
                             required: ' ',
-                            maxlength: 'Der Spielername darf nicht aus mehr als 20 Zeichen bestehen'
+                            maxlength: $translate.instant("VALIDATION_MAX_LENGTH", {length: 20})
                         }
                     }
                 });

@@ -43,33 +43,39 @@
                         <div class="panel-body">
 
                             <button type="button" class="btn btn-primary btn-lg" data-toggle="modal"
-                                    data-target="#link-modal" ng-show="!itsMyTurn" translate="INVITE"><i
-                                    class="glyphicon glyphicon-link"></i>
-
+                                    data-target="#link-modal" ng-show="!itsMyTurn">
+                                <i class="glyphicon glyphicon-link"></i>
+                                <span translate="INVITE"></span>
                             </button>
 
                             <div class="btn-group btn-group-lg" ng-show="itsMyTurn">
                                 <button type="button" class="btn btn-primary" data-toggle="modal"
-                                        data-target="#link-modal" translate="INVITE"><i class="glyphicon glyphicon-link"></i>
+                                        data-target="#link-modal">
+                                    <i class="glyphicon glyphicon-link"></i>
+                                    <span translate="INVITE"></span>
                                 </button>
 
-                                <a class="btn btn-default" role="button" href="" ng-click="offerDraw()" translate="OFFER_DRAW"></a>
-                                <a class="btn btn-default" role="button" href="" ng-click="surrender()" translate="SURRENDER"></a>
+                                <a class="btn btn-default" role="button" href="" ng-click="offerDraw()"
+                                   translate="OFFER_DRAW"></a>
+                                <a class="btn btn-default" role="button" href="" ng-click="surrender()"
+                                   translate="SURRENDER"></a>
                             </div>
 
                             <p style="padding-top: 20px">
 
                             <div class="alert alert-info" ng-show="onlooker" translate="ONLOOKER"></div>
                             <div class="alert alert-success" ng-show="itsMyTurn" translate="MY_TURN"></div>
-                            <div class="alert alert-warning" ng-show="match.state == 'preparing'" translate="WAIT_FOR_OPPONENT">
-                            </div>
-                            <div class="alert alert-warning" ng-show="itsMyTurn && check" translate="CHECK_NOTIFICATION"></div>
+                            <div class="alert alert-warning" ng-show="match.state == 'preparing'"
+                                 translate="WAIT_FOR_OPPONENT"></div>
+                            <div class="alert alert-warning" ng-show="itsMyTurn && check"
+                                 translate="CHECK_NOTIFICATION"></div>
                             </p>
                         </div>
 
                     </div>
 
-                    <div class="alert alert-warning" ng-show="match.state == 'finished'" translate="GAME_FINISHED_NOTIFICATION"></div>
+                    <div class="alert alert-warning" ng-show="match.state == 'finished'"
+                         translate="MATCH_FINISHED_NOTIFICATION"></div>
 
                 </div>
 
@@ -162,7 +168,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="end-modal-label" translate="GAME_FINISHED_HEADING"></h4>
+                <h4 class="modal-title" id="end-modal-label" translate="MATCH_FINISHED_HEADING"></h4>
             </div>
             <div class="modal-body">
 

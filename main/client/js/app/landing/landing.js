@@ -1,35 +1,21 @@
 'use strict';
 
-define(['angular', 'angular-translate-partial'], function(angular) {
+define(['angular'], function (angular) {
 
     angular.module('landing', []).
-        controller('landingCtrl', ['$scope', '$http', '$translatePartialLoader', '$translate', 'endpoint', "$location",
-            function($scope, $http, $translatePartialLoader, $translate, endpoint, $location) {
+        controller('landingCtrl', ['$scope', '$http', '$location', 'endpoint',
+            function ($scope, $http, $location, endpoint) {
 
-            $translatePartialLoader.addPart('landing');
-            $translate.refresh();
+                $scope.createNewGame = function (size) {
 
-            $scope.createNewGame = function(size){
-                console.log("size:" + size);
-
-                $http.post(endpoint, {size:size}).success(function(match) {
-                    console.log("post successful");
-
-                    console.log("match was:");
-                    console.dir(match);
-
-                    var path = "match/" + match.matchId + "/login";
-
-                    console.log("redirect to: " + path);
-
-
-                    $location.path(path);
-
-                });
-            }
-
-
-        }]);
+                    $http.post(endpoint, {size: size}).success(function (match) {
+                        console.log("post successful");
+                        var path = "match/" + match.matchId + "/login";
+                        console.log("redirect to: " + path);
+                        $location.path(path);
+                    });
+                }
+            }]);
 
 
 });

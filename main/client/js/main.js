@@ -44,15 +44,12 @@ require([
         'angular',
         'bootstrap',
         'app/app',
-        'app/about/about',
         'app/landing/landing',
-        'app/error-pages/error',
         'app/match/match',
         'app/login/login',
         'app/match/directives/schachzwo-board',
         'app/match/services/sse',
-        'app/match/services/match-link',
-        'app/match/services/end-messages'],
+        'app/match/services/match-link'],
     function (angular) {
         require(['domReady!'], function (document) {
 

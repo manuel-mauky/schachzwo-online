@@ -1,13 +1,11 @@
 'use strict';
 
-define(['angular', 'jquery', 'angular-growl'], function (angular, $) {
+define(['angular', 'jquery', 'angular-growl', 'angular-translate'], function (angular, $) {
 
     angular.module('match', []).
-        controller('matchCtrl', ['$scope', '$routeParams', '$http', '$location', 'growl', 'endpoint', 'sse', 'matchLink', 'endMessages','$translatePartialLoader', '$translate',
-            function ($scope, $routeParams, $http, $location, growl, endpoint, sse, matchLink, endMessages,$translatePartialLoader, $translate) {
+        controller('matchCtrl', ['$scope', '$routeParams', '$http', '$location', '$translate', 'growl', 'endpoint', 'sse', 'matchLink',
+            function ($scope, $routeParams, $http, $location, $translate, growl, endpoint, sse, matchLink) {
 
-                $translatePartialLoader.addPart('match');
-                $translate.refresh();
 
                 var matchId = $routeParams.matchId;
                 var selectedField = {};
@@ -32,7 +30,7 @@ define(['angular', 'jquery', 'angular-growl'], function (angular, $) {
                         update();
                     }
                     if (event.data == "match-started") {
-                        growl.addSuccessMessage("Die Partie kann beginnen");
+                        growl.addSuccessMessage($translate.instant("MATCH_STARTED_NOTIFICATION"));
                         $('#link-modal').modal('hide');
                         initMatch();
                     }
@@ -50,12 +48,12 @@ define(['angular', 'jquery', 'angular-growl'], function (angular, $) {
                     }
 
                     if (event.data == "draw-rejected") {
-                        growl.addWarnMessage("Remis wurde abgelehnt");
+                        growl.addWarnMessage($translate.instant("DRAW_REJECTED_NOTIFICATION"));
                     }
 
                     if (event.data == "check") {
                         $scope.check = true;
-                        growl.addWarnMessage("Du stehst im Schach!");
+                        growl.addWarnMessage($translate.instant("CHECK_NOTIFICATION"));
                     }
 
                 }, false);
@@ -146,7 +144,7 @@ define(['angular', 'jquery', 'angular-growl'], function (angular, $) {
                     try {
                         return $scope.self.color === 'black' ? $scope.match.playerBlack.name : $scope.match.playerWhite.name;
                     } catch (e) {
-                        return $scope.onlooker ? "Schwarzer Spieler" : "Du";
+                        return $translate.instant($scope.onlooker ? "BLACK_PLAYER" : "SELF");
                     }
                 };
 
@@ -154,7 +152,7 @@ define(['angular', 'jquery', 'angular-growl'], function (angular, $) {
                     try {
                         return $scope.self.color === 'black' ? $scope.match.playerWhite.name : $scope.match.playerBlack.name;
                     } catch (e) {
-                        return $scope.onlooker ? "Weißer Spieler" : "Dein Gegner";
+                        return $translate.instant($scope.onlooker ? "WHITE_PLAYER" : "OPPONENT");
                     }
                 };
 
@@ -167,7 +165,11 @@ define(['angular', 'jquery', 'angular-growl'], function (angular, $) {
                 };
 
                 $scope.getEndMessage = function () {
-                    return endMessages($scope.endCause);
+                    if ($scope.endCause) {
+                        return $translate.instant("END_MESSAGE_" + $scope.endCause.toUpperCase());
+                    } else {
+                        return "";
+                    }
                 };
 
                 var initMatch = function () {
