@@ -205,12 +205,14 @@ module.exports.addMove = function(matchId, playerId, moveJson, callbacks){
 
         if(match.isDrawPending()){
             callWhenDefined(callbacks.onMoveFailed, "Move can not be applied because there is a draw request pending.");
+            return;
         }
 
         var gameLogic = new GameLogic(match);
 
         if(!gameLogic.isPlayerParticipating(playerId)){
             callWhenDefined(callbacks.onPlayerNotFound);
+            return;
         }
 
         var move;

@@ -242,6 +242,13 @@ define(['angular', 'jquery', 'angular-growl', 'angular-translate'], function (an
                             $scope.itsMyTurn = false;
                             $scope.check = false;
                             update();
+                        }).error(function() {
+                            // Maybe you can respond to the draw request.
+                            $http.put(endpoint + "/" + matchId + "/draw", {draw: "rejected" }).success(function () {
+                                $scope.rejectDraw();
+                                update();
+                            });
+
                         });
                     }
                 };
