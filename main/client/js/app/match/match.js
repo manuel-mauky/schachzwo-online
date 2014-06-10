@@ -3,8 +3,11 @@
 define(['angular', 'jquery', 'angular-growl'], function (angular, $) {
 
     angular.module('match', []).
-        controller('matchCtrl', ['$scope', '$routeParams', '$http', '$location', 'growl', 'endpoint', 'sse', 'matchLink', 'endMessages',
-            function ($scope, $routeParams, $http, $location, growl, endpoint, sse, matchLink, endMessages) {
+        controller('matchCtrl', ['$scope', '$routeParams', '$http', '$location', 'growl', 'endpoint', 'sse', 'matchLink', 'endMessages','$translatePartialLoader', '$translate',
+            function ($scope, $routeParams, $http, $location, growl, endpoint, sse, matchLink, endMessages,$translatePartialLoader, $translate) {
+
+                $translatePartialLoader.addPart('match');
+                $translate.refresh();
 
                 var matchId = $routeParams.matchId;
                 var selectedField = {};

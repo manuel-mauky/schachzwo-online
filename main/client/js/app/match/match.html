@@ -43,36 +43,33 @@
                         <div class="panel-body">
 
                             <button type="button" class="btn btn-primary btn-lg" data-toggle="modal"
-                                    data-target="#link-modal" ng-show="!itsMyTurn"><i
+                                    data-target="#link-modal" ng-show="!itsMyTurn" translate="INVITE"><i
                                     class="glyphicon glyphicon-link"></i>
-                                Mitspieler einladen
+
                             </button>
 
                             <div class="btn-group btn-group-lg" ng-show="itsMyTurn">
                                 <button type="button" class="btn btn-primary" data-toggle="modal"
-                                        data-target="#link-modal"><i class="glyphicon glyphicon-link"></i>
-                                    Mitspieler einladen
+                                        data-target="#link-modal" translate="INVITE"><i class="glyphicon glyphicon-link"></i>
                                 </button>
 
-                                <a class="btn btn-default" role="button" href="" ng-click="offerDraw()">Remis
-                                    anbieten</a>
-                                <a class="btn btn-default" role="button" href="" ng-click="surrender()">Aufgeben</a>
+                                <a class="btn btn-default" role="button" href="" ng-click="offerDraw()" translate="OFFER_DRAW"></a>
+                                <a class="btn btn-default" role="button" href="" ng-click="surrender()" translate="SURRENDER"></a>
                             </div>
 
                             <p style="padding-top: 20px">
 
-                            <div class="alert alert-info" ng-show="onlooker">Du bist Zuschauer der Partie</div>
-                            <div class="alert alert-success" ng-show="itsMyTurn">Du bist am Zug</div>
-                            <div class="alert alert-warning" ng-show="match.state == 'preparing'">Auf Gegner warten
-                                ...
+                            <div class="alert alert-info" ng-show="onlooker" translate="ONLOOKER"></div>
+                            <div class="alert alert-success" ng-show="itsMyTurn" translate="MY_TURN"></div>
+                            <div class="alert alert-warning" ng-show="match.state == 'preparing'" translate="WAIT_FOR_OPPONENT">
                             </div>
-                            <div class="alert alert-warning" ng-show="itsMyTurn && check">Du stehst im Schach</div>
+                            <div class="alert alert-warning" ng-show="itsMyTurn && check" translate="CHECK_NOTIFICATION"></div>
                             </p>
                         </div>
 
                     </div>
 
-                    <div class="alert alert-warning" ng-show="match.state == 'finished'">Die Partie ist beendet.</div>
+                    <div class="alert alert-warning" ng-show="match.state == 'finished'" translate="GAME_FINISHED_NOTIFICATION"></div>
 
                 </div>
 
@@ -92,11 +89,10 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"
                         aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="link-modal-label">Mitspieler einladen</h4>
+                <h4 class="modal-title" id="link-modal-label" translate="INVITE"></h4>
             </div>
             <div class="modal-body">
-                <h4>Schicke den Link deinen Freunden, damit sie mitspielen oder zuschauen
-                    können:</h4>
+                <h4 translate="SEND_LINK_INSTRUCTION"></h4>
 
                 <p>
                     <a href="{{matchLink}}">{{matchLink}}</a>
@@ -104,7 +100,7 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Schließen</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" translate="CLOSE"></button>
             </div>
         </div>
     </div>
@@ -119,7 +115,7 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"
                         aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="exchange-modal-label">Figur wechseln</h4>
+                <h4 class="modal-title" id="exchange-modal-label" translate="EXCHANGE_PIECE"></h4>
             </div>
             <div class="modal-body">
 
@@ -146,15 +142,15 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="draw-modal-label">Remis Angebot</h4>
+                <h4 class="modal-title" id="draw-modal-label" translate="DRAW_OFFER_HEADING"></h4>
             </div>
-            <div class="modal-body">
-                Dein Mitspieler hat dir Remis angeboten.
+            <div class="modal-body" translate="DRAW_OFFERED_NOTIFICATION">
+
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" ng-click="rejectDraw()">Ablehnen</button>
-                <button type="button" class="btn btn-primary" ng-click="acceptDraw()">Annehmen</button>
+                <button type="button" class="btn btn-primary" ng-click="rejectDraw()" translate="REJECT"></button>
+                <button type="button" class="btn btn-primary" ng-click="acceptDraw()" translate="ACCEPT"></button>
             </div>
         </div>
     </div>
@@ -166,7 +162,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="end-modal-label">Die Partie ist vorbei!</h4>
+                <h4 class="modal-title" id="end-modal-label" translate="GAME_FINISHED_HEADING"></h4>
             </div>
             <div class="modal-body">
 
@@ -174,8 +170,8 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Zurück zum Spielfeld</button>
-                <a class="btn btn-primary" href="/index.html">Zur Startseite</a>
+                <button type="button" class="btn btn-default" data-dismiss="modal" translate="BACK_TO_BOARD"></button>
+                <a class="btn btn-primary" href="/index.html" translate="BACK_TO_HOME"></a>
             </div>
         </div>
     </div>

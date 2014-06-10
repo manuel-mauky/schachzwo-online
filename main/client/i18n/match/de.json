@@ -1,0 +1,20 @@
+{
+    "INVITE": "Mitspieler einladen",
+    "OFFER_DRAW": "Remis anbieten",
+    "SURRENDER": "Aufgeben",
+    "ONLOOKER": "Du bist Zuschauer der Partie",
+    "MY_TURN": "Du bist am Zug",
+    "WAIT_FOR_OPPONENT": "Auf Gegner warten...",
+    "CHECK_NOTIFICATION": "Du stehst im Schach",
+    "GAME_FINISHED_NOTIFICATION": "Die Partie ist beendet.",
+    "SEND_LINK_INSTRUCTION": "Schicke den Link deinen Freunden, damit sie mitspielen oder zuschauen können:",
+    "CLOSE": "Schließen",
+    "EXCHANGE_PIECE": "Figur wechseln",
+    "DRAW_OFFER_HEADING": "Remis Angebot",
+    "DRAW_OFFERED_NOTIFICATION": "Dein Mitspieler hat dir Remis angeboten.",
+    "REJECT": "Ablehnen",
+    "ACCEPT": "Annehmen",
+    "GAME_FINISHED_HEADING": "Die Partie ist vorbei!",
+    "BACK_TO_BOARD": "Zurück zum Spielfeld",
+    "BACK_TO_HOME": "Zur Startseite"
+}
