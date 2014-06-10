@@ -44,6 +44,7 @@ require([
         'angular',
         'bootstrap',
         'app/app',
+        'app/about/about',
         'app/landing/landing',
         'app/error-pages/error',
         'app/match/match',

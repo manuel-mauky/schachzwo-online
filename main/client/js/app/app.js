@@ -21,7 +21,8 @@ define([
         'sse',
         'matchLink',
         'endMessages',
-        'error']).
+        'error',
+        'about']).
         config(['$routeProvider', function ($routeProvider) {
 
             $routeProvider.when("/match/:matchId/login",
@@ -44,7 +45,8 @@ define([
 
             $routeProvider.when('/about',
                 {
-                    templateUrl: 'js/app/about/about.html'
+                    templateUrl: 'js/app/about/about.html',
+                    controller: 'aboutCtrl'
                 });
 
             $routeProvider.when('/404',
