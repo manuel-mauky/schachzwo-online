@@ -45,14 +45,16 @@
                             <button type="button" class="btn btn-primary btn-lg" data-toggle="modal"
                                     data-target="#link-modal" ng-show="!itsMyTurn">
                                 <i class="glyphicon glyphicon-link"></i>
-                                <span translate="INVITE"></span>
+                                <span translate="INVITE" ng-show="match.state == 'preparing'"></span>
+                                <span translate="INVITE_ONLOOKER" ng-show="match.state == 'playing'"></span>
                             </button>
 
                             <div class="btn-group btn-group-lg" ng-show="itsMyTurn">
                                 <button type="button" class="btn btn-primary" data-toggle="modal"
                                         data-target="#link-modal">
                                     <i class="glyphicon glyphicon-link"></i>
-                                    <span translate="INVITE"></span>
+                                    <span translate="INVITE" ng-show="match.state == 'preparing'"></span>
+                                    <span translate="INVITE_ONLOOKER" ng-show="match.state == 'playing'"></span>
                                 </button>
 
                                 <a class="btn btn-default" role="button" href="" ng-click="offerDraw()"
