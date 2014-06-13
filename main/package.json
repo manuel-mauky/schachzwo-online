@@ -2,6 +2,7 @@
     "name": "schachzwo",
     "description": "SchachZWO Webapplikation",
     "version": "0.0.1",
+    "main":"app.js",
     "scripts": {
         "start": "node app.js",
         "test": "mocha --recursive --reporter list ./server"

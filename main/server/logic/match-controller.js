@@ -54,7 +54,9 @@ module.exports.createMatch = function(size, callbacks){
     try{
         store.createMatch(modelFactory.createMatch(size), function(err, match){
             if(err){
+                if(err) console.error(err);
                 callWhenDefined(callbacks.onError, err);
+                return;
             }
 
             delete match.history;
@@ -62,6 +64,7 @@ module.exports.createMatch = function(size, callbacks){
             callWhenDefined(callbacks.onSuccess, match);
         });
     } catch(err){
+        if(err) console.error(err);
         callWhenDefined(callbacks.onError, err);
     }
 };
@@ -71,6 +74,7 @@ module.exports.getPlayer = function(matchId, playerId, isOpponent, callbacks){
 
     store.getMatch(matchId, function(err, match){
        if(err || !match){
+           if(err) console.error(err);
            callWhenDefined(callbacks.onMatchNotFound);
            return;
        }
@@ -113,6 +117,7 @@ module.exports.login = function(matchId, playerId, name, callbacks){
     var store = storeProvider.getStore();
     store.getMatch(matchId, function(err, match){
         if(err || !match){
+            if(err) console.error(err);
             callWhenDefined(callbacks.onMatchNotFound);
             return;
         }
@@ -142,6 +147,7 @@ module.exports.login = function(matchId, playerId, name, callbacks){
         if (successfullyAdded) {
             store.updateMatch(match, function (err, updatedMatch) {
                 if(err || !updatedMatch){
+                    if(err) console.error(err);
                     callWhenDefined(callbacks.onError);
                     return;
                 }
@@ -168,6 +174,7 @@ module.exports.getBoard = function(matchId, callbacks){
     var store = storeProvider.getStore();
     store.getMatch(matchId, function (err, match) {
         if(err || !match){
+            if(err) console.error(err);
             callWhenDefined(callbacks.onMatchNotFound);
             return;
         }
@@ -186,6 +193,7 @@ module.exports.getMoves = function(matchId, callbacks){
     var store = storeProvider.getStore();
     store.getMatch(matchId, function (err, match) {
         if (err || !match) {
+            if(err) console.error(err);
             callWhenDefined(callbacks.onMatchNotFound);
             return;
         }
@@ -198,6 +206,7 @@ module.exports.addMove = function(matchId, playerId, moveJson, callbacks){
     var store = storeProvider.getStore();
     store.getMatch(matchId, function (err, match) {
         if (err || !match) {
+            if(err) console.error(err);
             callWhenDefined(callbacks.onMatchNotFound);
             return;
         }
@@ -219,7 +228,8 @@ module.exports.addMove = function(matchId, playerId, moveJson, callbacks){
 
         try{
             move = new model.Move(moveJson);
-        }catch(error){
+        }catch(err){
+            if(err) console.error(err);
             callWhenDefined(callbacks.onMoveFailed,'Move can not be applied because the request is invalid.');
             return;
         }
@@ -248,6 +258,7 @@ module.exports.addMove = function(matchId, playerId, moveJson, callbacks){
 
             store.updateMatch(match, function(err, match){
                 if(err || !match){
+                    if(err) console.error(err);
                     callWhenDefined(callbacks.onMoveFailed,'Move can not be applied because the move is invalid.');
                     return;
                 }
@@ -263,6 +274,7 @@ module.exports.addMove = function(matchId, playerId, moveJson, callbacks){
                     match.state = State.FINISHED;
                     store.updateMatch(match, function (err, match) {
                         if (err) {
+                            console.error(err);
                             callWhenDefined(callbacks.onMoveFailed, 'Move can not be applied because the move is invalid.');
                         } else {
                             sse.sendMessage(message.HAS_LOST_BY_GIVEN_UP, match.matchId, playerId);
@@ -282,6 +294,7 @@ module.exports.getThreats = function(matchId, callbacks){
     var store = storeProvider.getStore();
     store.getMatch(matchId, function (err, match) {
         if(err || !match){
+            if(err) console.error(err);
             callWhenDefined(callbacks.onMatchNotFound);
             return;
         }
@@ -294,6 +307,7 @@ module.exports.getValidMoves = function(matchId, callbacks){
     var store = storeProvider.getStore();
     store.getMatch(matchId, function (err, match) {
         if (err || !match) {
+            if(err) console.error(err);
             callWhenDefined(callbacks.onMatchNotFound);
             return;
         }
@@ -311,6 +325,7 @@ module.exports.createDraw = function (matchId, playerId, drawRequest, callbacks)
     var store = storeProvider.getStore();
     store.getMatch(matchId, function (err, match) {
         if (err || !match) {
+            if(err) console.error(err);
             callWhenDefined(callbacks.onMatchNotFound);
             return;
         }
@@ -364,6 +379,7 @@ module.exports.getCapturedPieces = function(matchId, callbacks) {
     var store = storeProvider.getStore();
     store.getMatch(matchId, function (err, match) {
         if (err || !match) {
+            if(err) console.error(err);
             callWhenDefined(callbacks.onMatchNotFound);
             return;
         }
