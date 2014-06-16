@@ -15,7 +15,8 @@
         "cookie-parser": "latest",
         "mongoskin": "latest",
         "shortid": "latest",
-        "cradle": "latest"
+        "cradle": "latest",
+        "minimist": "latest"
     },
     "devDependencies": {
         "request": "latest",
