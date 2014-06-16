@@ -6,6 +6,8 @@ var app = express();
 var bodyParser = require("body-parser");
 var cookieParser = require("cookie-parser");
 
+var minimist = require("minimist") // CLI args parsing
+
 var noCacheFilter =  function(req, res, next) {
     res.header('Pragma', 'no-cache');
     res.header('Cache-Control', 'no-store, no-cache, must-revalidate');
@@ -14,7 +16,7 @@ var noCacheFilter =  function(req, res, next) {
 };
 
 app.use(bodyParser());
-app.use(cookieParser())
+app.use(cookieParser());
 
 app.use(express.static(__dirname + "/client"));
 
@@ -37,7 +39,16 @@ app.get("*", function(req, res){
 });
 
 
-var server = app.listen(1337, function() {
+var args = minimist(process.argv.slice(2));
+
+// node app.js --port 80
+if(args.port){
+    var port = args.port;
+}else {
+    var port = 1337;
+}
+
+var server = app.listen(port, function() {
     console.log("Listening on port %d", server.address().port);
 });
 
