@@ -1,4 +1,4 @@
-schachzwo-online
+SchachZWO-Online
 ================
 
 "[SchachZWO](http://www.schachzwo.de/)" ist eine moderne Variante des klassischen Schachs, welche von einem [dresdner Spiele-Autor](http://www.schachzwo.de/impressum/) als Brett-Spiel entwickelt wird. 
@@ -7,7 +7,7 @@ schachzwo-online
 
 Das Projekt ist im Rahmen der Lehrveranstaltung "XML-basierte Anwendungen" des Master-Studiengangs [Informatik an der Hochschule Zittau/Görlitz](http://www.hszg.de/f-ei) im Sommersemester 2014
 entstanden. 
-Beteiligt waren [Marlene Knoche](https://github.com/Sanguinik), [Manuel Mauky](https://github.com/lestard), Erik Jähne und Paul Weinhold, 
+Beteiligt waren [Marlene Knoche](https://github.com/Sanguinik), [Manuel Mauky](https://github.com/lestard), Erik Jähne und [Paul Weinhold](https://github.com/weinpau), 
 sowie [Prof. Dr. Christian Wagenknecht](https://www.hszg.de/f-ei/fakultaet/professoren/christian-wagenknecht).
 
 ## Technisches
