@@ -10,6 +10,9 @@ entstanden.
 Beteiligt waren [Marlene Knoche](https://github.com/Sanguinik), [Manuel Mauky](https://github.com/lestard), [Erik Jähne](https://github.com/s3erjaeh) und [Paul Weinhold](https://github.com/weinpau), 
 sowie [Prof. Dr. Christian Wagenknecht](https://www.hszg.de/f-ei/fakultaet/professoren/christian-wagenknecht).
 
+
+![screenshot](screenshot_schachzwo.png)
+
 ## Technisches
 
 SchachZWO-Online ist durchgängig in JavaScript programmiert.
