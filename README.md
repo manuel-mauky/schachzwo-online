@@ -26,4 +26,4 @@ Im Client kommen
 [RequireJS](http://requirejs.org/) 
 sowie HTML5-Canvas zum Einsatz.
 
-Die Kommunikation zwischen Server und Client baut auf einer Kombination aus [Server-Sent Events (SSE)](https://en.wikipedia.org/wiki/Server-sent_events) und einer REST-artigen Webservice-Schnittstelle ([Dokumentation](Rest.md)) auf.
+Die Kommunikation zwischen Server und Client baut auf einer Kombination aus [Server-Sent Events (SSE)](https://en.wikipedia.org/wiki/Server-sent_events) und einer REST-artigen Webservice-Schnittstelle ([Dokumentation](REST.md)) auf.
