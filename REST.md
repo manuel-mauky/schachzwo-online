@@ -8,11 +8,11 @@
 ### Zugriff
 
 
-Der Zugriff auf das REST API erfolgt über folgenden URL:
+Der Zugriff auf das REST API erfolgt über folgende URL:
 
 	http://schachzwo.inf.hszg.de
 
-Alle Pfadenangaben dieser Dokumentation sind relativ zu dieser URL.
+Alle nachfolgenden Pfadenangaben dieser Dokumentation sind relativ zu dieser URL.
 
 ### Authentifzierung
 
@@ -118,13 +118,13 @@ Zunächst müssen wir eine Partie anlegen. Dazu führen wir ein HTTP-POST auf `\
 
 	POST /matches
 
-**Beispiel Request (7x7 Partie) **
+**Beispiel Request (7x7 Partie)**
 
 	{
 		size: 7
 	}
 
-**Beispiel Request (9x9 Partie) **
+**Beispiel Request (9x9 Partie)**
 
 	{
 		size: 9
